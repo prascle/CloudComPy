@@ -533,6 +533,31 @@ std::vector<ccHObject*> importFile(const char* filename, CC_SHIFT_MODE mode, dou
             }
         }
     }
+    // look for polylines inside loaded DB
+    {
+        ccHObject::Container polys;
+        db->filterChildren(polys, true, CC_TYPES::POLY_LINE);
+        size_t count = polys.size();
+        CCTRACE("number of polys: " << count);
+        for (size_t i = 0; i < count; ++i)
+        {
+            ccPolyline* pc = static_cast<ccPolyline*>(polys[i]);
+            if (pc->getParent())
+            {
+                pc->getParent()->detachChild(pc);
+            }
+
+            //if the cloud is a set of vertices, we ignore it!
+            if (verticesIDs.find(pc->getUniqueID()) != verticesIDs.end())
+            {
+                capi->m_orphans.addChild(pc);
+                continue;
+            }
+            CCTRACE("Found one poly with " << pc->size() << " points");
+            capi->m_polys.emplace_back(pc, filename, count == 1 ? -1 : static_cast<int>(i));
+            entities.push_back(pc);
+        }
+    }
 
     //now look for the remaining clouds inside loaded DB
     {
