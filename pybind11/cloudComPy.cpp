@@ -541,6 +541,11 @@ py::tuple ExtractConnectedComponents_py(std::vector<ccHObject*> entities,
 //    double sigma = 0;
 //};
 
+void renderPy(ccPointCloud* cloud)
+{
+
+}
+
 bool InterpolateScalarFieldsFrom_py(ccPointCloud* destCloud,
                                     ccPointCloud* srcCloud,
                                     std::vector<int> sfIndexes,
