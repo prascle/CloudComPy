@@ -224,5 +224,7 @@ TODO List
 - TODO: (issue #154) plugin MeshIO ?
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
-- TODO  following setPointSize, add other methods for improving rendering in file
-
+- TODO: following setPointSize, add other methods for improving rendering in file
+- TODO: (issue #192) improve behaviour when converting float into int is harmless
+- TODO: (issue #195) improve documentation on normal generation with quadric fitting
+- TODO: (issue #198) get transformation history
