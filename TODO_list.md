@@ -228,3 +228,5 @@ TODO List
 - TODO: (issue #192) improve behaviour when converting float into int is harmless
 - TODO: (issue #195) improve documentation on normal generation with quadric fitting
 - TODO: (issue #198) get transformation history
+- TODO: (issue #196) improve doc on mesh transformations
+- TODO: (issue #196) add a binding for mesh transformations
