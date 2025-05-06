@@ -230,3 +230,7 @@ TODO List
 - TODO: (issue #198) get transformation history
 - TODO: (issue #196) improve doc on mesh transformations
 - TODO: (issue #196) add a binding for mesh transformations
+- TODO: (issue #208) read correctly submeshes and some other CloudCompare types in .obj
+- TODO: embed install and build docs in binaries 
+
+
