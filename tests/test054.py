@@ -40,9 +40,9 @@ dic = cloud.getScalarFieldDic()
 sfx = cloud.getScalarField(dic['Nx'])
 sfy = cloud.getScalarField(dic['Ny'])
 sfz = cloud.getScalarField(dic['Nz'])
-asfx = sfx.toNpArray()
-asfy = sfy.toNpArray()
-asfz = sfz.toNpArray()
+asfx = sfx.toNpArrayCopy()
+asfy = sfy.toNpArrayCopy()
+asfz = sfz.toNpArrayCopy()
 
 normals=cloud.normalsToNpArrayCopy()
 
@@ -50,13 +50,13 @@ dx = normals[:,0] -asfx
 dy = normals[:,1] -asfy
 dz = normals[:,2] -asfz
 
-if dx.max() != 0 or dx.min() !=0:
+if dx.max() > 1.e-7 or dx.min() < -1.e7:
     raise RuntimeError
 
-if dy.max() != 0 or dy.min() !=0:
+if dy.max() > 1.e-7 or dy.min() < -1.e7:
     raise RuntimeError
 
-if dz.max() != 0 or dz.min() !=0:
+if dz.max() > 1.e-7 or dz.min() < -1.e7:
     raise RuntimeError
 #---normals01-end
 

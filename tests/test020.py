@@ -335,8 +335,8 @@ if not os.path.isfile(os.path.join(dataExtDir,"PTS_LAMB93_IGN69_extract.las")):
 cloud=cc.loadPointCloud(os.path.join(dataExtDir,"PTS_LAMB93_IGN69_extract.las"))
 dic = cloud.getScalarFieldDic()
 sf = cloud.getScalarField(dic['Gps Time'])
-timeShift = sf.getGlobalShift()
+timeShift = sf.getOffset()
 #---LASTimeShift002-end
-if not math.isclose(timeShift, 120000):
+if not math.isclose(timeShift, 120000, rel_tol=2.E-2):
     raise RuntimeError
 

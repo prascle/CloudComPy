@@ -34,29 +34,60 @@ py::array ToNpArray_copy(CCCoreLib::ScalarField &self)
 {
     CCTRACE("ScalarField ToNpArray with copy, ownership transfered to Python");
     size_t nRows = self.size();
-    return py::array_t<PyScalarType>({nRows}, {sizeof(PyScalarType)}, (PyScalarType*)self.data());
+    double offset = self.getOffset();
+    float* data = self.getInternalData();
+
+    py::array_t<double> result(nRows);
+    auto buf = result.request();
+    double* ptr = static_cast<double*>(buf.ptr);
+    for (size_t i = 0; i < nRows; ++i)
+    {
+        ptr[i] = static_cast<double>(data[i] + offset);
+    }
+    return result;
 }
 
 py::array ToNpArray_py(CCCoreLib::ScalarField &self)
 {
-    CCTRACE("ScalarField ToNpArray without copy, ownership stays in C++");
-    auto capsule = py::capsule(self.data(), [](void *v) { CCTRACE("C++ ScalarField not deleted"); });
-    return py::array(self.size(), self.data(), capsule);
+    CCTRACE("ScalarField ToNpArray without copy, ownership stays in C++. Offset non included");
+    auto capsule = py::capsule(self.getInternalData(), [](void *v) { CCTRACE("C++ ScalarField not deleted"); });
+    return py::array(self.size(), self.getInternalData(), capsule);
 }
 
-void fromNPArray_copy(CCCoreLib::ScalarField &self, py::array_t<PointCoordinateType, py::array::c_style | py::array::forcecast> array)
+void fromNPArray_copy(CCCoreLib::ScalarField &self, py::array_t<double, py::array::c_style | py::array::forcecast> array)
 {
     size_t nRows = self.size();
     if (array.ndim() != 1 && array.shape(0) != nRows)
     {
         throw std::runtime_error("Incorrect array dimension");
     }
-    self.reserve(nRows);
-    self.resize(nRows);
+    self.clear(); // clear the vector and reset offset
+    self.reserveSafe(nRows);
+    self.resizeSafe(nRows);
+    const double *s = reinterpret_cast<const double*>(array.data());
+    for (size_t i = 0; i < nRows; ++i)
+    {
+        self.setValue(i, static_cast<double>(s[i]));
+    }
+    CCTRACE("copied " << nRows << " values");
+    self.computeMinAndMax();
+}
+
+void fromNPArray_copyFloat(CCCoreLib::ScalarField &self, py::array_t<float, py::array::c_style | py::array::forcecast> array, double offset)
+{
+    size_t nRows = self.size();
+    if (array.ndim() != 1 && array.shape(0) != nRows)
+    {
+        throw std::runtime_error("Incorrect array dimension");
+    }
+    self.clear(); // clear the vector and reset offset
+    self.reserveSafe(nRows);
+    self.resizeSafe(nRows);
     const PyScalarType *s = reinterpret_cast<const PyScalarType*>(array.data());
-    PyScalarType *d = (PyScalarType*)self.data();
-    memcpy(d, s, nRows*sizeof(PyScalarType));
-    CCTRACE("copied " << nRows*sizeof(PyScalarType) << " bytes");
+    float *d = self.getInternalData();
+    memcpy(d, s, nRows*sizeof(float));
+    CCTRACE("copied " << nRows*sizeof(float) << " bytes");
+    self.setOffset(offset);
     self.computeMinAndMax();
 }
 
@@ -68,8 +99,8 @@ py::tuple computeMeanAndVariance_py(CCCoreLib::ScalarField &self)
     return res;
 }
 
-ScalarType& (CCCoreLib::ScalarField::* getValue1)(std::size_t) = &CCCoreLib::ScalarField::getValue; // getValue1: pointer to member function
-const ScalarType& (CCCoreLib::ScalarField::* getValue2)(std::size_t) const = &CCCoreLib::ScalarField::getValue; //pointer to member function with const qualifier
+//ScalarType& (CCCoreLib::ScalarField::* getValue1)(std::size_t) = &CCCoreLib::ScalarField::getValue; // getValue1: pointer to member function
+ScalarType (CCCoreLib::ScalarField::* getValue2)(std::size_t) const = &CCCoreLib::ScalarField::getValue; //pointer to member function with const qualifier
 //typedef const ScalarType& (CCCoreLib::ScalarField::*gvftype)(std::size_t) const; // the same using a typedef
 //gvftype getValue2 = &CCCoreLib::ScalarField::getValue;
 
@@ -91,18 +122,19 @@ void export_ScalarField(py::module &m0)
         .def("fill", &CCCoreLib::ScalarField::fill, ScalarFieldPy_fill_doc)
         .def("flagValueAsInvalid", &CCCoreLib::ScalarField::flagValueAsInvalid, ScalarFieldPy_flagValueAsInvalid_doc)
         .def("fromNpArrayCopy", &fromNPArray_copy, ScalarFieldPy_fromNpArrayCopy_doc)
+        .def("fromNpArrayCopyFloat", &fromNPArray_copyFloat, ScalarFieldPy_fromNpArrayCopyFloat_doc)
         .def("getMax", &CCCoreLib::ScalarField::getMax, ScalarFieldPy_getMax_doc)
         .def("getMin", &CCCoreLib::ScalarField::getMin, ScalarFieldPy_getMin_doc)
         .def("getName", &CCCoreLib::ScalarField::getName, ScalarFieldPy_getName_doc)
-        .def("getValue", getValue1, ScalarFieldPy_getValue_doc, py::return_value_policy::reference)
+        .def("getOffset", &CCCoreLib::ScalarField::getOffset, ScalarFieldPy_getOffset_doc)
         .def("getValue", getValue2, ScalarFieldPy_getValue_doc, py::return_value_policy::reference)
         .def("reserveSafe", &CCCoreLib::ScalarField::reserveSafe, ScalarFieldPy_reserveSafe_doc)
         .def("resizeSafe", &CCCoreLib::ScalarField::resizeSafe, ScalarFieldPy_resizeSafe_doc)
         .def("setName", &CCCoreLib::ScalarField::setName, ScalarFieldPy_setName_doc)
         .def("setValue", &CCCoreLib::ScalarField::setValue, ScalarFieldPy_setValue_doc)
         .def("swap", &CCCoreLib::ScalarField::swap, ScalarFieldPy_swap_doc)
-        .def("toNpArray", &ToNpArray_py, ScalarFieldPy_toNpArray_doc)
         .def("toNpArrayCopy", &ToNpArray_copy, ScalarFieldPy_toNpArrayCopy_doc)
+        .def("toNpArrayNoCopy", &ToNpArray_py, ScalarFieldPy_toNpArrayNoCopy_doc)
         ;
     //TODO optional parameters on resizeSafe
 
@@ -110,7 +142,7 @@ void export_ScalarField(py::module &m0)
             ccScalarFieldPy_ccScalarField_doc)
         .def(py::init<const char*>(), py::arg("name")=nullptr, ccScalarFieldPy_ccScalarField_ctor_doc)
         .def("isSerializable", &ccScalarField::isSerializable)
-        .def("getGlobalShift", &ccScalarField::getGlobalShift, ccScalarFieldPy_getGlobalShift_doc)
+//        .def("getGlobalShift", &ccScalarField::getGlobalShift, ccScalarFieldPy_getGlobalShift_doc)
         .def("setColorScale", &setColorScalePy, ccScalarFieldPy_setColorScale_doc)
         ;
 

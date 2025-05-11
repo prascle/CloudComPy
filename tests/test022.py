@@ -50,7 +50,7 @@ cc.DistanceComputationTools.computeCloud2MeshDistances(cloud, cylinder, params)
 
 #---histogram01-begin
 sf = cloud.getScalarField(cloud.getScalarFieldDic()['C2M absolute distances'])
-asf = sf.toNpArray()
+asf = sf.toNpArrayCopy()
 #---histogram01-end
 
 #---histogram02-begin

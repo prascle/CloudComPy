@@ -71,7 +71,7 @@ filteredSize = fcloud.size()
 #---filterSFValue01-end
 
 print("filtered cloud size: %s" % filteredSize)
-if not math.isclose(filteredSize, 113325, rel_tol=1e-03):
+if not math.isclose(filteredSize, 173786, rel_tol=1e-03):
     raise RuntimeError
 
 res = cc.SavePointCloud(fcloud, os.path.join(dataDir, "res3.xyz"))
@@ -118,7 +118,7 @@ cloud = cc.loadPointCloud(getSampleCloud(5.0))
 res = cloud.exportCoordToSF(False, True, True)
 l = cloud.sfSplitCloud(cloud.getNumberOfScalarFields()-1)
 #---cloudsf04-end
-if len(l) != 7:
+if len(l) != 6:
     raise RuntimeError
 res = cc.SaveEntities(l, os.path.join(dataDir, "sfsplit.bin"))
 

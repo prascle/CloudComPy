@@ -29,7 +29,7 @@
 
 //common dialogs
 #include <ccCameraParamEditDlg.h>
-#include <ccDisplayOptionsDlg.h>
+#include <ccDisplaySettingsDlg.h>
 #include <ccStereoModeDlg.h>
 
 //qCC_db
@@ -387,7 +387,7 @@ void viewerPy::selectEntity(ccHObject* toSelect)
 			//ui.menuSelectSF->clear();
 			for (unsigned i = 0; i < sfCount; ++i)
 			{
-				QAction* action = ui.menuSelectSF->addAction(cloud->getScalarFieldName(i));
+				QAction* action = ui.menuSelectSF->addAction(QString::fromStdString(cloud->getScalarFieldName(i)));
 				action->setData(i);
 				action->setCheckable(true);
 				if (currentSFIndex == static_cast<int>(i))
@@ -646,9 +646,9 @@ void viewerPy::removeFromDB(ccHObject* obj, bool autoDelete/*=true*/)
 
 void viewerPy::showDisplayParameters()
 {
-	ccDisplayOptionsDlg clmDlg(this);
+	ccDisplaySettingsDlg clmDlg(this);
 
-	connect(&clmDlg, &ccDisplayOptionsDlg::aspectHasChanged, this, &viewerPy::updateDisplay);
+	connect(&clmDlg, &ccDisplaySettingsDlg::aspectHasChanged, this, &viewerPy::updateDisplay);
 
 	clmDlg.exec();
 

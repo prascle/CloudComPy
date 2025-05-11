@@ -416,7 +416,7 @@ public:
     static ccQuadric* initWrapper5( CCVector2 minCorner,
                                     CCVector2 maxCorner,
                                     std::vector<PointCoordinateType> eqv,
-                                    Tuple3ub dims = Tuple3ub(0,1,2),
+                                    const CCCoreLib::SquareMatrix* toLocalOrientation = nullptr,
                                     const ccGLMatrix* transMat = nullptr,
                                     QString name = QString("Quadric"),
                                     unsigned precision = ccQuadric::DEFAULT_DRAWING_PRECISION)
@@ -424,7 +424,7 @@ public:
         if (eqv.size() != 6)
             throw std::range_error("equation parameters: vector of 6 float/double required");
         PointCoordinateType* eq = eqv.data();
-        return new ccQuadric(minCorner, maxCorner, eq, &dims, transMat, name, precision);
+        return new ccQuadric(minCorner, maxCorner, eq, toLocalOrientation, transMat, name, precision);
     }
 };
 
@@ -555,6 +555,9 @@ void export_ccPrimitives(py::module &m0)
         .def("toQuaternion", &toQuaternion_double, ccPrimitivesPy_toQuaternion_doc)
         ;
 
+    py::class_<CCCoreLib::SquareMatrixTpl<PointCoordinateType> >(m0,"SquareMatrix", ccPrimitivesPy_SquareMatrix_doc)
+            ;
+
     py::class_<ccGenericPrimitive, PyccGenericPrimitive>(m0, "ccGenericPrimitive") //boost::noncopyable, no_init
         .def(py::init<QString, const ccGLMatrix*, unsigned>(),
              py::arg("name")=QString(), py::arg("transMat")=nullptr, py::arg("uniqueID")= 0xFFFFFFFF)
@@ -624,7 +627,7 @@ void export_ccPrimitives(py::module &m0)
               std::unique_ptr<ccQuadric, py::nodelete>>(m0, "ccQuadric", ccPrimitivesPy_ccQuadric_doc)
         .def(py::init(&ccQuadricWrap::initWrapper5),
             py::arg("minCorner"), py::arg("maxCorner"), py::arg("eqv"),
-            py::arg("dims")=Tuple3ub(0,1,2), py::arg("transMat")=nullptr,
+            py::arg("toLocalOrientation")=nullptr, py::arg("transMat")=nullptr,
             py::arg("name")=QString("Quadric"), py::arg("precision")= ccQuadric::DEFAULT_DRAWING_PRECISION,
             ccPrimitivesPy_ccQuadric_ctor_doc )
         ;

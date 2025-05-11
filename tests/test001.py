@@ -55,15 +55,15 @@ if nsf != 0:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(0)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(-1)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(25)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 #---scale-translate-begin

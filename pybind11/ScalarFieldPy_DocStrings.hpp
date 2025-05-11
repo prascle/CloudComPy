@@ -72,10 +72,30 @@ Sets the value as 'invalid' (i.e. CCCoreLib::NAN_VALUE).
 const char* ScalarFieldPy_fromNpArrayCopy_doc= R"(
 Copy data from numpy array into an existing ScalarField.
 
+The ScalarField is stored internally in CloudCompare as a simple precision (float) array, with substraction of an offset,
+which allows a better precision without the need of a double precision array, when the variance is low compared to the mean value.
+
+Here, the numpy array source must be of type double (double precision), the conversion to float and offset substraction is done automatically.
+
 Checks if the numpy array is of PyScalarType, one dimension, same size as the ScalarField,
 before overwriting ScalarField data.
 
 :param ndarray nparray: the data source to use to overwrite the ScalarField )";
+
+const char* ScalarFieldPy_fromNpArrayCopyFloat_doc= R"(
+Copy data from numpy array into an existing ScalarField.
+
+The ScalarField is stored internally in CloudCompare as a simple precision (float) array, with substraction of an offset,
+which allows a better precision without the need of a double precision array, when the variance is low compared to the mean value.
+
+Here, the numpy array source must be of type float (simple precision) and corresponds to the ScalarField value minus the offset.
+The offset is given in a separate argument.
+
+Checks if the numpy array is of PyScalarType, one dimension, same size as the ScalarField,
+before overwriting ScalarField data.
+
+:param ndarray nparray: the data source to use to overwrite the ScalarField
+:param double offset: the offset )";
 
 const char* ScalarFieldPy_getMax_doc= R"(
 Returns maximal value of the ScalarField.
@@ -98,6 +118,15 @@ Returns the name of the ScalarField.
 
 :return: ScalarField name
 :rtype: str )";
+
+const char* ScalarFieldPy_getOffset_doc= R"(
+Returns the offset of the ScalarField.
+
+The ScalarField is stored internally in CloudCompare as a simple precision (float) array, with substraction of an offset,
+which allows a better precision without the need of a double precision array, when the variance is low compared to the mean value.
+
+:return: ScalarField offset
+:rtype: double )";
 
 const char* ScalarFieldPy_getValue_doc= R"(
 Returns the ScalarField value at a given index.
@@ -149,27 +178,35 @@ Swap values between two indices.
 :param int index1: first index
 :param int index2: second index )";
 
-const char* ScalarFieldPy_toNpArray_doc= R"(
-Wrap the ScalarField data into a numpy Array.
-
-Returns a numpy array: a one dimension array of (number of Points).
-Data is not copied, the numpy array object does not own the data.
-
-**WARNING** No automatic action on the Python side on the variables referencing the C++ object in case of destruction!
-
-:return: numpy Array pointing to the ScalarField data
-:rtype: ndarray
-)";
-
 const char* ScalarFieldPy_toNpArrayCopy_doc= R"(
 Wrap the ScalarField data into a numpy Array.
 
-Returns a numpy array: a one dimension array of (number of Points).
+The ScalarField is stored internally in CloudCompare as a simple precision (float) array, with substraction of an offset,
+which allows a better precision without the need of a double precision array, when the variance is low compared to the mean value.
+When the ScalarField is copied, the offset is added.
+
+Returns a numpy array of double precision (double): a one dimension array of (number of Points).
 Data is copied, the numpy array object owns its data.
 Ownership is transfered to Python:
 the numpy array object and its data will be handled by the Python Garbage Collector.
 
 :return: numpy Array with data copied from the ScalarField data
+:rtype: ndarray
+)";
+
+const char* ScalarFieldPy_toNpArrayNoCopy_doc= R"(
+Wrap the ScalarField data into a numpy Array, without the internal offset.
+
+The ScalarField is stored internally in CloudCompare as a simple precision (float) array, with substraction of an offset,
+which allows a better precision without the need of a double precision array, when the variance is low compared to the mean value.
+
+Returns a numpy array of simple precision: a one dimension array of (number of Points).
+Data is not copied, the numpy array object does not own the data.
+To get the real value of the scalar field, one must add the offset: @see :py:meth`getOffset`
+
+**WARNING** No automatic action on the Python side on the variables referencing the C++ object in case of destruction!
+
+:return: numpy Array pointing to the ScalarField data
 :rtype: ndarray
 )";
 

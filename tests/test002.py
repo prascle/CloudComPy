@@ -73,7 +73,7 @@ if not math.isclose(sfmin, -4.3446699e-01, rel_tol=1e-06):
 if not math.isclose(sfmax, 2.0000000e+00, rel_tol=1e-06):
     raise RuntimeError
 
-asf1 = sf1.toNpArray()
+asf1 = sf1.toNpArrayCopy()
 print(asf1.size)
 if asf1.size != 1000000:
     raise RuntimeError
@@ -81,7 +81,7 @@ if asf1.size != 1000000:
 cloud2 = cc.loadPointCloud(getSampleCloud(1.9))
 res = cloud2.exportCoordToSF(False, False, True)
 sf2 = cloud2.getScalarField(0)
-asf2 = sf2.toNpArray()
+asf2 = sf2.toNpArrayCopy()
 
 sf2.fromNpArrayCopy(asf1)
 
@@ -92,7 +92,7 @@ sfname = sf2.getName()
 print("scalar field name: %s" % sfname)
 if sfname != "Scalar field":
     raise RuntimeError
-asf2 = sf2.toNpArray()
+asf2 = sf2.toNpArrayCopy()
 ok = np.allclose(asf1, asf2, rtol=1.e-6)
 if not ok:
     raise RuntimeError
@@ -101,13 +101,26 @@ if not ok:
 dic = cloud1.getScalarFieldDic()
 sf1 = cloud1.getScalarField(dic['Coord. Z'])
 max1 = sf1.getMax()
-asf1 = sf1.toNpArray()   # access to Numpy array, without copy
-asf1[0] = 2*max1         # modification in place
-sf1.computeMinAndMax()
-#---sfNumpy01-end
+asf1 = sf1.toNpArrayNoCopy()        # access to Numpy array, without copy, without offset
+offset = sf1.getOffset()
 
-if not math.isclose(sf1.getMax(), 2*max1):
+print(offset)
+print(sf1.getValue(0))
+print(asf1)
+print(max1)
+print(asf1.max())
+
+if not math.isclose(max1, asf1.max() + offset):
     raise RuntimeError
+if not math.isclose(sf1.getValue(0), asf1[0] + offset):
+    raise RuntimeError
+
+asf1[0] = 2*max1 -offset      # modification in place
+sf1.computeMinAndMax()
+
+if not math.isclose(sf1.getMax(), 2*max1, rel_tol=1.e-6):
+    raise RuntimeError
+#---sfNumpy01-end
 
 #---sfNumpy02-begin
 sfname = sf1.getName()

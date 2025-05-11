@@ -50,6 +50,7 @@ if ( BUILD_PY_TESTING )
 	include( CTest )
 endif()
 
+add_definitions(-D_CLOUDCOMPY_BUILD_)
 option(PYTHONAPI_TRACES "Activate console trace in the Python API" OFF)
 if (PYTHONAPI_TRACES)
     message(STATUS "Python Api traces activated")

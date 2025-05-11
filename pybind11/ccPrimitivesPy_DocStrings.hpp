@@ -489,7 +489,7 @@ ccQuadric constructor
 :param tuple minCorner: min corner of the 'representation' base area
 :param tuple maxCorner: max corner of the 'representation' base area
 :param tuple eq: equation coefficients ( Z = a + b.X + c.Y + d.X^2 + e.X.Y + f.Y^2)
-:param tuple,optional dims: (default 0) dimension indexes
+:param SquareMatrix,optional toLocalOrientation: (default 0) orientation matrix
 :param ccGLMatrix,optional transMat: (default 0) 3D transformation
        (can be set afterwards with ccDrawableObject::setGLTransformation)
 :param str,optional name: optional name, default 'Quadric'
@@ -592,5 +592,8 @@ If the creation does not succeed, returns identity transformation.
 :return: ccGLMatrix transformation
 :rtype: ccGLMatrix)";
 
+const char* ccPrimitivesPy_SquareMatrix_doc= R"(
+Row-major ordered matrix (i.e. elements are accessed with 'values[row][column]'
+)";
 
 #endif /* CCPRIMITIVESPY_DOCSTRINGS_HPP_ */

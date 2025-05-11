@@ -165,7 +165,7 @@ std::map<QString, int> getScalarFieldDic_py(ccPointCloud &self)
     int nbSF = self.getNumberOfScalarFields();
     for (int i=0; i < nbSF; i++)
     {
-        mapSF[self.getScalarFieldName(i)] = i;
+        mapSF[self.getScalarFieldName(i).c_str()] = i;
     }
     return mapSF;
 }
@@ -175,7 +175,7 @@ CCCoreLib::ScalarField* getScalarFieldByName_py(ccPointCloud &self, const QStrin
     int nbSF = self.getNumberOfScalarFields();
     for (int i=0; i < nbSF; i++)
     {
-        if (self.getScalarFieldName(i) == name)
+        if (self.getScalarFieldName(i).c_str() == name)
         {
             return self.getScalarField(i);
         }
@@ -369,7 +369,7 @@ bool computeScalarFieldGradient_py( ccPointCloud &self,
     }
     self.setCurrentInScalarField(-1);
     self.setCurrentOutScalarField(SFindex);
-    QString sfName = QString("%1(%2)").arg(CC_GRADIENT_NORMS_FIELD_NAME, self.getScalarFieldName(SFindex));
+    QString sfName = QString("%1(%2)").arg(CC_GRADIENT_NORMS_FIELD_NAME, self.getScalarFieldName(SFindex).c_str());
     int ret = CCCoreLib::ScalarFieldTools::computeScalarFieldGradient(&self, radius, euclideanDistances,
         false, nullptr, theOctree);
     if (ret != 0)
@@ -399,7 +399,7 @@ bool applyScalarFieldGaussianFilter_py( ccPointCloud &self,
     }
     self.setCurrentInScalarField(-1);
     self.setCurrentOutScalarField(SFindex);
-    QString sfName = QString("%1.smooth(%2)").arg(self.getScalarFieldName(SFindex)).arg(usedSigma);
+    QString sfName = QString("%1.smooth(%2)").arg(self.getScalarFieldName(SFindex).c_str()).arg(usedSigma);
     bool ret = CCCoreLib::ScalarFieldTools::applyScalarFieldGaussianFilter(usedSigma,
                                                                            &self,
                                                                            -1,
@@ -447,7 +447,7 @@ bool sfBilateralFilter_py(  ccPointCloud &self,
     }
     self.setCurrentInScalarField(-1);
     self.setCurrentOutScalarField(SFindex);
-    QString sfName = QString("%1.bilsmooth(%2,%3)").arg(self.getScalarFieldName(SFindex)).arg(usedSpatialSigma).arg(usedScalarFieldSigma);
+    QString sfName = QString("%1.bilsmooth(%2,%3)").arg(self.getScalarFieldName(SFindex).c_str()).arg(usedSpatialSigma).arg(usedScalarFieldSigma);
     ccOctree::Shared octree = pc->getOctree();
     if (!octree)
     {
@@ -488,8 +488,9 @@ std::list<ccPointCloud*> sfSplitCloud_py(ccPointCloud &self, int SFindex, int ma
     // count integer values
     size_t N = sf->size();
     std::set<int> classes;
-    for (ScalarType sfValue : *sf)
+    for (size_t i = 0; i<N; i++)
     {
+        ScalarType sfValue = sf->getValue(i);
         classes.insert(static_cast<int>(sfValue));
     }
     if (classes.size() > maxNbClouds)
@@ -516,7 +517,7 @@ std::list<ccPointCloud*> sfSplitCloud_py(ccPointCloud &self, int SFindex, int ma
             // populate the cloud with the points which have the selected class
             for (unsigned index = 0; index < static_cast<unsigned>(self.size()); index++)
             {
-                if (static_cast<int>(sf->at(index)) == pointClass)
+                if (static_cast<int>(sf->getValue(index)) == pointClass)
                 {
                     referenceCloud.addPointIndex(index);
                 }
@@ -796,7 +797,7 @@ void applyRigidTransformationPy(ccPointCloud &self, const ccGLMatrixTpl<float>& 
     self.applyRigidTransformation(m);
 }
 
-int (ccPointCloud::*addScalarFieldt)(const char*) = &ccPointCloud::addScalarField;
+int (ccPointCloud::*addScalarFieldt)(const std::string&) = &ccPointCloud::addScalarField;
 
 void export_ccPointCloud(py::module &m0)
 {
