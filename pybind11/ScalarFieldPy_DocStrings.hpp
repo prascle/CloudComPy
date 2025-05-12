@@ -77,7 +77,7 @@ which allows a better precision without the need of a double precision array, wh
 
 Here, the numpy array source must be of type double (double precision), the conversion to float and offset substraction is done automatically.
 
-Checks if the numpy array is of PyScalarType, one dimension, same size as the ScalarField,
+Checks if the numpy array is of type double, one dimension, same size as the ScalarField,
 before overwriting ScalarField data.
 
 :param ndarray nparray: the data source to use to overwrite the ScalarField )";
@@ -91,7 +91,7 @@ which allows a better precision without the need of a double precision array, wh
 Here, the numpy array source must be of type float (simple precision) and corresponds to the ScalarField value minus the offset.
 The offset is given in a separate argument.
 
-Checks if the numpy array is of PyScalarType, one dimension, same size as the ScalarField,
+Checks if the numpy array is of type float, one dimension, same size as the ScalarField,
 before overwriting ScalarField data.
 
 :param ndarray nparray: the data source to use to overwrite the ScalarField

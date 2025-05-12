@@ -39,9 +39,28 @@ See below :ref:`CloudCreateFromNumpy`.
 Read, modify or create a scalar field with Numpy
 ------------------------------------------------
 
+If you wish to access or modify a scalar field with Numpy,
+please note that the scalar field is stored internally in CloudCompare as a single-precision array (float), with offset subtraction,
+which allows better precision without the need for a double-precision array, when the variance is small compared to the mean value.
+This is the case, for example, with GPS time in some las-formatted lidar files.
+
+You don't need to worry about the offset, unless you have access to the data in place, without a copy. To get the offset, use:
+
+ - :py:meth:`~.cloudComPy.ccScalarField.getOffset`
+
+.. include:: ../tests/test020.py
+   :start-after: #---LASTimeShift002-begin
+   :end-before:  #---LASTimeShift002-end
+   :literal:
+   :code: python
+
+The above code snippet is from :download:`test020.py <../tests/test020.py>`.
+
 There are two ways to access to the scalar field data from Numpy.
 
- - If you want to modify the data in place, without copy, use :py:meth:`~.cloudComPy.ScalarField.toNpArray`
+ - If you want to modify the data in place, without copy, use :py:meth:`~.cloudComPy.ScalarField.toNpArrayNoCopy`.
+   You get the simple precision numpy array, and you have to explitely take into account the offset.
+   After a modification, you must reinitialise the min and max value of the scalar field with :py:meth:`~.cloudComPy.ScalarField.computeMinAndMax`.
 
   .. include:: ../tests/test002.py
      :start-after: #---sfNumpy01-begin
@@ -51,12 +70,17 @@ There are two ways to access to the scalar field data from Numpy.
 
   The above code snippet is from :download:`test002.py <../tests/test002.py>`.
 
- - if you prefer to copy the scalar field data, use :py:meth:`~.cloudComPy.ScalarField.toNpArrayCopy`
+
+ - if you prefer to copy the scalar field data, use :py:meth:`~.cloudComPy.ScalarField.toNpArrayCopy`.
+   You get a numpy array of double precision, with offset automatically added.
 
 You can fill a cloud scalar field with :py:meth:`~.cloudComPy.ScalarField.fromNpArrayCopy`.
 The method checks if the scalar field and the array have the same size, before copy.
  
 See below :ref:`CloudCreateFromNumpy`.
+
+There is also the possibility to work with a numpy array of float (simple precision), to fill the cloud scalar field,
+with :py:meth:`~.cloudComPy.ScalarField.fromNpArrayCopyFloat`. You have to provide the offset in argument.
 
 .. _CloudCreateFromNumpy:
 

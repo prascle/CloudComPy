@@ -398,8 +398,18 @@ The above code snippets are from :download:`test029.py <../tests/test029.py>`.
 scalar fields
 ~~~~~~~~~~~~~
 
-when a scalar field is modified with Numpy (see :ref:`ScalarField_Numpy`),
-you must reinitialise the min and max value of the scalar field with :py:meth:`~.cloudComPy.ScalarField.computeMinAndMax`.
+If you wish to access or modify a scalar field with Numpy (see :ref:`ScalarField_Numpy`),
+please note that the scalar field is stored internally in CloudCompare as a single-precision array (float), with offset subtraction,
+which allows better precision without the need for a double-precision array, when the variance is small compared to the mean value.
+This is the case, for example, with GPS time in some las-formatted lidar files.
+You don't need to worry about the offset, unless you have access to the data in place, without a copy.
+
+When accessing the scalar field with copy, you get a numpy array of double precision, with offset automatically added.
+
+When accessing the scalar field without copy, you get the simple precision numpy array,
+and you have to explitely take into account the offset with :py:meth:`~.cloudComPy.ccScalarField.getOffset`.
+
+After a modification, you must reinitialise the min and max value of the scalar field with :py:meth:`~.cloudComPy.ScalarField.computeMinAndMax`.
 
 .. include:: ../tests/test002.py
    :start-after: #---sfNumpy01-begin
@@ -422,21 +432,6 @@ General information and statistics are available with:
    :code: python
 
 The above code snippets are from :download:`test002.py <../tests/test002.py>`.
-
-Some scalar fields may be shifted to prevent a loss of accuracy.
-This is the case, for instance, for GPS time in some lidar files in las format.
- 
-To get the global shift, use:
-
- - :py:meth:`~.cloudComPy.ccScalarField.getGlobalShift`
-
-.. include:: ../tests/test020.py
-   :start-after: #---LASTimeShift002-begin
-   :end-before:  #---LASTimeShift002-end
-   :literal:
-   :code: python
-
-The above code snippets is from :download:`test020.py <../tests/test020.py>`.
 
 To change the scalar field name, set a value on a point, fill the scalar field with a uniform value, use:
 
