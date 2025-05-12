@@ -56,12 +56,11 @@ ccPointCloud* computeM3C2(std::vector<ccHObject*> clouds,
     ccPointCloud* cloud2 = ccHObjectCaster::ToPointCloud(clouds[1]);
     ccPointCloud* corePointsCloud = (clouds.size() > 2 ? ccHObjectCaster::ToPointCloud(clouds[2]) : nullptr);
 
-    qM3C2Dialog dlg(cloud1, cloud2, nullptr);
+    qM3C2Dialog dlg(cloud1, cloud2, nullptr, corePointsCloud);
     if (!dlg.loadParamsFromFile(paramFilename))
     {
         return nullptr;
     }
-    dlg.setCorePointsCloud(corePointsCloud);
 
     qM3C2Process::s_M3C2Params = M3C2Params(); // init to default values
     if ((precisionMaps.size() == 6) && (scales.size() == 2))
@@ -103,8 +102,7 @@ bool M3C2guessParamsToFile(std::vector<ccHObject*> clouds, const QString& paramF
     ccPointCloud* cloud2 = ccHObjectCaster::ToPointCloud(clouds[1]);
     ccPointCloud* corePointsCloud = (clouds.size() > 2 ? ccHObjectCaster::ToPointCloud(clouds[2]) : nullptr);
 
-    qM3C2Dialog dlg(cloud1, cloud2, nullptr);
-    dlg.setCorePointsCloud(corePointsCloud);
+    qM3C2Dialog dlg(cloud1, cloud2, nullptr, corePointsCloud);
 
     dlg.guessParams(fastMode);
     dlg.saveParamsToGivenFile(paramFilename);
