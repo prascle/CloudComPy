@@ -1,17 +1,17 @@
 #!/bin/zsh
 
 export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                            # CloudComPy source directory
-export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda310                       # CloudComPy build directory
+export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda311                       # CloudComPy build directory
 export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                      # directory for CloudComPy installs
-export CLOUDCOMPY_INSTNAME=CloudComPy310                                               # CloudComPy install directory name
+export CLOUDCOMPY_INSTNAME=CloudComPy311                                               # CloudComPy install directory name
 export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                 # CloudComPy install directory
-export CLOUDCOMPY_TARFILE=CloudComPy_Conda310_MacOS_"$(date +"%Y%m%d-%H%M")".tgz     # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
+export CLOUDCOMPY_TARFILE=CloudComPy_Conda311_MacOS_"$(date +"%Y%m%d-%H%M")".tgz     # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
 if [ -d ${HOME}/anaconda3 ]; then
     export CONDA_ROOT=${HOME}/anaconda3                                                # root directory of conda installation
 else
     export CONDA_ROOT=${HOME}/miniconda3                                               # root directory of conda installation
 fi
-export CONDA_ENV=CloudComPy310                                                         # conda environment name
+export CONDA_ENV=CloudComPy311                                                         # conda environment name
 export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                                      # conda environment directory
 export CORK_REP=${HOME}/projets/CloudComPy/Cork/cork                                   # directory of cork (remove the plugin in cmake options if not needed)
 export FBXSDK_REP="/Applications/Autodesk/FBX SDK/2020.2.1"                            # directory of fbx sdk (remove the plugin in cmake options if not needed)
@@ -46,12 +46,12 @@ conda_buildenv()
     ret=1
     if [ $ret != "0" ]; then
         conda activate && \
-        conda create -y --name ${CONDA_ENV} python=3.10 && \
+        conda create -y --name ${CONDA_ENV} python=3.11 && \
         conda activate ${CONDA_ENV} || error_exit "conda environment ${CONDA_ENV} cannot be built"
     fi
     conda config --add channels conda-forge && \
     conda config --set channel_priority flexible && \
-    conda install -y "boost=1.84" "cgal=6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mysql=8" notebook numpy "opencv=4.8" "openssl=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
+    conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mysql=8" notebook numpy "opencv=4.9" "openssl>=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
 }
 
 # --- CloudComPy build
@@ -60,7 +60,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
-    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_macOS || error_exit "access problem to ${CLOUDCOMPY_SRC}"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_macOS_311 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -169,7 +169,7 @@ cloudcompy_configure()
     -DPYTHONAPI_TEST_DIRECTORY:STRING="CloudComPy/Data" \
     -DPYTHONAPI_EXTDATA_DIRECTORY:STRING="CloudComPy/ExternalData" \
     -DPYTHONAPI_TRACES:BOOL="1" \
-    -DPYTHON_PREFERED_VERSION:STRING="3.10" \
+    -DPYTHON_PREFERED_VERSION:STRING="3.11" \
     -DQANIMATION_WITH_FFMPEG_SUPPORT:BOOL="1" \
     -DQHULL_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libqhullcpp.a" \
     -DQHULL_LIBRARY_DEBUG_STATIC:FILEPATH="${CONDA_PATH}/lib/libqhullstatic_r.a" \
