@@ -52,6 +52,7 @@ conda_buildenv()
     conda config --add channels conda-forge && \
     conda config --set channel_priority flexible && \
     conda install -y "boost" "cgal" cmake "draco" "ffmpeg" "gdal" jupyterlab laszip "matplotlib" "mysql" notebook numpy "opencv" "openssl" "pcl" "pdal" "psutil" pybind11 quaternion "qhull" "qt" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
+    #conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.10" "mysql=8.0" notebook numpy "opencv=4.9" "openssl=3.5" "pcl=1.14" "pdal=2.7" "psutil=7.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
 }
 
 # --- CloudComPy build
