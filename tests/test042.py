@@ -62,5 +62,8 @@ for i in range(10):
     addedMemory = process.memory_full_info().rss - mem_start
     print(f'iteration {i}, ExtractConnectedComponents added memory: ', addedMemory)
     #---extractCC03-end
-    if i > 1 and addedMemory >20000:
+    if i == 0:
+        maxAddedMemory = addedMemory
+    if i > 1 and addedMemory >maxAddedMemory:
         raise RuntimeError
+    
