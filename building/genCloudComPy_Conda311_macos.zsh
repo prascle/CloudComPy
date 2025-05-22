@@ -132,7 +132,7 @@ cloudcompy_configure()
     -DPLUGIN_IO_QCSV_MATRIX:BOOL="1" \
     -DPLUGIN_IO_QDRACO:BOOL="1" \
     -DPLUGIN_IO_QE57:BOOL="1" \
-    -DPLUGIN_IO_QFBX:BOOL="0" \
+    -DPLUGIN_IO_QFBX:BOOL="1" \
     -DPLUGIN_IO_QLAS:BOOL="1" \
     -DPLUGIN_IO_QLAS_FWF:BOOL="0" \
     -DPLUGIN_IO_QPDAL:BOOL="0" \
@@ -213,7 +213,7 @@ cloudcompy_test()
     cd doc/PythonAPI_test && ctest
 }
 
-conda_buildenv && \
+#conda_buildenv && \
 cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \
