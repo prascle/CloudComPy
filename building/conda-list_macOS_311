@@ -63,7 +63,7 @@ cgal                      5.6.1           py311h2cb402a_2    conda-forge
 cgal-cpp                  5.6.1                h6a79a76_1    conda-forge
 chardet                   5.2.0              pyhd8ed1ab_3    conda-forge
 charset-normalizer        3.4.2              pyhd8ed1ab_0    conda-forge
-click                     8.2.0              pyh707e725_0    conda-forge
+click                     8.2.1              pyh707e725_0    conda-forge
 cloudpickle               3.1.1              pyhd8ed1ab_0    conda-forge
 cmake                     3.28.3               h50fd54c_0    conda-forge
 colorama                  0.4.6              pyhd8ed1ab_1    conda-forge
@@ -135,7 +135,7 @@ hyperframe                6.1.0              pyhd8ed1ab_0    conda-forge
 icu                       73.2                 hc8870d7_0    conda-forge
 idna                      3.10               pyhd8ed1ab_1    conda-forge
 imagesize                 1.4.1              pyhd8ed1ab_0    conda-forge
-importlib-metadata        8.6.1              pyha770c72_0    conda-forge
+importlib-metadata        8.7.0              pyhe01879c_0    conda-forge
 importlib_resources       6.5.2              pyhd8ed1ab_0    conda-forge
 inflection                0.5.1              pyhd8ed1ab_1    conda-forge
 intervaltree              3.1.0              pyhd8ed1ab_1    conda-forge
@@ -298,7 +298,7 @@ mistune                   3.1.3              pyh29332c3_0    conda-forge
 more-itertools            10.7.0             pyhd8ed1ab_0    conda-forge
 mpfr                      4.2.1                hb693164_3    conda-forge
 msgpack-python            1.1.0           py311h2c37856_0    conda-forge
-multidict                 6.4.3           py311h30e7462_0    conda-forge
+multidict                 6.4.4           py311h30e7462_0    conda-forge
 munkres                   1.1.4              pyh9f0ad1d_0    conda-forge
 mypy_extensions           1.1.0              pyha770c72_0    conda-forge
 mysql                     8.0.33               h44b9a77_6    conda-forge
@@ -422,16 +422,16 @@ rhash                     1.4.5                h7ab814d_0    conda-forge
 rich                      14.0.0             pyh29332c3_0    conda-forge
 roman-numerals-py         3.1.0              pyhd8ed1ab_0    conda-forge
 rope                      1.13.0             pyhd8ed1ab_1    conda-forge
-rpds-py                   0.25.0          py311hc9d6b66_0    conda-forge
+rpds-py                   0.25.1          py311hf245fc6_0    conda-forge
 rtree                     1.4.0              pyh11ca60a_1    conda-forge
 scipy                     1.15.2          py311h0675101_0    conda-forge
 send2trash                1.8.3              pyh31c8845_1    conda-forge
-setuptools                80.1.0             pyhff2d567_0    conda-forge
+setuptools                80.8.0             pyhff2d567_0    conda-forge
 sip                       6.11.0          py311h155a34a_0    conda-forge
 six                       1.17.0             pyhd8ed1ab_0    conda-forge
 snappy                    1.1.10               hd04f947_1    conda-forge
 sniffio                   1.3.1              pyhd8ed1ab_1    conda-forge
-snowballstemmer           2.2.0              pyhd8ed1ab_0    conda-forge
+snowballstemmer           3.0.1              pyhd8ed1ab_0    conda-forge
 sortedcontainers          2.4.0              pyhd8ed1ab_1    conda-forge
 soupsieve                 2.7                pyhd8ed1ab_0    conda-forge
 sphinx                    8.2.3              pyhd8ed1ab_0    conda-forge
@@ -445,7 +445,7 @@ sphinxcontrib-qthelp      2.0.0              pyhd8ed1ab_1    conda-forge
 sphinxcontrib-serializinghtml 1.1.10             pyhd8ed1ab_1    conda-forge
 spyder                    6.0.6                hd8ed1ab_0    conda-forge
 spyder-base               6.0.6           osx_pyh1a5313d_0    conda-forge
-spyder-kernels            3.0.4           unix_pyh707e725_0    conda-forge
+spyder-kernels            3.0.5           unix_pyh707e725_0    conda-forge
 sqlite                    3.49.2               hd7222ec_0    conda-forge
 stack_data                0.6.3              pyhd8ed1ab_1    conda-forge
 suitesparse               7.10.1          h3071b36_7100102    conda-forge
@@ -489,7 +489,7 @@ websocket-client          1.8.0              pyhd8ed1ab_1    conda-forge
 whatthepatch              1.0.7              pyhd8ed1ab_1    conda-forge
 wheel                     0.45.1             pyhd8ed1ab_1    conda-forge
 wrapt                     1.17.2          py311h917b07b_0    conda-forge
-wslink                    2.3.3              pyhd8ed1ab_0    conda-forge
+wslink                    2.3.4              pyhd8ed1ab_0    conda-forge
 wurlitzer                 3.1.1              pyhd8ed1ab_1    conda-forge
 x264                      1!164.3095           h57fd34a_2    conda-forge
 x265                      3.5                  hbc6ce65_3    conda-forge

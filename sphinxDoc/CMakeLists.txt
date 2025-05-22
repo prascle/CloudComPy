@@ -50,9 +50,9 @@ if(WIN32)
     configure_file(genSphinxDocWindows.bat.in genSphinxDoc.bat)
 elseif (USE_CONDA_PACKAGES)
     if(APPLE)
-	    configure_file(genSphinxDocMacOSConda.zsh.in genSphinxDoc.zsh)
-	    configure_file(libBundleCloudComPy.py.in libBundleCloudComPy.py)
-	    configure_file(signatureCloudComPy.sh.in signatureCloudComPy.sh @ONLY )
+	    configure_file(genSphinxDocMacOSConda.zsh.in genSphinxDoc.zsh @ONLY )
+	    #configure_file(libBundleCloudComPy.py.in libBundleCloudComPy.py)
+	    #configure_file(signatureCloudComPy.sh.in signatureCloudComPy.sh @ONLY )
     else()
 	    configure_file(genSphinxDocConda.sh.in genSphinxDoc.sh)
     endif()
@@ -66,12 +66,14 @@ add_custom_target(BUILD_HTML ALL
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-option( BUILD_REFERENCE_DOC "Build reference documentation for CloudComPy" OFF )
+option( BUILD_REFERENCE_DOC "Build reference documentation for CloudComPy" ON )
 
 # --- Sphinx Documentation at install time
 
 if ( BUILD_REFERENCE_DOC )
     message( STATUS "Sphinx documentation will be generated at install" )
+    install(CODE "set(CMAKE_SOURCE_DIR \"${CMAKE_SOURCE_DIR}\")")
+    install(CODE "set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\")")
     install( SCRIPT postInstall.cmake )
 endif()
 

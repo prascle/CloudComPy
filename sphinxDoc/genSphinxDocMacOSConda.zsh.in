@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
-source @CMAKE_INSTALL_PREFIX@/bin/condaCloud.zsh activate CloudComPy310
+condaenv=`conda info --json | jq .active_prefix_name`
+source @CMAKE_INSTALL_PREFIX@/bin/condaCloud.zsh activate ${CONDA_ENV} # --- CONDA_ENV is set in the genCloudComPy script
+
 rm @SPHINXDOCTREES@/*.doctree
 @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -v -a -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/doc/html 
