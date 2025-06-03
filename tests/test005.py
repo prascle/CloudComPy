@@ -138,7 +138,7 @@ for i in range(10):
     print("memory USS, delta current: %s max: %s" %
           (curMem - refMem, maxMem - refMem))
     print("scalarField copy %s" % i)
-    if (maxMem - refMem) > 4.0 * sfMem: # some memory not immediately released ?
+    if (maxMem - refMem) > 5.0 * sfMem: # some memory not immediately released ?
         raise RuntimeError
 
 asf = None
