@@ -119,7 +119,7 @@ const ICPres* ICP_py(ccHObject* data,
                     ccHObject* model,
                     double minRMSDecrease=1.e-5,
                     unsigned maxIterationCount=20,
-                    unsigned randomSamplingLimit=50000,
+                    double randomSamplingLimit=50000,
                     bool removeFarthestPoints=false,
                     CCCoreLib::ICPRegistrationTools::CONVERGENCE_TYPE method=CCCoreLib::ICPRegistrationTools::CONVERGENCE_TYPE::MAX_ITER_CONVERGENCE,
                     bool adjustScale=false,
@@ -138,7 +138,7 @@ const ICPres* ICP_py(ccHObject* data,
     params.nbMaxIterations = maxIterationCount;
     params.adjustScale = adjustScale;
     params.filterOutFarthestPoints = removeFarthestPoints;
-    params.samplingLimit = randomSamplingLimit;
+    params.samplingLimit = unsigned(randomSamplingLimit);
     params.finalOverlapRatio = finalOverlapRatio;
     params.modelWeights = nullptr;
     params.dataWeights = nullptr;
