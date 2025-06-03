@@ -15,18 +15,18 @@ You need to create a conda environment for CloudComPy: for instance, in Anaconda
 conda activate
 conda update -y -n base -c defaults conda
 ```
-If your environment CloudComPy310 does not exist or to recreate it from scratch:
-(**note:** for 2.13.2, it's better to recreate the environment, because there are a lot of changes)
+If your environment CloudComPy311 does not exist or to recreate it from scratch:
+(**note:** it's better to regularly recreate the environment, because there are sometimes a lot of changes)
 ```
-conda create -y --name CloudComPy310 python=3.10
+conda create -y --name CloudComPy311 python=3.11
    # --- erase previous env with the same name if existing
 ```
-Add or update the packages (list for 2.13.2 september 2024) :
+Add or update the packages 
 ```
-conda activate CloudComPy310
+conda activate CloudComPy311
 conda config --add channels conda-forge
 conda config --set channel_priority flexible
-conda install -y boost cgal cmake draco "ffmpeg=6.1" gdal jupyterlab laszip matplotlib "mysql=8" notebook numpy opencv openmp "openssl=3.1" pcl pdal psutil pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2"
+conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mpir=3.0" "mysql=8" notebook numpy "opencv=4.9" "openmp=8.0" "openssl>=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2"
 ```
 
 Install the binary in the directory of your choice.
