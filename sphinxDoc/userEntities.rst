@@ -95,8 +95,15 @@ If you need to save clouds for reopening with CloudCompare GUI, with a predefine
  - :py:meth:`~.cloudComPy.ccPointCloud.sfShown`
  - :py:meth:`~.cloudComPy.ccPointCloud.setCurrentDisplayedScalarField`
 
+.. _Cloud_Transformations:
+
 cloud transformations
 ~~~~~~~~~~~~~~~~~~~~~
+
+**NOTE:** The cloud transformations introduced below are also appliable on meshes and primitives.
+Meshes and primitives are built on a point cloud.
+To get this cloud, use :py:meth:`~.cloudComPy.ccMesh.getAssociatedCloud` which gives a :py:class:`~.cloudComPy.ccPointCloud`.
+To apply a transformation on a mesh or a primitive, use the methods below, with the associated cloud.
 
 Basic transformations :py:meth:`~.cloudComPy.ccPointCloud.translate` and :py:meth:`~.cloudComPy.ccPointCloud.scale`
 allow to translate a cloud or rescale it, with separate factors along the 3 directions and an optional center (see 
@@ -672,6 +679,12 @@ An example with an open mesh:
 
 The above code snippets are from :download:`test055.py <../tests/test055.py>`.
 
+meshes transformations
+~~~~~~~~~~~~~~~~~~~~~~
+
+The methods defined for clouds (see :ref:`Cloud_Transformations`) can be applied on the mesh associated cloud 
+(:py:meth:`~.cloudComPy.ccMesh.getAssociatedCloud`) to transform the mesh.
+
 meshes modifications
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -887,7 +900,7 @@ Dish
    :literal:
    :code: python
 
-Unless Otherwise noted, the above code snippets are from :download:`test009.py <../tests/test009.py>`.
+Unless otherwise noted, the above code snippets are from :download:`test009.py <../tests/test009.py>`.
 
 polylines
 ---------
