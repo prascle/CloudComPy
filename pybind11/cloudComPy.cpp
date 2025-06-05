@@ -2646,10 +2646,10 @@ PYBIND11_MODULE(_cloudComPy, m0)
         .export_values();
 
     py::enum_<CCCoreLib::LOCAL_MODEL_TYPES>(m0, "LOCAL_MODEL_TYPES")
-        .value("NO_MODEL", CCCoreLib::NO_MODEL )
-        .value("LS", CCCoreLib::LS )
-        .value("TRI", CCCoreLib::TRI )
-        .value("QUADRIC", CCCoreLib::QUADRIC )
+        .value("NO_MODEL", CCCoreLib::NO_MODEL, "No local model")
+        .value("LS", CCCoreLib::LS, "Least Square best fitting plane")
+        .value("TRI", CCCoreLib::TRI, "2.5D Delaunay triangulation")
+        .value("QUADRIC", CCCoreLib::QUADRIC, "2.5D quadric function")
         .export_values();
 
     py::enum_<ccNormalVectors::Orientation>(m0, "Orientation")
