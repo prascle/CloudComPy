@@ -92,6 +92,10 @@ transform1.initFromParameters(0.25, (1.5, 2.9, 6.3), (0,0,0))
 cloud.applyRigidTransformation(transform1)
 #---transformations05-end
 
+#---transformationHistory01-begin
+transformationHistory = cloud.getGLTransformationHistory()
+#---transformationHistory01-end
+
 boundingBox = cloud.getOwnBB()
 if not isCoordEqual(boundingBox.minCorner(), (-1.510, -2.944, -8.937), 1.e-2):
     raise RuntimeError

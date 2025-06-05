@@ -102,6 +102,13 @@ Get the type of this object.
 :rtype: CC_TYPE
 )";
 
+const char* ccHObject_getGLTransformationHistory_doc=R"(
+Returns the transformation 'history' matrix
+
+:return: transformation Matrix
+:rtype: ccGLMatrix
+)";
+
 const char* ccHObject_getParent_doc=R"(
 Get the parent of this object.
 

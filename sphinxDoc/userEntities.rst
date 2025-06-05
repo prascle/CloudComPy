@@ -124,6 +124,15 @@ with :py:meth:`~.cloudComPy.ccGLMatrix.initFromParameters`.
    :literal:
    :code: python
 
+If you have applied several successive transformations and want to get the resulting ("history") transformation, 
+the :py:meth:`~.cloudComPy.ccHObject.getGLTransformationHistory` gives the corresponding :py:class:`cloudComPy.ccGLMatrix` object.
+
+.. include:: ../tests/test026.py
+   :start-after: #---transformationHistory01-begin
+   :end-before:  #---transformationHistory01-end
+   :literal:
+   :code: python
+
 Sometimes, you need to store or retreive the transformation matrix data (4x4 matrix stored in major column order),
 use :py:meth:`~.cloudComPy.ccGLMatrix.toString`, :py:meth:`~.cloudComPy.ccGLMatrix.fromString` 
 and :py:meth:`~.cloudComPy.ccGLMatrix.data`.

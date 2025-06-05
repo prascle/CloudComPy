@@ -216,6 +216,8 @@ void export_ccGenericCloud(py::module &m0)
 		.def("getChildrenNumber", &ccHObject::getChildrenNumber, ccHObject_getChildrenNumber_doc)
 		.def("getChildCountRecursive", &ccHObject::getChildCountRecursive, ccHObject_getChildCountRecursive_doc)
         .def("getClassID", &ccHObject::getClassID, ccHObject_getClassID_doc)
+        .def("getGLTransformationHistory", &ccHObject::getGLTransformationHistory,
+             ccHObject_getGLTransformationHistory_doc, py::return_value_policy::reference)
         .def("getParent", &ccHObject::getParent, py::return_value_policy::reference, ccHObject_getParent_doc)
         .def("hasColors", &ccHObject::hasColors, ccHObject_hasColors_doc)
         .def("hasNormals", &ccHObject::hasNormals, ccHObject_hasNormals_doc)
