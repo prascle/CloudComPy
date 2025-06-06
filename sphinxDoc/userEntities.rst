@@ -685,6 +685,13 @@ meshes transformations
 The methods defined for clouds (see :ref:`Cloud_Transformations`) can be applied on the mesh associated cloud 
 (:py:meth:`~.cloudComPy.ccMesh.getAssociatedCloud`) to transform the mesh.
 
+There are now shortcut methods for meshes, to avoid the explicit use of the associated cloud:
+
+ - :py:meth:`~.cloudComPy.ccMesh.scale`
+ - :py:meth:`~.cloudComPy.ccMesh.translate`
+ - :py:meth:`~.cloudComPy.ccMesh.applyRigidTransformation`
+ - :py:meth:`~.cloudComPy.ccMesh.getGLTransformationHistory`
+
 meshes modifications
 ~~~~~~~~~~~~~~~~~~~~
 

@@ -197,6 +197,7 @@ TODO List
 * DONE: (issue #192) improve behaviour when converting float into int is harmless
 * DONE: (issue #195) improve documentation on normal generation with quadric fitting
 * DONE: (issue #198) get transformation history
+* DONE: (issue #196) improve doc on mesh transformations, shortcuts to avoid the explicit use of associated cloud
 - TODO: try to have ctest working at build step on Windows and Linux (incomplete)
 - TODO: A kind of automatic test coverage, to find examples for a particular function.
 - TODO: Fix the Link problem in Windows to avoid the option /force:multiple at link step
@@ -228,7 +229,6 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
-- TODO: (issue #196) improve doc on mesh transformations
 - TODO: (issue #196) add a binding for mesh transformations
 - TODO: (issue #208) read correctly submeshes and some other CloudCompare types in .obj
 - TODO: embed install and build docs in binaries 

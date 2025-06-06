@@ -188,6 +188,50 @@ ccMesh* meshTriangulate_py(ccGenericPointCloud* cloud,
     return mesh;
 }
 
+void translatePy(ccMesh &self, const CCVector3& T)
+{
+    ccPointCloud* associatedCloud = ccHObjectCaster::ToPointCloud(self.getAssociatedCloud());
+    if (!associatedCloud)
+    {
+        CCTRACE("problem with associatedCloud!");
+        return;
+    }
+    associatedCloud->translate(T);
+}
+
+void scalePy(ccMesh &self, PointCoordinateType fx, PointCoordinateType fy, PointCoordinateType fz, CCVector3 center)
+{
+    ccPointCloud* associatedCloud = ccHObjectCaster::ToPointCloud(self.getAssociatedCloud());
+    if (!associatedCloud)
+    {
+        CCTRACE("problem with associatedCloud!");
+        return;
+    }
+    associatedCloud->scale(fx, fy, fz, center);
+}
+
+void applyRigidTransformationPy(ccMesh &self, const ccGLMatrix& trans)
+{
+    ccPointCloud* associatedCloud = ccHObjectCaster::ToPointCloud(self.getAssociatedCloud());
+    if (!associatedCloud)
+    {
+        CCTRACE("problem with associatedCloud!");
+        return;
+    }
+    associatedCloud->applyRigidTransformation(trans);
+}
+
+const ccGLMatrix& getGLTransformationHistoryPy(ccMesh &self)
+{
+    ccPointCloud* associatedCloud = ccHObjectCaster::ToPointCloud(self.getAssociatedCloud());
+    if (!associatedCloud)
+    {
+        CCTRACE("problem with associatedCloud!");
+        return ccGLMatrix();
+    }
+    return associatedCloud->getGLTransformationHistory();
+}
+
 void export_ccMesh(py::module &m0)
 {
     py::class_<CCCoreLib::MeshSamplingTools::EdgeConnectivityStats>(m0, "EdgeConnectivityStats", ccMeshPy_EdgeConnectivityStats_doc)
@@ -218,6 +262,7 @@ void export_ccMesh(py::module &m0)
         ;
 
     py::class_<ccMesh, ccGenericMesh>(m0, "ccMesh", ccMeshPy_ccMesh_doc)
+        .def("applyRigidTransformation", &applyRigidTransformationPy, ccMeshPy_applyRigidTransformation_doc)
         .def("clearTriNormals", &ccMesh::clearTriNormals, ccMeshPy_clearTriNormals_doc)
         .def("cloneMesh", &cloneMesh_py, py::return_value_policy::reference, ccMeshPy_cloneMesh_doc)
         .def("computeMeshVolume", &computeMeshVolume_py , ccMeshPy_computeMeshVolume_doc)
@@ -226,13 +271,20 @@ void export_ccMesh(py::module &m0)
         .def("flipTriangles", &ccMesh::flipTriangles, ccMeshPy_flipTriangles_doc)
         .def("getAssociatedCloud", &ccMesh::getAssociatedCloud,
              py::return_value_policy::reference, ccMeshPy_getAssociatedCloud_doc)
+        .def("getGLTransformationHistory", &getGLTransformationHistoryPy,
+             ccMeshPy_getGLTransformationHistory_doc, py::return_value_policy::reference)
         .def("getTriangleVertIndexes", &getTriangleVertIndexes_py, ccMeshPy_getTriangleVertIndexes_doc)
         .def("IndexesToNpArray", &IndexesToNpArray_py, ccMeshPy_IndexesToNpArray_doc)
         .def("IndexesToNpArray_copy", &IndexesToNpArray_copy, ccMeshPy_IndexesToNpArray_copy_doc)
         .def("laplacianSmooth", &laplacianSmooth_py,
              py::arg("nbIteration")=20, py::arg("factor")=0.2,
               ccMeshPy_laplacianSmooth_doc)
+        .def("scale",
+             &scalePy,
+             py::arg("fx"), py::arg("fy"), py::arg("fz"), py::arg("center") = CCVector3(0,0,0),
+             ccMeshPy_scale_doc)
         .def("subdivide", &ccMesh::subdivide, py::return_value_policy::reference, ccMeshPy_subdivide_doc)
+        .def("translate", &translatePy, ccMeshPy_translate_doc)
         .def_static("triangulate",
              &meshTriangulate_py,
              py::arg("cloud"), py::arg("type"), py::arg("updateNormals")=false, py::arg("maxEdgeLength")=0, py::arg("dim")=2,

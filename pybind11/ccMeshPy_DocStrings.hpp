@@ -48,6 +48,13 @@ Samples points on a mesh.
 :param bool,optional withTexture: default `True`
 :param progressDialog,optional progdiag: progress dialog, default None, use None!)";
 
+const char* ccMeshPy_applyRigidTransformation_doc= R"(
+Applies a GL transformation to the entity::
+
+  this = rotMat*(this-rotCenter)+(rotCenter+trans)
+
+:param ccGLMatrix trans: a ccGLMatrix structure)";
+
 const char* ccMeshPy_ccMesh_doc= R"(
 A triangular mesh based on a cloud of vertices.)";
 
@@ -108,6 +115,13 @@ Returns the cloud corresponding to the mesh vertices.
 :return: the associated cloud
 :rtype: ccGenericPointCloud)";
 
+const char* ccMeshPy_getGLTransformationHistory_doc=R"(
+Returns the transformation 'history' matrix
+
+:return: transformation Matrix
+:rtype: ccGLMatrix
+)";
+
 const char* ccMeshPy_getTriangleVertIndexes_doc= R"(
 Returns the 3 indexes of the nodes of a given triangle index.
 
@@ -157,11 +171,24 @@ Laplacian smoothing.
 :return: success
 :rtype: bool )";
 
+const char* ccMeshPy_scale_doc= R"(
+Scale the mesh with separate factors along the 3 directions x,y,z and an optional center (default: (0,0,0)).
+
+:param float fx: scale x
+:param float fy: scale y
+:param float fz: scale z
+:param tuple,optional center: (xc, yc, zc), default (0,0,0))";
+
 const char* ccMeshPy_size_doc= R"(
 Returns the number of triangles in the mesh.
 
 :return:  number of triangles
 :rtype: int)";
+
+const char* ccMeshPy_translate_doc= R"(
+translate the mesh of (x,y,z).
+
+:param tuple translation: tuple: (x,y,z))";
 
 const char* ccMeshPy_triangulate_doc= R"(
 Creates a Delaunay 2.5D mesh from a point cloud.
