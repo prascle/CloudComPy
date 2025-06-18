@@ -29,6 +29,7 @@
 #include <ccPointCloud.h>
 #include <ccOctree.h>
 #include <ccMesh.h>
+#include <ccSubMesh.h>
 #include <ccFacet.h>
 #include <ScalarField.h>
 #include <ccNormalVectors.h>
@@ -177,11 +178,11 @@ py::tuple importFilePy(const char* filename,
     std::vector<ccHObject*> entities = importFile(filename, mode, x, y, z, extraData, &structure);
     for( auto entity : entities)
     {
-       ccMesh* mesh = ccHObjectCaster::ToMesh(entity);
+        ccMesh* mesh = ccHObjectCaster::ToMesh(entity);
         if (mesh)
         {
-            meshes.push_back(mesh);
-            continue;
+         meshes.push_back(mesh);
+         continue;
         }
         ccPolyline* poly = ccHObjectCaster::ToPolyline(entity);
         if (poly)

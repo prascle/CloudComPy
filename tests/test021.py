@@ -96,7 +96,7 @@ meshes = entities[0]
 clouds = entities[1]
 facets = entities[2]
 polylines = entities[3]
-structure = entities[4]
+structure = entities[-1]
 #---loadEntities01-end
 
 if len(meshes) != 4:

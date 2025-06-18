@@ -23,6 +23,7 @@
 
 #include <CCGeom.h>
 #include <ccMesh.h>
+#include <ccSubMesh.h>
 #include <MeshSamplingTools.h>
 #include <ccGenericPointCloud.h>
 #include <ccPointCloud.h>
@@ -56,7 +57,7 @@ ccPointCloud* mesh_samplePoints_py( ccGenericMesh& self,
     return self.samplePoints(densityBased, samplingParameter, withNormals, withRGB, withTexture, pDlg);
 }
 
-Tuple3Tpl<unsigned int> getTriangleVertIndexes_py(ccMesh &self, unsigned triangleIndex)
+Tuple3Tpl<unsigned int> getTriangleVertIndexes_py(CCCoreLib::GenericIndexedMesh &self, unsigned triangleIndex)
 {
     CCCoreLib::VerticesIndexes* indexes = self.getTriangleVertIndexes(triangleIndex);
     Tuple3Tpl<unsigned int> ret = {indexes->i1, indexes->i2, indexes->i3};
@@ -232,6 +233,26 @@ const ccGLMatrix& getGLTransformationHistoryPy(ccMesh &self)
     return associatedCloud->getGLTransformationHistory();
 }
 
+std::vector<Vector3Tpl<float> > ccMesh_getBoundingBox_py(ccMesh& self)
+{
+    std::vector<Vector3Tpl<float> > bb;
+    Vector3Tpl<float> a, b;
+    self.getBoundingBox(a, b);
+    bb.push_back(a);
+    bb.push_back(b);
+    return bb;
+}
+
+std::vector<Vector3Tpl<float> > ccSubMesh_getBoundingBox_py(ccSubMesh& self)
+{
+    std::vector<Vector3Tpl<float> > bb;
+    Vector3Tpl<float> a, b;
+    self.getBoundingBox(a, b);
+    bb.push_back(a);
+    bb.push_back(b);
+    return bb;
+}
+
 void export_ccMesh(py::module &m0)
 {
     py::class_<CCCoreLib::MeshSamplingTools::EdgeConnectivityStats>(m0, "EdgeConnectivityStats", ccMeshPy_EdgeConnectivityStats_doc)
@@ -248,6 +269,7 @@ void export_ccMesh(py::module &m0)
         ;
 
     py::class_<CCCoreLib::GenericIndexedMesh>(m0, "GenericIndexedMesh") //, no_init, boost::noncopyable
+        .def("getTriangleVertIndexes", &getTriangleVertIndexes_py, ccMeshPy_getTriangleVertIndexes_doc)
         ;
 
     py::class_<ccGenericMesh, CCCoreLib::GenericIndexedMesh, ccShiftedObject>(m0, "ccGenericMesh") //, no_init, boost::noncopyable
@@ -266,16 +288,20 @@ void export_ccMesh(py::module &m0)
         .def("clearTriNormals", &ccMesh::clearTriNormals, ccMeshPy_clearTriNormals_doc)
         .def("cloneMesh", &cloneMesh_py, py::return_value_policy::reference, ccMeshPy_cloneMesh_doc)
         .def("computeMeshVolume", &computeMeshVolume_py , ccMeshPy_computeMeshVolume_doc)
+        .def("computeNormals", &ccMesh::computeNormals, ccMeshPy_computeNormals_doc)
         .def("crop2D", &ccMesh::crop2D, py::return_value_policy::reference, ccMeshPy_crop2D_doc)
-        .def("size", &ccMesh::size, ccMeshPy_size_doc)
         .def("flipTriangles", &ccMesh::flipTriangles, ccMeshPy_flipTriangles_doc)
+        .def("getBoundingBox", &ccMesh_getBoundingBox_py, ccMeshPy_getBoundingBox_doc)
         .def("getAssociatedCloud", &ccMesh::getAssociatedCloud,
              py::return_value_policy::reference, ccMeshPy_getAssociatedCloud_doc)
         .def("getGLTransformationHistory", &getGLTransformationHistoryPy,
              ccMeshPy_getGLTransformationHistory_doc, py::return_value_policy::reference)
         .def("getTriangleVertIndexes", &getTriangleVertIndexes_py, ccMeshPy_getTriangleVertIndexes_doc)
+        .def("hasNormals", &ccMesh::hasNormals, ccMeshPy_hasMeshNormals_doc)
+        .def("hasTriNormals", &ccMesh::hasTriNormals, ccMeshPy_hasTriNormals_doc)
         .def("IndexesToNpArray", &IndexesToNpArray_py, ccMeshPy_IndexesToNpArray_doc)
         .def("IndexesToNpArray_copy", &IndexesToNpArray_copy, ccMeshPy_IndexesToNpArray_copy_doc)
+        .def("invertNormals", &ccMesh::invertNormals, ccMeshPy_invertNormals_doc)
         .def("laplacianSmooth", &laplacianSmooth_py,
              py::arg("nbIteration")=20, py::arg("factor")=0.2,
               ccMeshPy_laplacianSmooth_doc)
@@ -283,6 +309,7 @@ void export_ccMesh(py::module &m0)
              &scalePy,
              py::arg("fx"), py::arg("fy"), py::arg("fz"), py::arg("center") = CCVector3(0,0,0),
              ccMeshPy_scale_doc)
+        .def("size", &ccMesh::size, ccMeshPy_size_doc)
         .def("subdivide", &ccMesh::subdivide, py::return_value_policy::reference, ccMeshPy_subdivide_doc)
         .def("translate", &translatePy, ccMeshPy_translate_doc)
         .def_static("triangulate",
@@ -294,4 +321,15 @@ void export_ccMesh(py::module &m0)
              py::arg("p1"), py::arg("p2"), py::arg("projectionDir")=nullptr,
                      ccMeshPy_triangulateTwoPolylines_doc, py::return_value_policy::reference)
         ;
+
+    py::class_<ccSubMesh, ccGenericMesh>(m0, "ccSubMesh", ccMeshPy_ccSubMesh_doc)
+        .def("getAssociatedCloud", &ccSubMesh::getAssociatedCloud,
+             py::return_value_policy::reference, ccMeshPy_getAssociatedCloud_doc)
+        .def("getAssociatedMesh", static_cast<ccMesh* (ccSubMesh::*)()>(&ccSubMesh::getAssociatedMesh),
+             py::return_value_policy::reference, ccMeshPy_getAssociatedMesh_doc)
+        .def("getBoundingBox", &ccSubMesh_getBoundingBox_py, ccMeshPy_getBoundingBox_doc)
+        .def("getTriangleVertIndexes", &getTriangleVertIndexes_py, ccMeshPy_getTriangleVertIndexes_doc)
+        .def("size", &ccSubMesh::size, ccMeshPy_size_doc)
+        ;
+
 }

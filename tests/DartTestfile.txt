@@ -62,4 +62,5 @@ add_test(PYCC_test057 "execTest.sh" "test057.py")
 add_test(PYCC_test058 "execTest.sh" "test058.py")
 set_tests_properties(PYCC_test058 PROPERTIES SKIP_REGULAR_EXPRESSION "Test skipped")
 add_test(PYCC_test059 "execTest.sh" "test059.py")
+add_test(PYCC_test060 "execTest.sh" "test060.py")
 
