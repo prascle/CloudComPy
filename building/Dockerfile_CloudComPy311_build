@@ -27,8 +27,8 @@ COPY $FBXINC /root/fbxsdk/include/
 COPY $FBXLIB /root/fbxsdk/lib/
 COPY $CORKINC /root/cork/src/
 COPY $CORKLIB /root/cork/lib/
-copy $LIBIGL /root/libigl/
-copy $OPENCASCADE /root/occt/
+COPY $LIBIGL /root/libigl/
+COPY $OPENCASCADE /root/occt/
 COPY genCloudComPy_Conda311_docker.sh /root/
 
 RUN cd /root && \
