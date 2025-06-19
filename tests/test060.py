@@ -57,21 +57,27 @@ print(res)
 mesh=res[0][0]
 names=res[4]
 print(len(names))
+#---subMesh01-begin
 nbChildren=mesh.getChildrenNumber()
-children=[]
+subMeshes=[]
 for i in range(nbChildren):
-    children.append(mesh.getChild(i))
-
-for i in range(nbChildren):
-    child = children[i]
+    child = mesh.getChild(i)
     if child.isA(cc.CC_TYPES.SUB_MESH):
-        print("child", i , child.getName())
-        print("  size:", child.size())
-        print("  cloud.size:", child.getAssociatedCloud().size())
-        print("  ", child.getAssociatedCloud().getName())
-        print("  first triangle vertex indexes:", child.getTriangleVertIndexes(0))
-        if child.size() != 192:
-            raise RuntimeError
-        if child.getAssociatedCloud().size() != 882:
-            raise RuntimeError
+        subMeshes.append(mesh.getChild(i))
+#---subMesh01-end
+
+#---subMesh02-begin
+for i in len(subMeshes):
+    child = subMeshes[i]
+    print("child", i , child.getName())
+    print("  size:", child.size())
+    print("  cloud.size:", child.getAssociatedCloud().size())
+    print("  ", child.getAssociatedCloud().getName())
+    print("  first triangle vertex indexes:", child.getTriangleVertIndexes(0))
+    #---subMesh02-end
+    if child.size() != 192:
+        raise RuntimeError
+    if child.getAssociatedCloud().size() != 882:
+        raise RuntimeError
+
 

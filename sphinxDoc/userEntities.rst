@@ -679,6 +679,31 @@ An example with an open mesh:
 
 The above code snippets are from :download:`test055.py <../tests/test055.py>`.
 
+Exploring SubMeshes
+~~~~~~~~~~~~~~~~~~~~
+A mesh can be composed of several sub-meshes, which are defined by a set of triangles.
+The sub-meshes share the same vertices, but each sub-mesh has its own set of triangles.
+To find the sub-meshes, find the mesh children with :py:meth:`~.cloudComPy.ccMesh.getChildrenNumber` and :py:meth:`~.cloudComPy.ccMesh.getChild`.
+Keep only the children of the right type (:py:class:`~.cloudComPy.ccSubMesh`) using :py:meth:`~.cloudComPy.ccHObject.isA`.
+
+.. include:: ../tests/test060.py
+   :start-after: #---subMesh01-begin
+   :end-before:  #---subMesh01-end
+   :literal:
+   :code: python
+
+the common vertices of the sub-meshes can be accessed with :py:meth:`~.cloudComPy.ccSubMesh.getAssociatedCloud`.
+the number of triangles in a sub-mesh can be obtained with :py:meth:`~.cloudComPy.ccSubMesh.size`.
+The find the vertices associated to the triangles of a sub-mesh use :py:meth:`~.cloudComPy.ccSubMesh.getTriangleVertIndexes`.
+
+.. include:: ../tests/test060.py
+   :start-after: #---subMesh02-begin
+   :end-before:  #---subMesh02-end
+   :literal:
+   :code: python
+
+The above code snippets are from :download:`test060.py <../tests/test060.py>`.
+
 meshes transformations
 ~~~~~~~~~~~~~~~~~~~~~~
 
