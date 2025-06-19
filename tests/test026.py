@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -91,6 +91,10 @@ transform1 = cc.ccGLMatrix()
 transform1.initFromParameters(0.25, (1.5, 2.9, 6.3), (0,0,0))
 cloud.applyRigidTransformation(transform1)
 #---transformations05-end
+
+#---transformationHistory01-begin
+transformationHistory = cloud.getGLTransformationHistory()
+#---transformationHistory01-end
 
 boundingBox = cloud.getOwnBB()
 if not isCoordEqual(boundingBox.minCorner(), (-1.510, -2.944, -8.937), 1.e-2):

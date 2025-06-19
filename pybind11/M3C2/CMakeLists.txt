@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 

@@ -51,7 +51,7 @@ conda_buildenv()
     fi
     conda config --add channels conda-forge && \
     conda config --set channel_priority flexible && \
-    conda install -y boost cgal cmake draco "ffmpeg=6.1" gdal jupyterlab laszip matplotlib "mysql=8" notebook numpy opencv "openssl=3.1" pcl pdal psutil pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11 || error_exit "conda environment ${CONDA_ENV} cannot be completed"
+    conda install -y "boost=1.84" "cgal=6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mysql=8" notebook numpy "opencv=4.8" "openssl=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
 }
 
 # --- CloudComPy build
@@ -60,6 +60,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_macOS || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -131,7 +132,7 @@ cloudcompy_configure()
     -DPLUGIN_IO_QCSV_MATRIX:BOOL="1" \
     -DPLUGIN_IO_QDRACO:BOOL="1" \
     -DPLUGIN_IO_QE57:BOOL="1" \
-    -DPLUGIN_IO_QFBX:BOOL="1" \
+    -DPLUGIN_IO_QFBX:BOOL="0" \
     -DPLUGIN_IO_QLAS:BOOL="1" \
     -DPLUGIN_IO_QLAS_FWF:BOOL="0" \
     -DPLUGIN_IO_QPDAL:BOOL="0" \
@@ -145,7 +146,7 @@ cloudcompy_configure()
     -DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG:BOOL="1" \
     -DPLUGIN_STANDARD_QANIMATION:BOOL="1" \
     -DPLUGIN_STANDARD_QBROOM:BOOL="1" \
-    -DPLUGIN_STANDARD_QCANUPO:BOOL="1" \
+    -DPLUGIN_STANDARD_QCANUPO:BOOL="0" \
     -DPLUGIN_STANDARD_QCLOUDLAYERS:BOOL="1" \
     -DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER:BOOL="1" \
     -DPLUGIN_STANDARD_QCOMPASS:BOOL="1" \

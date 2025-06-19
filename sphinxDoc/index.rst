@@ -3,6 +3,8 @@
 cloudComPy: a Python interface for CloudCompare
 ###############################################
 
+**Release:** |release|
+
 .. toctree::
    :numbered:
    :maxdepth: 3

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -98,7 +98,7 @@ if torus.size() != 964:
 #---ccQuadric01-begin
 tr7 = cc.ccGLMatrix()
 tr7.initFromParameters(0.5*math.pi, (1., 0., 0.), (-5.0, -2.0, -2.0))
-quadric = cc.ccQuadric((-1., -1.), (1., 1.), (1., 2., 1., 1., 2., 2.), dims=(0,1,2), transMat=tr7, name="aQuadric", precision=60)
+quadric = cc.ccQuadric((-1., -1.), (1., 1.), (1., 2., 1., 1., 2., 2.), transMat=tr7, name="aQuadric", precision=60)
 if quadric.getName() != 'aQuadric':
     raise RuntimeError
 if quadric.size() != 6962:

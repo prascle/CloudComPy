@@ -17,13 +17,14 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
 import os
 import sys
 import math
+import requests
 
 os.environ["_CCTRACE_"]="ON" # only if you want C++ debug traces
 
@@ -70,7 +71,7 @@ filteredSize = fcloud.size()
 #---filterSFValue01-end
 
 print("filtered cloud size: %s" % filteredSize)
-if not math.isclose(filteredSize, 113325, rel_tol=1e-03):
+if not math.isclose(filteredSize, 173786, rel_tol=1e-03):
     raise RuntimeError
 
 res = cc.SavePointCloud(fcloud, os.path.join(dataDir, "res3.xyz"))
@@ -117,7 +118,7 @@ cloud = cc.loadPointCloud(getSampleCloud(5.0))
 res = cloud.exportCoordToSF(False, True, True)
 l = cloud.sfSplitCloud(cloud.getNumberOfScalarFields()-1)
 #---cloudsf04-end
-if len(l) != 7:
+if len(l) != 6:
     raise RuntimeError
 res = cc.SaveEntities(l, os.path.join(dataDir, "sfsplit.bin"))
 

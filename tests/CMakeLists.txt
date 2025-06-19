@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -114,6 +114,8 @@ set(PYTHONAPI_TEST_SCRIPTS
     test056.py
     test057.py
     test058.py
+    test059.py
+    test060.py
     )
 
 # list of utilities
@@ -215,4 +217,6 @@ do_test(test055)
 do_test(test056)
 do_test(test057)
 do_test(test058)
+do_test(test059)
+do_test(test060)
 

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -55,15 +55,15 @@ if nsf != 0:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(0)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(-1)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 sfname = cloud.getScalarFieldName(25)
-if sfname is not None:
+if sfname:
     raise RuntimeError
 
 #---scale-translate-begin

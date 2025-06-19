@@ -32,6 +32,11 @@ bases classes for Meshes
    :inherited-members:
    :show-inheritance:
 
+.. autoclass:: ccSubMesh
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
 .. autoclass:: TRIANGULATION_TYPES
    :members:
    :undoc-members:

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -96,7 +96,7 @@ meshes = entities[0]
 clouds = entities[1]
 facets = entities[2]
 polylines = entities[3]
-structure = entities[4]
+structure = entities[-1]
 #---loadEntities01-end
 
 if len(meshes) != 4:

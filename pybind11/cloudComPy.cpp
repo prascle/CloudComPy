@@ -15,7 +15,7 @@
 //#  You should have received a copy of the GNU General Public License     #
 //#  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 //#                                                                        #
-//#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+//#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 //#                                                                        #
 //##########################################################################
 
@@ -29,6 +29,7 @@
 #include <ccPointCloud.h>
 #include <ccOctree.h>
 #include <ccMesh.h>
+#include <ccSubMesh.h>
 #include <ccFacet.h>
 #include <ScalarField.h>
 #include <ccNormalVectors.h>
@@ -119,7 +120,7 @@ const ICPres* ICP_py(ccHObject* data,
                     ccHObject* model,
                     double minRMSDecrease=1.e-5,
                     unsigned maxIterationCount=20,
-                    unsigned randomSamplingLimit=50000,
+                    double randomSamplingLimit=50000,
                     bool removeFarthestPoints=false,
                     CCCoreLib::ICPRegistrationTools::CONVERGENCE_TYPE method=CCCoreLib::ICPRegistrationTools::CONVERGENCE_TYPE::MAX_ITER_CONVERGENCE,
                     bool adjustScale=false,
@@ -138,7 +139,7 @@ const ICPres* ICP_py(ccHObject* data,
     params.nbMaxIterations = maxIterationCount;
     params.adjustScale = adjustScale;
     params.filterOutFarthestPoints = removeFarthestPoints;
-    params.samplingLimit = randomSamplingLimit;
+    params.samplingLimit = unsigned(randomSamplingLimit);
     params.finalOverlapRatio = finalOverlapRatio;
     params.modelWeights = nullptr;
     params.dataWeights = nullptr;
@@ -177,11 +178,11 @@ py::tuple importFilePy(const char* filename,
     std::vector<ccHObject*> entities = importFile(filename, mode, x, y, z, extraData, &structure);
     for( auto entity : entities)
     {
-       ccMesh* mesh = ccHObjectCaster::ToMesh(entity);
+        ccMesh* mesh = ccHObjectCaster::ToMesh(entity);
         if (mesh)
         {
-            meshes.push_back(mesh);
-            continue;
+         meshes.push_back(mesh);
+         continue;
         }
         ccPolyline* poly = ccHObjectCaster::ToPolyline(entity);
         if (poly)
@@ -2646,10 +2647,10 @@ PYBIND11_MODULE(_cloudComPy, m0)
         .export_values();
 
     py::enum_<CCCoreLib::LOCAL_MODEL_TYPES>(m0, "LOCAL_MODEL_TYPES")
-        .value("NO_MODEL", CCCoreLib::NO_MODEL )
-        .value("LS", CCCoreLib::LS )
-        .value("TRI", CCCoreLib::TRI )
-        .value("QUADRIC", CCCoreLib::QUADRIC )
+        .value("NO_MODEL", CCCoreLib::NO_MODEL, "No local model")
+        .value("LS", CCCoreLib::LS, "Least Square best fitting plane")
+        .value("TRI", CCCoreLib::TRI, "2.5D Delaunay triangulation")
+        .value("QUADRIC", CCCoreLib::QUADRIC, "2.5D quadric function")
         .export_values();
 
     py::enum_<ccNormalVectors::Orientation>(m0, "Orientation")

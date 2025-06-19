@@ -15,7 +15,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -50,6 +50,7 @@ if ( BUILD_PY_TESTING )
 	include( CTest )
 endif()
 
+add_definitions(-D_CLOUDCOMPY_BUILD_)
 option(PYTHONAPI_TRACES "Activate console trace in the Python API" OFF)
 if (PYTHONAPI_TRACES)
     message(STATUS "Python Api traces activated")
@@ -86,6 +87,7 @@ add_subdirectory( pyAPI )
 add_subdirectory( pybind11 )
 add_subdirectory( tests )
 add_subdirectory( doc )
+add_subdirectory( building )
 
 # --- Sphinx doc, post install (must be in last position)
 

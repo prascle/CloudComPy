@@ -1,6 +1,9 @@
 ## Installing, testing and using a CloudComPy binary on MacOS, with conda
 
-The binary *CloudComPy_Conda310_MacOS-date-.zip* available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads)
+**Note:** CloudComPy versions released in 2024 and earlier were built using a Conda **Python 3.10** environment: **CloudComPy310**.
+Now, new versions are built with a **Python 3.11** Conda environment: **CloudComPy311**
+
+The binary *CloudComPy_Conda311_MacOS-date-.zip* available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads)
  is built with a Conda environment.
 
 **This binary works only on macOS Apple arm64 architecture (not on Intel processors), on recent macOS versions, not anywhere else!**
@@ -14,9 +17,9 @@ The macOS binary provides **CloudCompare** and **CloudCompy** (same as binaries 
 As CloudComPy is under development, these instructions and the link are subject to change from time to time...
 
 **CloudCompare** works as it is (no specific environment).
-It is located in CloudComPy310/CloudCompare/CloudCompare.app and can be launched from the Finder.
+It is located in CloudComPy311/CloudCompare/CloudCompare.app and can be launched from the Finder.
 
-**CloudComPy** needs a Python 3.10 configuration with at least the following packages, either with conda or not:
+**CloudComPy** needs a Python 3.11 configuration with at least the following packages, either with conda or not:
 
 ```
 numpy
@@ -35,35 +38,35 @@ The following package list corresponds to the building environment, but you can 
 conda activate
 conda update -y -n base -c defaults conda
 ```
-If your environment CloudComPy310 does not exist or to recreate it from scratch:
-(**note:** for 2.13.2, it's better to recreate the environment, because there are a lot of changes)
+If your environment CloudComPy311 does not exist or to recreate it from scratch:
+(**note:** it's best to recreate the environment from time to time, as conda packages are often updated)
 ```
-conda create --name CloudComPy310 python=3.10
+conda create --name CloudComPy311 python=3.11
    # --- erase previous env with the same name if existing
 ```
 Add or update the packages:
 ```
-conda activate CloudComPy310
+conda activate CloudComPy311
 conda config --add channels conda-forge
 conda config --set channel_priority flexible
-conda install -y boost cgal cmake draco "ffmpeg=6.1" gdal jupyterlab laszip matplotlib "mysql=8" notebook numpy opencv "openssl=3.1" pcl pdal psutil pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11
+conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mysql=8" notebook numpy "opencv=4.9" "openssl>=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11
 ```
 
 Unzip the binary tarfile in the directory of your choice.
 
 ### Using CloudCompare and CloudComPy:
 
-CloudCompare is located in `CloudComPy310/CloudCompare/CloudCompare.app` and can be launched from the Finder.
+CloudCompare is located in `CloudComPy311/CloudCompare/CloudCompare.app` and can be launched from the Finder.
 
 CloudcomPy requires to set the Python environment and the PYTHONPATH.
 
-If you have configured the conda CloudComPy310 environment, use the script `bin/condaCloud.zsh`.
+If you have configured the conda CloudComPy311 environment, use the script `bin/condaCloud.zsh`.
 It overrides the conda command for activation and deactivation, it must be sourced. 
 
 From a new prompt (replace `<path install>` by its value): 
 
 ```
-. <path install>/bin/condaCloud.zsh activate CloudComPy310
+. <path install>/bin/condaCloud.zsh activate CloudComPy311
 ```
 
 if conda is unknown, execute the following instruction before:
@@ -86,7 +89,7 @@ export PYTHONPATH=${CLOUDCOMPY_ROOT}/CloudCompare/CloudCompare.app/Contents/Fram
 export PYTHONPATH=${CLOUDCOMPY_ROOT}/doc/PythonAPI_test:${PYTHONPATH}
 ```
 
-where `CLOUDCOMPY_ROOT` is the path of CloudComPy310.
+where `CLOUDCOMPY_ROOT` is the path of CloudComPy311.
 
 To execute a Python script (for instance myscript.py) using CloudComPy:
 
@@ -110,7 +113,7 @@ An example of notebook is provided in ```doc/samples/histogramOnDistanceComputat
 ### Execute all the Python tests:
 
 ```
-. <path install>/bin/condaCloud.zsh activate CloudComPy310
+. <path install>/bin/condaCloud.zsh activate CloudComPy311
 cd  <path install>/doc/PythonAPI_test
 ```
 
@@ -133,6 +136,7 @@ There may be differences in the versions of conda packages. When updating the co
 This is usually not a problem, but since the CloudComPy binary is fixed, there may be a version difference on a package, 
 which makes it incompatible with CloudComPy. For your information, here is the list of package versions when CloudComPy was built.
 
-The result of ```conda list``` command is provided in the sources in [building directory](../building)
+The result of ```conda list``` command is provided in the doc directory of the binary package or, in the sources, in [building directory](../building)
+
 
  

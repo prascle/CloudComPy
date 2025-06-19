@@ -50,6 +50,10 @@ for instance to save the list of objects on a file.
    :members:
    :show-inheritance:
 
+.. autoclass:: CC_TYPES
+   :members:
+   :undoc-members:
+
 .. autoclass:: DEPENDENCY_FLAGS
    :members:
    :undoc-members:

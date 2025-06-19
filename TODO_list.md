@@ -194,6 +194,13 @@ TODO List
 * DONE: (issue #188) Docker instruction consistency for build
 * DONE: (issue #178) Visualisation using CloudComPy in CloudCompare: try to fix the behaviour on macOS
 * DONE: (issue #189) Fix macOS installation instructions
+* DONE: (issue #192) improve behaviour when converting float into int is harmless
+* DONE: (issue #195) improve documentation on normal generation with quadric fitting
+* DONE: (issue #198) get transformation history
+* DONE: (issue #196) improve doc on mesh transformations
+* DONE: (issue #196) add a binding for mesh transformations
+* DONE: (issue #208) read correctly submeshes and some other CloudCompare types in .obj
+* DONE: embed install and build docs in binaries 
 - TODO: try to have ctest working at build step on Windows and Linux (incomplete)
 - TODO: A kind of automatic test coverage, to find examples for a particular function.
 - TODO: Fix the Link problem in Windows to avoid the option /force:multiple at link step
@@ -224,5 +231,6 @@ TODO List
 - TODO: (issue #154) plugin MeshIO ?
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
-- TODO  following setPointSize, add other methods for improving rendering in file
+- TODO: following setPointSize, add other methods for improving rendering in file
+
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-. @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate CloudComPy310
+. @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate ${CONDA_DEFAULT_ENV}
 rm @SPHINXDOCTREES@/*.doctree
 @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/doc/html 

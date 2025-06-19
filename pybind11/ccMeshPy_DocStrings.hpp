@@ -15,7 +15,7 @@
 //#  You should have received a copy of the GNU General Public License     #
 //#  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 //#                                                                        #
-//#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+//#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 //#                                                                        #
 //##########################################################################
 
@@ -48,8 +48,18 @@ Samples points on a mesh.
 :param bool,optional withTexture: default `True`
 :param progressDialog,optional progdiag: progress dialog, default None, use None!)";
 
+const char* ccMeshPy_applyRigidTransformation_doc= R"(
+Applies a GL transformation to the entity::
+
+  this = rotMat*(this-rotCenter)+(rotCenter+trans)
+
+:param ccGLMatrix trans: a ccGLMatrix structure)";
+
 const char* ccMeshPy_ccMesh_doc= R"(
 A triangular mesh based on a cloud of vertices.)";
+
+const char* ccMeshPy_ccSubMesh_doc= R"(
+A sub-mesh (Equivalent to a CCCoreLib::ReferenceCloud for a mesh).)";
 
 const char* ccMeshPy_clearTriNormals_doc= R"(
 Removes per-triangle normals.
@@ -76,6 +86,15 @@ edgesSharedByMore: Edges shared by more than two triangles        ==> non manifo
 
 :return: tuple (volume, isWarning, stats)
 :rtype: (float, bool, EdgeConnectivityStats)
+)";
+
+const char* ccMeshPy_computeNormals_doc= R"(
+Computes normals on mesh, either per triangle or per vertex.
+
+:param bool perVertex: whether normals should be computed per-vertex or per-triangle.
+
+:return: success
+:rtype: bool
 )";
 
 const char* ccMeshPy_crop2D_doc= R"(
@@ -108,6 +127,26 @@ Returns the cloud corresponding to the mesh vertices.
 :return: the associated cloud
 :rtype: ccGenericPointCloud)";
 
+
+const char* ccMeshPy_getAssociatedMesh_doc= R"(
+Returns the associated mesh.
+
+:return: the associated mesh
+:rtype: ccMesh)";
+
+const char* ccMeshPy_getBoundingBox_doc= R"(
+get the mesh bounding box.
+
+:return bounding box limits: ((Xmin,Ymin,Zmin), (Xmax,Ymax,Zmax))
+:rtype: tuple)";
+
+const char* ccMeshPy_getGLTransformationHistory_doc=R"(
+Returns the transformation 'history' matrix
+
+:return: transformation Matrix
+:rtype: ccGLMatrix
+)";
+
 const char* ccMeshPy_getTriangleVertIndexes_doc= R"(
 Returns the 3 indexes of the nodes of a given triangle index.
 
@@ -115,6 +154,27 @@ Returns the 3 indexes of the nodes of a given triangle index.
 
 :return: a tuple with 3 nodes indexes
 :rtype: tuple )";
+
+const char* ccMeshPy_hasMeshNormals_doc= R"(
+Check if the mesh has normals (per vertex or per triangle)
+
+:return: True if the mesh has normals
+:rtype: bool
+)";
+
+const char* ccMeshPy_hasTriNormals_doc= R"(
+Check if the mesh has normals per triangle.
+
+:return: True if the mesh has normals per triangle
+:rtype: bool
+)";
+
+const char* ccMeshPy_hasNormals_doc= R"(
+Whether the mesh has normals (by vertex or by triangle)
+
+:return: True if the mesh has normals
+:rtype: bool
+)";
 
 const char* ccMeshPy_IndexesToNpArray_doc= R"(
 Wrap the indexes of nodes per triangle in the mesh into a numpy Array, without copy.
@@ -140,6 +200,10 @@ the numpy Array object and its data will be handled by the Python Garbage Collec
 :rtype: ndarray
  )";
 
+const char* ccMeshPy_invertNormals_doc= R"(
+Inverts normals (if any). Either the per-triangle normals, or the per-vertex ones.
+)";
+
 const char* ccMeshPy_subdivide_doc= R"(
 Subdivides mesh (so as to ensure that all triangles are falls below 'maxArea'.
 
@@ -157,11 +221,24 @@ Laplacian smoothing.
 :return: success
 :rtype: bool )";
 
+const char* ccMeshPy_scale_doc= R"(
+Scale the mesh with separate factors along the 3 directions x,y,z and an optional center (default: (0,0,0)).
+
+:param float fx: scale x
+:param float fy: scale y
+:param float fz: scale z
+:param tuple,optional center: (xc, yc, zc), default (0,0,0))";
+
 const char* ccMeshPy_size_doc= R"(
 Returns the number of triangles in the mesh.
 
 :return:  number of triangles
 :rtype: int)";
+
+const char* ccMeshPy_translate_doc= R"(
+translate the mesh of (x,y,z).
+
+:param tuple translation: tuple: (x,y,z))";
 
 const char* ccMeshPy_triangulate_doc= R"(
 Creates a Delaunay 2.5D mesh from a point cloud.

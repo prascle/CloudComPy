@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -50,7 +50,7 @@ cc.DistanceComputationTools.computeCloud2MeshDistances(cloud, cylinder, params)
 
 #---histogram01-begin
 sf = cloud.getScalarField(cloud.getScalarFieldDic()['C2M absolute distances'])
-asf = sf.toNpArray()
+asf = sf.toNpArrayCopy()
 #---histogram01-end
 
 #---histogram02-begin

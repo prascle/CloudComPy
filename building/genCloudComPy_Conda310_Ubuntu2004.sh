@@ -42,7 +42,7 @@ conda_buildenv()
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
-    ret=1
+    ret=1 # --- force rebuild environment from scratch
     if [ $ret != "0" ]; then
         conda activate && \
         conda create -y --name ${CONDA_ENV} python=3.10 && \
@@ -50,7 +50,7 @@ conda_buildenv()
     fi
     conda config --add channels conda-forge && \
     conda config --set channel_priority flexible && \
-    conda install -y boost cgal cmake draco "ffmpeg=6.1" gdal jupyterlab laszip matplotlib "mysql=8" notebook numpy opencv openmp "openssl=3.1" pcl pdal psutil pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" || error_exit "conda environment ${CONDA_ENV} cannot be completed"
+    conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mpir=3.0" "mysql=8" notebook numpy "opencv=4.8" "openmp=8.0" "openssl=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" || error_exit "conda environment ${CONDA_ENV} cannot be completed"
 }
 
 # --- CloudComPy build
@@ -59,6 +59,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu20.04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -80,7 +81,7 @@ cloudcompy_configure()
     -DCCCORELIB_USE_CGAL:BOOL="1" \
     -DCCCORELIB_USE_QT_CONCURRENT:BOOL="1" \
     -DCCCORELIB_USE_TBB:BOOL="0" \
-    -DCMAKE_BUILD_TYPE:STRING="Relwithdebinfo" \
+    -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++ \
     -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/cc \
     -DCMAKE_Fortran_COMPILER:FILEPATH=/usr/bin/gfortran \

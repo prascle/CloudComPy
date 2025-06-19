@@ -95,8 +95,15 @@ If you need to save clouds for reopening with CloudCompare GUI, with a predefine
  - :py:meth:`~.cloudComPy.ccPointCloud.sfShown`
  - :py:meth:`~.cloudComPy.ccPointCloud.setCurrentDisplayedScalarField`
 
+.. _Cloud_Transformations:
+
 cloud transformations
 ~~~~~~~~~~~~~~~~~~~~~
+
+**NOTE:** The cloud transformations introduced below are also appliable on meshes and primitives.
+Meshes and primitives are built on a point cloud.
+To get this cloud, use :py:meth:`~.cloudComPy.ccMesh.getAssociatedCloud` which gives a :py:class:`~.cloudComPy.ccPointCloud`.
+To apply a transformation on a mesh or a primitive, use the methods below, with the associated cloud.
 
 Basic transformations :py:meth:`~.cloudComPy.ccPointCloud.translate` and :py:meth:`~.cloudComPy.ccPointCloud.scale`
 allow to translate a cloud or rescale it, with separate factors along the 3 directions and an optional center (see 
@@ -121,6 +128,15 @@ with :py:meth:`~.cloudComPy.ccGLMatrix.initFromParameters`.
 .. include:: ../tests/test026.py
    :start-after: #---transformations01-begin
    :end-before:  #---transformations01-end
+   :literal:
+   :code: python
+
+If you have applied several successive transformations and want to get the resulting ("history") transformation, 
+the :py:meth:`~.cloudComPy.ccHObject.getGLTransformationHistory` gives the corresponding :py:class:`cloudComPy.ccGLMatrix` object.
+
+.. include:: ../tests/test026.py
+   :start-after: #---transformationHistory01-begin
+   :end-before:  #---transformationHistory01-end
    :literal:
    :code: python
 
@@ -398,8 +414,18 @@ The above code snippets are from :download:`test029.py <../tests/test029.py>`.
 scalar fields
 ~~~~~~~~~~~~~
 
-when a scalar field is modified with Numpy (see :ref:`ScalarField_Numpy`),
-you must reinitialise the min and max value of the scalar field with :py:meth:`~.cloudComPy.ScalarField.computeMinAndMax`.
+If you wish to access or modify a scalar field with Numpy (see :ref:`ScalarField_Numpy`),
+please note that the scalar field is stored internally in CloudCompare as a single-precision array (float), with offset subtraction,
+which allows better precision without the need for a double-precision array, when the variance is small compared to the mean value.
+This is the case, for example, with GPS time in some las-formatted lidar files.
+You don't need to worry about the offset, unless you have access to the data in place, without a copy.
+
+When accessing the scalar field with copy, you get a numpy array of double precision, with offset automatically added.
+
+When accessing the scalar field without copy, you get the simple precision numpy array,
+and you have to explitely take into account the offset with :py:meth:`~.cloudComPy.ccScalarField.getOffset`.
+
+After a modification, you must reinitialise the min and max value of the scalar field with :py:meth:`~.cloudComPy.ScalarField.computeMinAndMax`.
 
 .. include:: ../tests/test002.py
    :start-after: #---sfNumpy01-begin
@@ -422,21 +448,6 @@ General information and statistics are available with:
    :code: python
 
 The above code snippets are from :download:`test002.py <../tests/test002.py>`.
-
-Some scalar fields may be shifted to prevent a loss of accuracy.
-This is the case, for instance, for GPS time in some lidar files in las format.
- 
-To get the global shift, use:
-
- - :py:meth:`~.cloudComPy.ccScalarField.getGlobalShift`
-
-.. include:: ../tests/test020.py
-   :start-after: #---LASTimeShift002-begin
-   :end-before:  #---LASTimeShift002-end
-   :literal:
-   :code: python
-
-The above code snippets is from :download:`test020.py <../tests/test020.py>`.
 
 To change the scalar field name, set a value on a point, fill the scalar field with a uniform value, use:
 
@@ -668,6 +679,44 @@ An example with an open mesh:
 
 The above code snippets are from :download:`test055.py <../tests/test055.py>`.
 
+Exploring SubMeshes
+~~~~~~~~~~~~~~~~~~~~
+A mesh can be composed of several sub-meshes, which are defined by a set of triangles.
+The sub-meshes share the same vertices, but each sub-mesh has its own set of triangles.
+To find the sub-meshes, find the mesh children with :py:meth:`~.cloudComPy.ccMesh.getChildrenNumber` and :py:meth:`~.cloudComPy.ccMesh.getChild`.
+Keep only the children of the right type (:py:class:`~.cloudComPy.ccSubMesh`) using :py:meth:`~.cloudComPy.ccHObject.isA`.
+
+.. include:: ../tests/test060.py
+   :start-after: #---subMesh01-begin
+   :end-before:  #---subMesh01-end
+   :literal:
+   :code: python
+
+The common vertices of the sub-meshes can be accessed with :py:meth:`~.cloudComPy.ccSubMesh.getAssociatedCloud`.
+The number of triangles in a sub-mesh can be obtained with :py:meth:`~.cloudComPy.ccSubMesh.size`.
+To find the vertices associated to the triangles of a sub-mesh use :py:meth:`~.cloudComPy.ccSubMesh.getTriangleVertIndexes`.
+
+.. include:: ../tests/test060.py
+   :start-after: #---subMesh02-begin
+   :end-before:  #---subMesh02-end
+   :literal:
+   :code: python
+
+The above code snippets are from :download:`test060.py <../tests/test060.py>`.
+
+meshes transformations
+~~~~~~~~~~~~~~~~~~~~~~
+
+The methods defined for clouds (see :ref:`Cloud_Transformations`) can be applied on the mesh associated cloud 
+(:py:meth:`~.cloudComPy.ccMesh.getAssociatedCloud`) to transform the mesh.
+
+There are now shortcut methods for meshes, to avoid the explicit use of the associated cloud:
+
+ - :py:meth:`~.cloudComPy.ccMesh.scale`
+ - :py:meth:`~.cloudComPy.ccMesh.translate`
+ - :py:meth:`~.cloudComPy.ccMesh.applyRigidTransformation`
+ - :py:meth:`~.cloudComPy.ccMesh.getGLTransformationHistory`
+
 meshes modifications
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -883,7 +932,7 @@ Dish
    :literal:
    :code: python
 
-Unless Otherwise noted, the above code snippets are from :download:`test009.py <../tests/test009.py>`.
+Unless otherwise noted, the above code snippets are from :download:`test009.py <../tests/test009.py>`.
 
 polylines
 ---------

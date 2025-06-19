@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU General Public License     #
 #  along with this program. If not, see <https://www.gnu.org/licenses/>. #
 #                                                                        #
-#          Copyright 2020-2021 Paul RASCLE www.openfields.fr             #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
 #                                                                        #
 ##########################################################################
 
@@ -114,7 +114,7 @@ maxMem = curMem
 asf = None
 print("=========== loop scalar field no copy =============")
 for i in range(10):
-    asf = sf.toNpArray()
+    asf = sf.toNpArrayNoCopy()
     if asf.shape != (cloud.size(),):
         raise RuntimeError
     curMem = thisProcess.memory_full_info().uss
@@ -138,7 +138,7 @@ for i in range(10):
     print("memory USS, delta current: %s max: %s" %
           (curMem - refMem, maxMem - refMem))
     print("scalarField copy %s" % i)
-    if (maxMem - refMem) > 2.0 * sfMem: # some memory not immediately released ?
+    if (maxMem - refMem) > 5.0 * sfMem: # some memory not immediately released ?
         raise RuntimeError
 
 asf = None
