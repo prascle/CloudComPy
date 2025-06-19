@@ -692,9 +692,9 @@ Keep only the children of the right type (:py:class:`~.cloudComPy.ccSubMesh`) us
    :literal:
    :code: python
 
-the common vertices of the sub-meshes can be accessed with :py:meth:`~.cloudComPy.ccSubMesh.getAssociatedCloud`.
-the number of triangles in a sub-mesh can be obtained with :py:meth:`~.cloudComPy.ccSubMesh.size`.
-The find the vertices associated to the triangles of a sub-mesh use :py:meth:`~.cloudComPy.ccSubMesh.getTriangleVertIndexes`.
+The common vertices of the sub-meshes can be accessed with :py:meth:`~.cloudComPy.ccSubMesh.getAssociatedCloud`.
+The number of triangles in a sub-mesh can be obtained with :py:meth:`~.cloudComPy.ccSubMesh.size`.
+To find the vertices associated to the triangles of a sub-mesh use :py:meth:`~.cloudComPy.ccSubMesh.getTriangleVertIndexes`.
 
 .. include:: ../tests/test060.py
    :start-after: #---subMesh02-begin
