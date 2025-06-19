@@ -9,6 +9,9 @@ As CloudComPy is under development, these instructions and the link are subject 
 
 You need a recent installation of Anaconda3 or miniconda3.
 
+**Note:** CloudComPy versions released in 2024 and earlier were built using a Conda **Python 3.10** environment: **CloudComPy310**.
+Now, new versions are built with a **Python 3.11** Conda environment: **CloudComPy311**
+
 You need to create a conda environment for CloudComPy: for instance, in Anaconda3, use the Anaconda3 prompt console:
 
 ```

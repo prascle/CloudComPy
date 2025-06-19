@@ -2,6 +2,19 @@
 
 These release notes start with the October 18, 2021 CloudComPy release.
 
+## June 19, 2025 CloudComPy release:
+
+ - cloudComPy is now built with a Conda Python 3.11 enivronment (instead of 3.10)
+ - cloudComPy is based on CloudCompare 2.14aplha (master May 8, 2025), with patch to work on macOS Sequoia 15.4 and more.
+ - (issue #192) improve behaviour when converting float into int is harmless
+ - (issue #195) improve documentation on normal generation with quadric fitting
+ - (issue #198) get transformation history
+ - (issue #196) improve doc on mesh transformations
+ - (issue #196) add a binding for mesh transformations
+ - (issue #208) read correctly submeshes and some other CloudCompare types in .obj
+ - embed install and build docs in binaries 
+ - several minor fixes and doc improvement.
+ 
 ## September 27, 2024 CloudCompy release:
 
  - (issue #176) filterBySFValue does not support Meshes

@@ -8,8 +8,8 @@ This procedure has been tested on Ubuntu 20.04.
 
 You must have [installed docker](https://docs.docker.com/engine/install/) on your computer.
 
-Create a directory (for instance `dockerbuild`) for building the docker image and copy into it the script `genCloudComPy_Conda310_docker.sh`,
-the Docker file `Dockerfile_CloudComPy310_build` from the the `building` directory of the CloudComPy repository.
+Create a directory (for instance `dockerbuild`) for building the docker image and copy into it the script `genCloudComPy_Conda311_docker.sh`,
+the Docker file `Dockerfile_CloudComPy311_build` from the the `building` directory of the CloudComPy repository.
 
 Create also an empty file `noplugin` on docker image build directory (`dockerbuild`):
 
@@ -30,13 +30,13 @@ To build without optional plugins:
 
 ```
 cd dockerbuild
-docker build -f Dockerfile_CloudComPy310_build -t cloudcompy310_build .
+docker build -f Dockerfile_CloudComPy311_build -t cloudcompy311_build .
 ```
 To build with FBX SDK plugin:
 
 ```
 cd dockerbuild
-docker build --build-arg FBXINC=fbxsdk/include --build-arg FBXLIB=fbxsdk/lib -f Dockerfile_CloudComPy310_build -t cloudcompy310_build .
+docker build --build-arg FBXINC=fbxsdk/include --build-arg FBXLIB=fbxsdk/lib -f Dockerfile_CloudComPy311_build -t cloudcompy311_build .
 ```
 
 **Note**: Building with other optional plugins is not yet documented.
@@ -47,14 +47,14 @@ Create an empty directory (for instance `~/CloudComPy/result`) on your host to s
 ```
 mkdir -p ~/CloudComPy/result
 cd ~/CloudComPy/result
-docker run -it -v `pwd`:/root/CloudComPy cloudcompy310_build /bin/bash
+docker run -it -v `pwd`:/root/CloudComPy cloudcompy311_build /bin/bash
 ```
 
 from the container prompt:
 
 ```
 ./execTests.sh
-/bin/cp /opt/installConda/CloudComPy_Conda310_Linux64_*.tgz /root/CloudComPy/
+/bin/cp /opt/installConda/CloudComPy_Conda311_Linux64_*.tgz /root/CloudComPy/
 ```
 
 On your host, on `~/CloudCompy/result`, get the files from the tests and the CloudComPy binary tarfile.

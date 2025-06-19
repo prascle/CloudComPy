@@ -1,5 +1,7 @@
 ## Build on Ubuntu 20.04 with native packages
 
+**Note: these instructions are not up-to-date. Building the latest sources with native packages probably requires a more recent distribution!**.
+
 On Ubuntu 20.04, you can install the development versions of the prerequisites with:
 
 **TODO: complete the list, many packages are required...**

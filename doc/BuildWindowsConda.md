@@ -5,6 +5,9 @@ There are several methods to install the prerequisites on Windows 10 or 11.
 I chose to install miniconda, which is a very complete and large Python-based tools environment. 
 There is a package system under miniconda, to select the products you need. It has all our prerequisites.
 
+**Note:** CloudComPy versions released in 2024 and earlier were built using a Conda **Python 3.10** environment: **CloudComPy310**.
+Now, new versions are built with a **Python 3.11** Conda environment: **CloudComPy311**
+
 From miniconda prompt:
 ```
 conda activate
@@ -16,13 +19,13 @@ conda config --add channels conda-forge
 conda config --set channel_priority flexible
 conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mpir=3.0" "mysql=8" notebook numpy "opencv=4.9" "openmp=8.0" "openssl>=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2"
 ```
-For information, the list of packages actually installed for building and testing can be found in [conda-list_Windows11_310](../building/conda-list_Windows11_310).
+For information, the list of packages actually installed for building and testing can be found in [conda-list_Windows11_311](../building/conda-list_Windows11_311).
 
 CMake from miniconda is used to get ctest at install, not for build.
 
 To use FBX format plugin, install the FBX SDK, not provided by an miniconda package.
 
-It is necessary to configure Visual Studio 2019 with CMake.
+It is necessary to configure Visual Studio (2022) with CMake.
 
 I don't master well the configuration and use of Visual Studio, so I tested two ways to use the Visual Studio GUI, 
 without knowing if there is a better way to take into account the prerequisites in the Visual Studio environment.
@@ -30,7 +33,7 @@ without knowing if there is a better way to take into account the prerequisites 
 - 1: Launch the Visual Studio GUI as is, without any additions, and give all the necessary paths for the prerequisites.
 
 - 2: Launch the Visual Studio GUI from the `miniconda Prompt (miniconda3)` console with the command: 
-`"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe"`. 
+`"C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe"`. 
 
 With the miniconda environment, many paths and variables are found automatically. 
 In both cases, it is necessary to provide some configuration variables to CMake. 

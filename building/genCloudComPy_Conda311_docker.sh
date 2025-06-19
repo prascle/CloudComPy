@@ -1,36 +1,24 @@
-#!/bin/bash
 
-export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                            # CloudComPy source directory
-export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda311                       # CloudComPy build directory
-export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                      # directory for CloudComPy installs
-export CLOUDCOMPY_INSTNAME=CloudComPy311                                               # CloudComPy install directory name
-export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                 # CloudComPy install directory
-export CLOUDCOMPY_TARFILE=CloudComPy_Conda311_Linux64_"$(date +"%Y%m%d-%H%M")".tgz     # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
-if [ -d ${HOME}/anaconda3 ]; then
-    export CONDA_ROOT=${HOME}/anaconda3                                                # root directory of conda installation
-else
-    export CONDA_ROOT=${HOME}/miniconda3                                                # root directory of conda installation
-fi
-export CONDA_ENV=CloudComPy311                                                         # conda environment name
-export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                                      # conda environment directory
-export CORK_REP=${HOME}/projets/CloudComPy/cork                                        # directory of cork (remove the plugin in cmake options if not needed)
-export FBXSDK_REP=${HOME}/projets/CloudComPy/fbxSdk                                    # directory of fbx sdk (remove the plugin in cmake options if not needed)
-export LIBIGL_REP=${HOME}/projets/CloudComPy/libigl                                    # directory of libigl (remove the plugin in cmake options if not needed)
-if [ -d ${HOME}/projets/CloudComPy/Occ-740p3_opt ]; then
-    export OPENCASCADE_REP=${HOME}/projets/CloudComPy/Occ-740p3_opt                    # directory of OpenCascade (remove the plugin in cmake options if not needed)
-elif [ -d ${HOME}/projets/hydro95/prerequisites/install/Occ-740p3_opt ]; then
-    export OPENCASCADE_REP=${HOME}/projets/hydro95/prerequisites/install/Occ-740p3_opt
-else
-    export OPENCASCADE_REP=${HOME}/projets/hydro95/prerequisites/install/Occ-740p3EDFp1
-fi
-export PCLLIB_REP=${HOME}/projets/CloudComPy/pcl/install                               # patch on pcl lib (issue #100): libpcl_common.so
-export NBTHREADS="$(grep -c processor /proc/cpuinfo)"                                  # number of threads for parallel make
+export CLOUDCOMPY_SRC=/root/CloudComPy                                             # CloudComPy source directory
+export CLOUDCOMPY_BUILD=/root/buildConda311                                        # CloudComPy build directory
+export CLOUDCOMPY_INSTDIR=/opt/installConda                                        # directory for CloudComPy installs
+export CLOUDCOMPY_INSTNAME=CloudComPy311                                           # CloudComPy install directory name
+export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}             # CloudComPy install directory
+export CLOUDCOMPY_TARFILE=CloudComPy_Conda311_Linux64_"$(date +"%Y%m%d-%H%M")".tgz # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
+export CONDA_ROOT=/opt/conda                                                       # root directory of conda installation
+export CONDA_ENV=CloudComPy311                                                     # conda environment name
+export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                                  # conda environment directory
+export FBXSDK_REP=/root/fbxsdk                                                     # directory of fbx sdk (remove the plugin Fbx in cmake options if not needed)
+export CORK_REP=/root/cork                                                         # directory of cork (remove the plugin Cork in cmake options if not needed)
+export LIBIGL_REP=/root/libigl                                                     # directory of libigl (remove the plugin Mesh_Boolean in cmake options if not needed)
+export OPENCASCADE_REP=/root/occt                                                  # directory of OpenCascade (remove the plugin Step in cmake options if not needed)
+export NBTHREADS="$(grep -c processor /proc/cpuinfo)"                              # number of threads for parallel make
 
-. ${CONDA_ROOT}/etc/profile.d/conda.sh                                                 # required to have access to conda commands in a shell script
+. ${CONDA_ROOT}/etc/profile.d/conda.sh                                             # required to have access to conda commands in a shell script
 
 error_exit()
 {
-  echo "Error $1" 1>&2
+  echo "*** Error $1"
   exit 1
 }
 
@@ -42,7 +30,6 @@ conda_buildenv()
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
-    ret=1 # --- force rebuild environment from scratch
     if [ $ret != "0" ]; then
         conda activate && \
         conda create -y --name ${CONDA_ENV} python=3.11 && \
@@ -59,7 +46,6 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
-    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu20.04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -123,7 +109,7 @@ cloudcompy_configure()
     -DPLUGIN_IO_QCSV_MATRIX:BOOL="1" \
     -DPLUGIN_IO_QDRACO:BOOL="1" \
     -DPLUGIN_IO_QE57:BOOL="1" \
-    -DPLUGIN_IO_QFBX:BOOL="1" \
+    -DPLUGIN_IO_QFBX:BOOL="0" \
     -DPLUGIN_IO_QLAS:BOOL="1" \
     -DPLUGIN_IO_QLAS_FWF:BOOL="0" \
     -DPLUGIN_IO_QPDAL:BOOL="0" \
@@ -131,7 +117,7 @@ cloudcompy_configure()
     -DPLUGIN_IO_QRDB:BOOL="1" \
     -DPLUGIN_IO_QRDB_FETCH_DEPENDENCY:BOOL="1" \
     -DPLUGIN_IO_QRDB_INSTALL_DEPENDENCY:BOOL="1" \
-    -DPLUGIN_IO_QSTEP:BOOL="1" \
+    -DPLUGIN_IO_QSTEP:BOOL="0" \
     -DPLUGIN_PYTHON="OFF" \
     -DPLUGIN_STANDARD_3DMASC:BOOL="1" \
     -DPLUGIN_STANDARD_MASONRY_QAUTO_SEG:BOOL="1" \
@@ -142,14 +128,14 @@ cloudcompy_configure()
     -DPLUGIN_STANDARD_QCLOUDLAYERS:BOOL="1" \
     -DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER:BOOL="1" \
     -DPLUGIN_STANDARD_QCOMPASS:BOOL="1" \
-    -DPLUGIN_STANDARD_QCORK:BOOL="1" \
+    -DPLUGIN_STANDARD_QCORK:BOOL="0" \
     -DPLUGIN_STANDARD_QCSF:BOOL="1" \
     -DPLUGIN_STANDARD_QFACETS:BOOL="1" \
     -DPLUGIN_STANDARD_QHOUGH_NORMALS:BOOL="1" \
     -DPLUGIN_STANDARD_QHPR:BOOL="1" \
     -DPLUGIN_STANDARD_QJSONRPC:BOOL="1" \
     -DPLUGIN_STANDARD_QM3C2:BOOL="1" \
-    -DPLUGIN_STANDARD_QMESH_BOOLEAN:BOOL="1" \
+    -DPLUGIN_STANDARD_QMESH_BOOLEAN:BOOL="0" \
     -DPLUGIN_STANDARD_QMPLANE:BOOL="1" \
     -DPLUGIN_STANDARD_QPCL:BOOL="1" \
     -DPLUGIN_STANDARD_QPCV:BOOL="1" \
@@ -176,20 +162,11 @@ cloudcompy_build()
 {
     echo "# --- build and install CloudComPy ---"
     cd ${CLOUDCOMPY_BUILD} && make -j${NBTHREADS} && make install
-    cd ${OPENCASCADE_REP}/lib && \
-    cp -f libTKSTEP.so.7 libTKSTEPBase.so.7 libTKSTEPAttr.so.7 libTKSTEP209.so.7 libTKShHealing.so.7 libTKTopAlgo.so.7 libTKBRep.so.7 \
-    libTKGeomBase.so.7 libTKG3d.so.7 libTKG2d.so.7 libTKMath.so.7 libTKernel.so.7 libTKXSBase.so.7 libTKGeomAlgo.so.7 libTKMesh.so.7 \
-    ${CLOUDCOMPY_INSTALL}/lib/cloudcompare/plugins
-    cd ${PCLLIB_REP}/lib && \
-    cp -f libpcl_common.so.1.12.1 ${CLOUDCOMPY_INSTALL}/lib/cloudcompare
-    cd ${CLOUDCOMPY_INSTALL}/lib/cloudcompare && \
-    ln -s libpcl_common.so.1.12.1 libpcl_common.so.1.12 && ln -s libpcl_common.so.1.12.1 libpcl_common.so
 }
 
 cloudcompy_tarfile()
 {
     echo "# --- generate CloudComPy binaries tarfile ---"
-    cd ${CLOUDCOMPY_INSTNAME} && find . -type d -name __pycache__ -exec rm -rf {} \;
     cd ${CLOUDCOMPY_INSTDIR} && rm -f ${CLOUDCOMPY_TARFILE} &&\
     tar cvzf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
 }
@@ -199,13 +176,16 @@ cloudcompy_test()
     echo "# --- test CloudComPy ---"
     cd ${CLOUDCOMPY_INSTALL} && \
     . bin/condaCloud.sh activate ${CLOUDCOMPY_INSTNAME} && \
+    export QT_QPA_PLATFORM=offscreen && \
     rm -rf ~/CloudComPy/Data &&
     cd doc/PythonAPI_test && ctest
 }
 
-conda_buildenv && \
+#conda_buildenv
+
 cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \
-cloudcompy_tarfile && \
-cloudcompy_test
+cloudcompy_tarfile
+
+# cloudcompy_test

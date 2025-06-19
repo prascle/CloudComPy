@@ -87,6 +87,7 @@ add_subdirectory( pyAPI )
 add_subdirectory( pybind11 )
 add_subdirectory( tests )
 add_subdirectory( doc )
+add_subdirectory( building )
 
 # --- Sphinx doc, post install (must be in last position)
 

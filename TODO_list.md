@@ -200,6 +200,7 @@ TODO List
 * DONE: (issue #196) improve doc on mesh transformations
 * DONE: (issue #196) add a binding for mesh transformations
 * DONE: (issue #208) read correctly submeshes and some other CloudCompare types in .obj
+* DONE: embed install and build docs in binaries 
 - TODO: try to have ctest working at build step on Windows and Linux (incomplete)
 - TODO: A kind of automatic test coverage, to find examples for a particular function.
 - TODO: Fix the Link problem in Windows to avoid the option /force:multiple at link step
@@ -231,6 +232,5 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
-- TODO: embed install and build docs in binaries 
 
 

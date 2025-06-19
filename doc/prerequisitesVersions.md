@@ -1,5 +1,7 @@
 ## prerequisites required versions
 
+**Note: the following is not up-to-date. See building instructions based on Conda packages instead.**
+
 The minimum required version of each prerequisite is not always precisely identified. Examples of constructions that work are given here.
 
 First example: Linux64, Ubuntu 20.04, all native packages.

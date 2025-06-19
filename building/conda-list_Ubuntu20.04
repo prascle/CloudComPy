@@ -76,7 +76,7 @@ cookiecutter              2.6.0              pyhd8ed1ab_1    conda-forge
 cryptography              45.0.4          py311hafd3f86_0    conda-forge
 curl                      8.14.1               h332b0f4_0    conda-forge
 cycler                    0.12.1             pyhd8ed1ab_1    conda-forge
-cyrus-sasl                2.1.27               h54b06d7_7    conda-forge
+cyrus-sasl                2.1.28               hd9c7081_0    conda-forge
 dav1d                     1.2.1                hd590300_0    conda-forge
 dbus                      1.13.6               h5008d03_3    conda-forge
 debugpy                   1.8.14          py311hfdbb021_0    conda-forge
@@ -252,7 +252,7 @@ liblzma                   5.8.1                hb9d3cd8_2    conda-forge
 liblzma-devel             5.8.1                hb9d3cd8_2    conda-forge
 libnetcdf                 4.9.2           nompi_h135f659_114    conda-forge
 libnghttp2                1.64.0               h161d5f1_0    conda-forge
-libnsl                    2.0.1                hd590300_0    conda-forge
+libnsl                    2.0.1                hb9d3cd8_1    conda-forge
 libntlm                   1.8                  hb9d3cd8_0    conda-forge
 libogg                    1.3.5                hd0c01bc_1    conda-forge
 libopenblas               0.3.29          pthreads_h94d23a6_0    conda-forge
@@ -328,7 +328,7 @@ mpfr                      4.2.1                h90cbb55_3    conda-forge
 mpg123                    1.32.9               hc50e24c_0    conda-forge
 mpir                      3.0.0             hf484d3e_1002    conda-forge
 msgpack-python            1.1.1           py311hd18a35c_0    conda-forge
-multidict                 6.4.4           py311h2dc5d0c_0    conda-forge
+multidict                 6.5.0           py311h2dc5d0c_0    conda-forge
 munkres                   1.1.4              pyhd8ed1ab_1    conda-forge
 mypy_extensions           1.1.0              pyha770c72_0    conda-forge
 mysql                     8.0.33               h27aab58_6    conda-forge
@@ -441,7 +441,7 @@ qtawesome                 1.4.0              pyh9208f05_1    conda-forge
 qtconsole                 5.6.1              pyhd8ed1ab_2    conda-forge
 qtconsole-base            5.6.1              pyha770c72_2    conda-forge
 qtpy                      2.4.3              pyhd8ed1ab_1    conda-forge
-quaternion                2024.0.8        py311h9f3472d_0    conda-forge
+quaternion                2024.0.9        py311hb0beb2c_0    conda-forge
 re2                       2023.09.01           h7f4b329_1    conda-forge
 readline                  8.2                  h8c095d6_2    conda-forge
 referencing               0.36.2             pyh29332c3_0    conda-forge
@@ -481,7 +481,7 @@ spyder-kernels            3.0.5           unix_pyh707e725_0    conda-forge
 sqlite                    3.50.1               h9eae976_0    conda-forge
 stack_data                0.6.3              pyhd8ed1ab_1    conda-forge
 suitesparse               7.10.1          ha0f6916_7100102    conda-forge
-superqt                   0.7.3              pyhb6d5dde_0    conda-forge
+superqt                   0.7.5              pyhb6d5dde_0    conda-forge
 svt-av1                   1.8.0                h59595ed_0    conda-forge
 tabulate                  0.9.0              pyhd8ed1ab_2    conda-forge
 tbb                       2022.1.0             h4ce085d_0    conda-forge
@@ -508,7 +508,7 @@ ujson                     5.10.0          py311hfdbb021_1    conda-forge
 unicodedata2              16.0.0          py311h9ecbd09_0    conda-forge
 uri-template              1.3.0              pyhd8ed1ab_1    conda-forge
 uriparser                 0.9.8                hac33072_0    conda-forge
-urllib3                   2.4.0              pyhd8ed1ab_0    conda-forge
+urllib3                   2.5.0              pyhd8ed1ab_0    conda-forge
 utfcpp                    4.0.6                h005c6e1_0    conda-forge
 vtk                       9.2.6           qt_py311h1234567_223    conda-forge
 vtk-base                  9.2.6           qt_py311h1234567_223    conda-forge
