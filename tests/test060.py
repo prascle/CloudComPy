@@ -67,7 +67,7 @@ for i in range(nbChildren):
 #---subMesh01-end
 
 #---subMesh02-begin
-for i in len(subMeshes):
+for i in range(len(subMeshes)):
     child = subMeshes[i]
     print("child", i , child.getName())
     print("  size:", child.size())
