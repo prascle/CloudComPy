@@ -232,5 +232,7 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
+- TODO: (issue #216) Hough Plugin
+- 
 
 
