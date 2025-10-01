@@ -1,0 +1,203 @@
+[build-system]
+requires = ["scikit-build-core>=0.11", "pybind11>=3.0", "sphinx_rtd_theme"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cloudComPy"
+version = "2.13.1"
+dependencies = ["numpy", "scipy", "requests", "psutil", "matplotlib", "quaternion"]
+license = "GPL-3.0-or-later"
+license-files = ["License.txt"]
+description="CloudCompare Python bindings"
+readme = "README.md"
+authors = [
+  { name = "Paul RASCLE", email = "paul.rascle@openfields.fr" },
+]
+requires-python = ">=3.9"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Private :: Do Not Upload",
+]
+
+
+[dependency-groups]
+test = ["pytest"]
+dev = [{ include-group = "test" }]
+
+[tool.scikit-build]
+build-dir = "build/{wheel_tag}"
+cmake.build-type = "Release"
+build.verbose = true
+
+[tool.scikit-build.cmake.define]
+BUILD_PYPI = true
+BUILD_PY_TESTING = true
+BUILD_REFERENCE_DOC = true
+BUILD_TESTING = false
+CCCORELIB_SHARED = true
+CCCORELIB_USE_CGAL = true
+CCCORELIB_USE_QT_CONCURRENT = true
+CCCORELIB_USE_TBB = false
+CGAL_DIR = {env="CGAL_DIR", default="CGAL_DIR_not_set"}
+CORK_INCLUDE_DIR = {env="CORK_INCLUDE_DIR", default="CORK_INCLUDE_DIR_not_set"}
+CORK_RELEASE_LIBRARY_FILE = {env="CORK_RELEASE_LIBRARY_FILE", default="CORK_RELEASE_LIBRARY_FILE_not_set"}
+DRACO_INCLUDE_DIR = {env="DRACO_INCLUDE_DIR", default="DRACO_INCLUDE_DIR_not_set"}
+DRACO_LIBRARIES = {env="DRACO_LIBRARIES", default="DRACO_LIBRARIES_not_set"}
+DRACO_LIB_DIR = {env="DRACO_LIB_DIR", default="DRACO_LIB_DIR_not_set"}
+Draco_DIR = {env="Draco_DIR", default="Draco_DIR_not_set"}
+EIGEN_INCLUDE_DIR = {env="EIGEN_INCLUDE_DIR", default="EIGEN_INCLUDE_DIR_not_set"}
+EIGEN_ROOT_DIR = {env="EIGEN_ROOT_DIR", default="EIGEN_ROOT_DIR_not_set"}
+#FBX_SDK_INCLUDE_DIR = {env="FBX_SDK_INCLUDE_DIR", default="FBX_SDK_INCLUDE_DIR_not_set"}
+#FBX_SDK_LIBRARY_FILE = {env="FBX_SDK_LIBRARY_FILE", default="FBX_SDK_LIBRARY_FILE_not_set"}
+#FBX_XML2_LIBRARY_FILE = {env="FBX_XML2_LIBRARY_FILE", default="FBX_XML2_LIBRARY_FILE_not_set"}
+#GDAL_INCLUDE_DIR = {env="GDAL_INCLUDE_DIR", default="GDAL_INCLUDE_DIR_not_set"}
+#GDAL_LIBRARY = {env="GDAL_LIBRARY", default="GDAL_LIBRARY_not_set"}
+#GMP_INCLUDE_DIR = {env="GMP_INCLUDE_DIR", default="GMP_INCLUDE_DIR_not_set"}
+#GMP_LIBRARIES = {env="GMP_LIBRARIES", default="GMP_LIBRARIES_not_set"}
+#GMP_LIBRARIES_DIR = {env="GMP_LIBRARIES_DIR", default="GMP_LIBRARIES_DIR_not_set"}
+LIBIGL_INCLUDE_DIR = {env="LIBIGL_INCLUDE_DIR", default="LIBIGL_INCLUDE_DIR_not_set"}
+LIBIGL_RELEASE_LIBRARY_FILE = {env="LIBIGL_RELEASE_LIBRARY_FILE", default="LIBIGL_RELEASE_LIBRARY_FILE_not_set"}
+#MPFR_INCLUDE_DIR = {env="MPFR_INCLUDE_DIR", default="MPFR_INCLUDE_DIR_not_set"}
+#MPFR_LIBRARIES = {env="MPFR_LIBRARIES", default="MPFR_LIBRARIES_not_set"}
+#MPFR_LIBRARIES_DIR = {env="MPFR_LIBRARIES_DIR", default="MPFR_LIBRARIES_DIR_not_set"}
+#MPIR_INCLUDE_DIR = {env="MPIR_INCLUDE_DIR", default="MPIR_INCLUDE_DIR_not_set"}
+#MPIR_RELEASE_LIBRARY_FILE = {env="MPIR_RELEASE_LIBRARY_FILE", default="MPIR_RELEASE_LIBRARY_FILE_not_set"}
+#OPENCASCADE_DLL_DIR = {env="OPENCASCADE_DLL_DIR", default="OPENCASCADE_DLL_DIR_not_set"}
+#OPENCASCADE_INC_DIR = {env="OPENCASCADE_INC_DIR", default="OPENCASCADE_INC_DIR_not_set"}
+#OPENCASCADE_LIB_DIR = {env="OPENCASCADE_LIB_DIR", default="OPENCASCADE_LIB_DIR_not_set"}
+OPTION_USE_GDAL = true
+OpenMP_omp_LIBRARY = {env="OpenMP_omp_LIBRARY", default="OpenMP_omp_LIBRARY_not_set"}
+PLUGIN_EXAMPLE_GL = true
+PLUGIN_EXAMPLE_IO = true
+PLUGIN_EXAMPLE_STANDARD = true
+PLUGIN_GL_QEDL = true
+PLUGIN_GL_QSSAO = true
+PLUGIN_IO_QADDITIONAL = true
+PLUGIN_IO_QCORE = true
+PLUGIN_IO_QCSV_MATRIX = true
+PLUGIN_IO_QDRACO = true
+PLUGIN_IO_QE57 = true
+PLUGIN_IO_QFBX = false
+PLUGIN_IO_QLAS = true
+PLUGIN_IO_QLAS_FWF = false
+PLUGIN_IO_QPDAL = false
+PLUGIN_IO_QPHOTOSCAN = true
+PLUGIN_IO_QRDB = false
+PLUGIN_IO_QRDB_FETCH_DEPENDENCY = false
+PLUGIN_IO_QRDB_INSTALL_DEPENDENCY = false
+PLUGIN_IO_QSTEP = false
+PLUGIN_PYTHON = "OFF"
+PLUGIN_STANDARD_3DMASC = true
+PLUGIN_STANDARD_MASONRY_QAUTO_SEG = true
+PLUGIN_STANDARD_MASONRY_QMANUAL_SEG = true
+PLUGIN_STANDARD_QANIMATION = true
+PLUGIN_STANDARD_QBROOM = true
+PLUGIN_STANDARD_QCANUPO = true
+PLUGIN_STANDARD_QCLOUDLAYERS = true
+PLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER = true
+PLUGIN_STANDARD_QCOMPASS = true
+PLUGIN_STANDARD_QCORK = false
+PLUGIN_STANDARD_QCSF = true
+PLUGIN_STANDARD_QFACETS = true
+PLUGIN_STANDARD_QHOUGH_NORMALS = true
+PLUGIN_STANDARD_QHPR = true
+PLUGIN_STANDARD_QJSONRPC = true
+PLUGIN_STANDARD_QM3C2 = true
+PLUGIN_STANDARD_QMESH_BOOLEAN = true
+PLUGIN_STANDARD_QMPLANE = true
+PLUGIN_STANDARD_QPCL = true
+PLUGIN_STANDARD_QPCV = true
+PLUGIN_STANDARD_QPOISSON_RECON = true
+PLUGIN_STANDARD_QRANSAC_SD = true
+PLUGIN_STANDARD_QSRA = true
+PLUGIN_STANDARD_QTREEISO = false
+PLUGIN_STANDARD_QVOXFALL = false
+PYTHONAPI_EXTDATA_DIRECTORY = "CloudComPy/ExternalData"
+PYTHONAPI_TEST_DIRECTORY = "CloudComPy/Data"
+PYTHONAPI_TRACES = true
+PYTHON_PREFERED_VERSION  = {env="PYTHON_PREFERED_VERSION", default="PYTHON_PREFERED_VERSION_not_set"}
+QANIMATION_WITH_FFMPEG_SUPPORT = false
+QT_PREFIX = {env="QT_PREFIX", default="QT_PREFIX_not_set"}
+Qt5_DIR = {env="Qt5_DIR", default="Qt5_DIR_not_set"}
+#TBB_DIR = {env="TBB_DIR", default="TBB_DIR_not_set"}
+USE_CONDA_PACKAGES = false
+USE_EXTERNAL_QHULL_FOR_QHPR = false
+WHEEL_TAG = {env="SKBUILD_WHEEL_TAG", default="wheel_tag_not_set"}
+XercesC_INCLUDE_DIR = {env="XercesC_INCLUDE_DIR", default="XercesC_INCLUDE_DIR_not_set"}
+XercesC_LIBRARY_DEBUG = {env="XercesC_LIBRARY_DEBUG", default="XercesC_LIBRARY_DEBUG_not_set"}
+XercesC_LIBRARY_RELEASE = {env="XercesC_LIBRARY_RELEASE", default="XercesC_LIBRARY_RELEASE_not_set"}
+XercesC_VERSION = {env="XercesC_VERSION", default="XercesC_VERSION_not_set"}
+#ZLIB_INCLUDE_DIR = {env="ZLIB_INCLUDE_DIR", default="ZLIB_INCLUDE_DIR_not_set"}
+#ZLIB_LIBRARY_RELEASE = {env="ZLIB_LIBRARY_RELEASE", default="ZLIB_LIBRARY_RELEASE_not_set"}
+pybind11_DIR = {env="pybind11_DIR", default="pybind11_DIR_not_set"}
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+log_cli_level = "INFO"
+filterwarnings = [
+  "error",
+  "ignore::pytest.PytestCacheWarning",
+]
+testpaths = ["tests"]
+
+
+[tool.cibuildwheel]
+build-frontend = "build[uv]"
+enable = ["pypy"]
+test-command = "python -m pytest tests"
+test-sources = ["pyproject.toml", "tests"]
+test-groups = ["test"]
+
+[tool.cibuildwheel.pyodide]
+build-frontend = {name = "build", args = ["--exports", "whole_archive"]}
+
+[tool.cibuildwheel.ios]
+build-frontend = "build"
+xbuild-tools = ["cmake", "ninja"]
+
+[tool.cibuildwheel.android]
+build-frontend = "build"
+environment.ANDROID_API_LEVEL = "24"
+
+[tool.ruff.lint]
+extend-select = [
+  "B",           # flake8-bugbear
+  "I",           # isort
+  "ARG",         # flake8-unused-arguments
+  "C4",          # flake8-comprehensions
+  "EM",          # flake8-errmsg
+  "ICN",         # flake8-import-conventions
+  "G",           # flake8-logging-format
+  "PGH",         # pygrep-hooks
+  "PIE",         # flake8-pie
+  "PL",          # pylint
+  "PT",          # flake8-pytest-style
+  "PTH",         # flake8-use-pathlib
+  "RET",         # flake8-return
+  "RUF",         # Ruff-specific
+  "SIM",         # flake8-simplify
+  "T20",         # flake8-print
+  "UP",          # pyupgrade
+  "YTT",         # flake8-2020
+  "EXE",         # flake8-executable
+  "NPY",         # NumPy specific rules
+  "PD",          # pandas-vet
+]
+ignore = [
+  "PLR09",    # Too many X
+  "PLR2004",  # Magic comparison
+]
+isort.required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["T20"]

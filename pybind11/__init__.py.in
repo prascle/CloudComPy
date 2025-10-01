@@ -31,6 +31,41 @@ Python3 access to cloudCompare objects is done like this:
   cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
  
 """
-from _cloudComPy import *
+import os
+cloudComPyInstallDir = os.path.dirname(__file__)
+
+isPypiBuild = @IS_PYPI_BUILD@
+if isPypiBuild:
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"]=os.path.join(cloudComPyInstallDir, "plugins")
+    print("QT_QPA_PLATFORM_PLUGIN_PATH", os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
+
+    #Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl, xcb.
+    os.environ["QT_QPA_PLATFORM"]="offscreen"
+    print("QT_QPA_PLATFORM", os.environ["QT_QPA_PLATFORM"])
+
+    os.environ["QT_XCB_GL_INTEGRATION"]="none" # 3 possibles values : xcb_egl, xcb_glx, none
+    print("QT_XCB_GL_INTEGRATION", os.environ["QT_XCB_GL_INTEGRATION"])
+
+    from ._cloudComPy import *
+else:
+    from _cloudComPy import *
+
 initCC()
 initCloudCompare()
+
+def launchCloudCompareGUI():
+    """
+    Launch the CloudCompare GUI in a subprocess, and return immediately.
+    """
+    import subprocess
+    subprocess.Popen(os.path.join(cloudComPyInstallDir, "CloudCompare"))
+    
+def launchTests():
+    """
+    Launch the cloudComPy Python tests
+    """
+    import subprocess
+    oldCWD = os.getcwd()
+    os.chdir(os.path.join(cloudComPyInstallDir,"doc/PythonAPI_test"))
+    subprocess.run("ctest")
+    os.chdir(oldCWD)

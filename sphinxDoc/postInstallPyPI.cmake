@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 ##########################################################################
 #                                                                        #
 #                              CloudComPy                                #
@@ -21,23 +19,26 @@
 #                                                                        #
 ##########################################################################
 
-"""
-MeshBoolean is a standard plugin of cloudComPy.
-
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginMeshBoolean` function:
-::
-
-  isMeshBoolean_available = cc.isPluginMeshBoolean()
-
-MeshBoolean is a submodule of cloudCompy:
-::
-
-  import cloudComPy as cc
-  # ...
-  if cc.isPluginMeshBoolean():
-      import cloudComPy.MeshBoolean
-      cc.MeshBoolean.computeMeshBoolean(...)
-"""
-from _MeshBoolean import *
-initTrace_MeshBoolean()
+message( STATUS "post install process ...")
+if (WIN32)
+    message( STATUS "generate documentation ...")
+    execute_process( COMMAND sphinxDoc\genSphinxDoc.bat )
+elseif( APPLE )
+    execute_process( COMMAND pwd )
+    message( STATUS "add libraries to bundle ...")
+    execute_process( COMMAND python ${CMAKE_SOURCE_DIR}/CloudCompare/scripts/mac/bundle/libBundleCloudCompare.py ${CMAKE_INSTALL_PREFIX})
+    message( STATUS "signature ...")
+    # --- developper signature (CC_BUNDLE_SIGN) is set in .zshrc 
+    execute_process( COMMAND python ${CMAKE_SOURCE_DIR}/CloudCompare/scripts/mac/bundle/signatureCloudCompare.py ${CMAKE_INSTALL_PREFIX})
+    message( STATUS "generate documentation ...")
+    execute_process( COMMAND chmod +x sphinxDoc/genSphinxDoc.zsh )
+    execute_process( COMMAND zsh sphinxDoc/genSphinxDoc.zsh ERROR_QUIET )
+else()
+    execute_process( COMMAND pwd )
+    # specific behavior for post install script, while builing wheel package on Linux
+    message( STATUS "generate documentation ... ${CMAKE_BINARY_DIR}/build/${WHEEL_TAG}/sphinxDoc/genSphinxDoc.sh")
+    execute_process( COMMAND bash ${CMAKE_BINARY_DIR}/build/${WHEEL_TAG}/sphinxDoc/genSphinxDoc.sh )
+    #execute_process( COMMAND bash ${CMAKE_CURRENT_BINARY_DIR}/genSphinxDoc.sh )
+endif()
+message( STATUS "... Done")
 

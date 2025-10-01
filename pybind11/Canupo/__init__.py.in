@@ -22,21 +22,21 @@
 ##########################################################################
 
 """
-CSF is a standard plugin of cloudComPy.
+Canupo is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCSF` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCanupo` function:
 ::
 
-  isCSF_available = cc.isPluginCSF()
+  isCanupo_available = cc.isPluginCanupo()
 
-CSF is a submodule of cloudCompy:
+Canupo is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginCSF():
-      import cloudComPy.CSF
-      cc.CSF.computeCSF(...)
+  if cc.isPluginCanupo():
+      import cloudComPy.Canupo
+      cc.Canupo.computeCanupo(...)
 """
-from _CSF import *
-initTrace_CSF()
+from @CLOUDCOMPY_IMPORT_PREFIX@_Canupo import *
+initTrace_Canupo()

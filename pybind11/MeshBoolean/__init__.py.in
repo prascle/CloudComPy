@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ##########################################################################
 #                                                                        #
 #                              CloudComPy                                #
@@ -19,24 +21,23 @@
 #                                                                        #
 ##########################################################################
 
-if(WIN32)
-        set( BUILDING_DOCS
-            conda-list_Windows11_311
-            )
-elseif (USE_CONDA_PACKAGES)
-    if(APPLE)
-        set( BUILDING_DOCS
-            conda-list_macOS_311
-            )
-    else()
-        set( BUILDING_DOCS
-        conda-list_Ubuntu20.04
-            )
-    endif()
-endif()
+"""
+MeshBoolean is a standard plugin of cloudComPy.
 
-if ( BUILD_PYPI )
-    install(FILES ${BUILDING_DOCS} DESTINATION cloudComPy/doc)
-else()
-    install(FILES ${BUILDING_DOCS} DESTINATION doc)
-endif()
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginMeshBoolean` function:
+::
+
+  isMeshBoolean_available = cc.isPluginMeshBoolean()
+
+MeshBoolean is a submodule of cloudCompy:
+::
+
+  import cloudComPy as cc
+  # ...
+  if cc.isPluginMeshBoolean():
+      import cloudComPy.MeshBoolean
+      cc.MeshBoolean.computeMeshBoolean(...)
+"""
+from @CLOUDCOMPY_IMPORT_PREFIX@_MeshBoolean import *
+initTrace_MeshBoolean()
+

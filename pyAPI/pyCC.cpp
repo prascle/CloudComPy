@@ -261,9 +261,13 @@ pyCC* initCloudCompare()
         CCTRACE("initCloudCompare");
     	//viewerPyApplication::InitOpenGL();
         QDir appDir = initCC::moduleDir;
+#ifdef BUILD_PYPI
+        QString appliDir = appDir.absolutePath() + "/cloudComPy";
+#else
         appDir.cdUp();
         appDir.cdUp();
         QString appliDir = appDir.absolutePath() + "/bin";
+#endif
     	viewerPyApplication* app = new viewerPyApplication(pyCC_argc, pyCC_argv, true, appliDir);
     	//QApplication* app = new QApplication(pyCC_argc, pyCC_argv);
         s_pyCCInternals = new pyCC;
@@ -343,6 +347,13 @@ void pyCC_setupPaths(pyCC* capi)
         capi->m_PluginPaths << (theDir.absolutePath() + "/CloudCompare/plugins"); // need to create a symbolic link here for all the plugins.so
         capi->m_ShaderPath = (theDir.absolutePath() + "/shaders");
         capi->m_TranslationPath = (theDir.absolutePath() + "/CloudCompare/translations");
+    }
+    else if ( theDir.dirName() == "site-packages" ) // PyPI
+    {
+        CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
+        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
+        capi->m_ShaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        capi->m_TranslationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
     }
     else
     {
@@ -3261,8 +3272,11 @@ public:
                                         vertices->setEnabled(false);
 
                                         ++realCount;
+#ifdef BUILD_PYPI
+                                        poly->setMetaData(ccContourLinesGenerator_::MetaKeySubIndex(), realCount);
+#else
                                         poly->setMetaData(ccContourLinesGenerator::MetaKeySubIndex(), realCount);
-
+#endif
                                         //add the 'const altitude' meta-data as well
                                         poly->setMetaData(ccPolyline::MetaKeyConstAltitude(), QVariant(v));
 

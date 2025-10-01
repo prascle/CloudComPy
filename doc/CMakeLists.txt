@@ -31,7 +31,11 @@ set( USE_DOCS
     UseLinuxCondaBinary.md
     UseWindowsCondaBinary.md
     )
-install(FILES ${USE_DOCS} DESTINATION doc)
+if ( BUILD_PYPI )
+    install(FILES ${USE_DOCS} DESTINATION cloudComPy/doc )
+else()
+    install(FILES ${USE_DOCS} DESTINATION doc )
+endif()
 
 add_subdirectory( samples )
 

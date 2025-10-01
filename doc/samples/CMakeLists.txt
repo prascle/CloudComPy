@@ -23,7 +23,11 @@ set( NOTEBOOK_SAMPLES
      histogramOnDistanceComputation.ipynb
     )
 
-set( NOTEBOOK_SAMPLES_DIR doc/samples )
+if ( BUILD_PYPI )
+    set( NOTEBOOK_SAMPLES_DIR cloudComPy/doc/samples )
+else()
+    set( NOTEBOOK_SAMPLES_DIR doc/samples )
+endif()
 
 install(PROGRAMS ${NOTEBOOK_SAMPLES}
         DESTINATION ${NOTEBOOK_SAMPLES_DIR}

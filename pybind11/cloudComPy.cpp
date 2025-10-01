@@ -2881,7 +2881,9 @@ PYBIND11_MODULE(_cloudComPy, m0)
 
     m0.def("ComputeVolume25D", &ComputeVolume25D,
            py::arg("reportInfo"), py::arg("ground"), py::arg("ceil"), py::arg("vertDim"),
-           py::arg("gridStep"), py::arg("groundHeight"), py::arg("ceilHeight"),
+           py::arg("gridStep"),
+           py::arg("groundHeight")=std::numeric_limits<double>::quiet_NaN(),
+           py::arg("ceilHeight")=std::numeric_limits<double>::quiet_NaN(),
            py::arg("projectionType")=ccRasterGrid::PROJ_AVERAGE_VALUE,
            py::arg("groundEmptyCellFillStrategy")=ccRasterGrid::LEAVE_EMPTY,
            py::arg("groundMaxEdgeLength")=0.0,

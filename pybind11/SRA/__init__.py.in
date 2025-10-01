@@ -22,22 +22,22 @@
 ##########################################################################
 
 """
-HPR is a standard plugin of cloudComPy.
+SRA is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginHPR` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginSRA` function:
 ::
 
-  isHPR_available = cc.isPluginHPR()
+  isSRA_available = cc.isPluginSRA()
 
-HPR is a submodule of cloudCompy:
+SRA is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginHPR():
-      import cloudComPy.HPR
-      cc.HPR.computeHPR(...)
+  if cc.isPluginSRA():
+      import cloudComPy.SRA
+      cc.SRA.loadProfile(...)
 """
-from _HPR import *
-initTrace_HPR()
-
+from cloudComPy import DEFAULT_SCALES
+from @CLOUDCOMPY_IMPORT_PREFIX@_SRA import *
+initTrace_SRA()
