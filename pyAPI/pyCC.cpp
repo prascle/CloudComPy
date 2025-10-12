@@ -3261,7 +3261,7 @@ public:
                                         vertices->setEnabled(false);
 
                                         ++realCount;
-                                        poly->setMetaData(ccContourLinesGenerator::MetaKeySubIndex(), realCount);
+                                        poly->setMetaData(ccContourLinesGenerator_::MetaKeySubIndex(), realCount);
 
                                         //add the 'const altitude' meta-data as well
                                         poly->setMetaData(ccPolyline::MetaKeyConstAltitude(), QVariant(v));
