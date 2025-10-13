@@ -31,7 +31,7 @@ set( USE_DOCS
     UseLinuxCondaBinary.md
     UseWindowsCondaBinary.md
     )
-install(FILES ${USE_DOCS} DESTINATION doc)
+install(FILES ${USE_DOCS} DESTINATION cloudComPy/doc )
 
 add_subdirectory( samples )
 

@@ -35,7 +35,7 @@ else()
 endif()
 
 # where to install the tests scripts
-set(PYTHONAPI_TEST_SCRIPTS_DIRECTORY doc/PythonAPI_test)
+set(PYTHONAPI_TEST_SCRIPTS_DIRECTORY cloudComPy/doc/PythonAPI_test)
 
 # data sample generator and other utilities for test
 configure_file(gendata.py.in gendata.py)

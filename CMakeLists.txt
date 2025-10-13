@@ -70,7 +70,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 # since they are only used by qCC/ccViewer
 if( UNIX AND NOT APPLE )
 	include( GNUInstallDirs )
-	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/cloudcompare")
+	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 endif()
 
 # scripts to set environment
@@ -102,5 +102,5 @@ set( README_DOCS
     README.md
     License.txt
     )
-install(FILES ${README_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES ${README_DOCS} DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
     

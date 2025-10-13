@@ -31,6 +31,6 @@ Python3 access to cloudCompare objects is done like this:
   cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
  
 """
-from _cloudComPy import *
+from ._cloudComPy import *
 initCC()
 initCloudCompare()

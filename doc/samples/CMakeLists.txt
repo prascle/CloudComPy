@@ -23,7 +23,7 @@ set( NOTEBOOK_SAMPLES
      histogramOnDistanceComputation.ipynb
     )
 
-set( NOTEBOOK_SAMPLES_DIR doc/samples )
+set( NOTEBOOK_SAMPLES_DIR cloudComPy/doc/samples )
 
 install(PROGRAMS ${NOTEBOOK_SAMPLES}
         DESTINATION ${NOTEBOOK_SAMPLES_DIR}
