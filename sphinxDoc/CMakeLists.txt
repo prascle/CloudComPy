@@ -74,6 +74,7 @@ if ( BUILD_REFERENCE_DOC )
     message( STATUS "Sphinx documentation will be generated at install" )
     install(CODE "set(CMAKE_SOURCE_DIR \"${CMAKE_SOURCE_DIR}\")")
     install(CODE "set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\")")
+    install(CODE "set(WHEEL_TAG \"${WHEEL_TAG}\")")
     install( SCRIPT postInstall.cmake )
 endif()
 
