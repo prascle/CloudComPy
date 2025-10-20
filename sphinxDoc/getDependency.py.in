@@ -12,6 +12,10 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy"):
     Find all the libraries (*.so*) used by cloudComPy, CloudCompare, ccViewer, to be added to the bundle.
     The system libraries (in /usr and /lib) are not taken into account.
     """
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print(os.environ)
+    print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    
 
     # --- CloudCompare and ccViewer executables are always analysed
     pathlibs = [os.path.join(packagePath, "CloudCompare"), os.path.join(packagePath, "ccViewer")]
