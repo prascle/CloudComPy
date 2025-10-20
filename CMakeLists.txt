@@ -86,6 +86,14 @@ if( PLUGIN_STANDARD_QM3C2 )
     message(STATUS "Plugin PLUGIN_STANDARD_QM3C2")
 endif()
 
+function(myconfigure_file INPUT_FILE OUTPUT_FILE OPTION)
+    # Log the input and output file paths
+    message(STATUS "configure_file called with input: ${INPUT_FILE}")
+    message(STATUS "configure_file called with output: ${OUTPUT_FILE}")
+
+    configure_file(${INPUT_FILE} ${OUTPUT_FILE} ${OPTION})
+endfunction()
+
 add_subdirectory( CloudCompare )
 add_subdirectory( viewer )
 add_subdirectory( pyAPI )
