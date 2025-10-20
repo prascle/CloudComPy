@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-. @CMAKE_INSTALL_PREFIX@/cloudComPy/bin/condaCloud.sh activate ${CONDA_ENV}
+. ${CONDA_ROOT}/etc/profile.d/conda.sh                                             # required to have access to conda commands in a shell script
+conda activate ${CONDA_ENV}
 rm @SPHINXDOCTREES@/*.doctree
 @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
 python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy"
