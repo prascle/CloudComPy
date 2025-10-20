@@ -6,7 +6,7 @@ import subprocess
 import sys
 import shutil
 
-def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@"):
+def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy"):
     """
     Linux only!
     Find all the libraries (*.so*) used by cloudComPy, CloudCompare, ccViewer, to be added to the bundle.
