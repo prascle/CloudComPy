@@ -43,6 +43,7 @@ PYTHONAPI_TRACES = true
 OPTION_USE_GDAL = true
 USE_CONDA_PACKAGES = true
 BUILD_REFERENCE_DOC = true
+WHEEL_TAG = {env="SKBUILD_WHEEL_TAG", default="wheel_tag_not_set"}
 
 [tool.pytest.ini_options]
 minversion = "8.0"
