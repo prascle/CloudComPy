@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate ${CONDA_DEFAULT_ENV}
+. @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate ${CONDA_ENV}
 rm @SPHINXDOCTREES@/*.doctree
 @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
 python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy"
