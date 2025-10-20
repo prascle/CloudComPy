@@ -45,6 +45,7 @@ set(ALLSPHINXOPTS "${SPHINXOPTS} ${SOURCEDIR}")
 set(SPHINXBUILD sphinx-build)
 
 configure_file(conf.py.in conf.py)
+configure_file(getDependency.py.in getDependency.py)
 
 if(WIN32)
     configure_file(genSphinxDocWindows.bat.in genSphinxDoc.bat @ONLY)
