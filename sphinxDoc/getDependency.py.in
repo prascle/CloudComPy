@@ -49,7 +49,7 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy"):
         print(dest)
         if orig != dest:
             shutil.copy(orig, dest)
-        subprocess.Popen(["patchelf", "--set-rpath", "$ORIGIN", str(dest)])
+        subprocess.Popen(["patchelf", "--set-rpath", r"$ORIGIN", str(dest)])
 
 
 if __name__ == "__main__":
