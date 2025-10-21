@@ -55,6 +55,7 @@ elseif (USE_CONDA_PACKAGES)
 	    #configure_file(libBundleCloudComPy.py.in libBundleCloudComPy.py)
 	    #configure_file(signatureCloudComPy.sh.in signatureCloudComPy.sh @ONLY )
     else()
+        # myconfigure: debug, log the input and output file paths: specific behavior for post install script
 	    myconfigure_file(genSphinxDocConda.sh.in genSphinxDoc.sh @ONLY)
     endif()
 else()

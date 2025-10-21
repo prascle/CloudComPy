@@ -91,7 +91,6 @@ function(myconfigure_file INPUT_FILE OUTPUT_FILE OPTION)
     message(STATUS "configure_file called with input: ${INPUT_FILE}")
     message(STATUS "configure_file called with output: ${OUTPUT_FILE}")
     message(STATUS "Wheel_Tag: ${WHEEL_TAG}")
-
     configure_file(${INPUT_FILE} ${OUTPUT_FILE} ${OPTION})
 endfunction()
 
