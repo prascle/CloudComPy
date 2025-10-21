@@ -33,6 +33,7 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy"):
 
     # --- for each library or executable in the package, find all dependencies
     for pathLibmain in pathlibs:
+        libs.add(str(pathLibmain))
         with subprocess.Popen(["ldd", str(pathLibmain)], stdout=subprocess.PIPE) as proc:
             lines = proc.stdout.readlines()
             for line in lines:
