@@ -35,4 +35,4 @@ elseif (USE_CONDA_PACKAGES)
     endif()
 endif()
 
-install(FILES ${BUILDING_DOCS} DESTINATION doc)
+install(FILES ${BUILDING_DOCS} DESTINATION cloudComPy/doc)
