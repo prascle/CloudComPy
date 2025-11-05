@@ -234,5 +234,6 @@ TODO List
 - TODO: following setPointSize, add other methods for improving rendering in file
 - TODO: (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
 - TODO: (issue #216) Hough Plugin
+- TODO: (issue #218) Las Shift
 
 
