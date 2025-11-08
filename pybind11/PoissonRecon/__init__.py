@@ -38,5 +38,5 @@ PoissonRecon is a submodule of cloudCompy:
       import cloudComPy.PoissonRecon
       mesh = cc.PoissonRecon.PR.PoissonReconstruction(...)
 """
-from _PoissonRecon import *
+from cloudComPy._PoissonRecon import *
 initTrace_PoissonRecon()

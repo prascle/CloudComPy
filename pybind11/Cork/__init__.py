@@ -38,5 +38,5 @@ Cork is a submodule of cloudCompy:
       import cloudComPy.Cork
       mesh = cc.Cork.Cork.Compute(...)
 """
-from _Cork import *
+from cloudComPy._Cork import *
 initTrace_Cork()

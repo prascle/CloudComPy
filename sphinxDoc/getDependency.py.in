@@ -41,7 +41,10 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy"):
                 vals = res.split()
                 if len(vals) > 3:
                     f = vals[2]
-                    if f[0:4] != '/lib' and f[0:4] != '/usr':
+                    if f == 'not' and vals[3] == 'found':
+                        print("Warning: library not found for ", vals[0])
+                        print("for executable/library: ", pathLibmain)
+                    elif not (f.startswith('/lib') or f.startswith('/usr')):
                         libs.add(f)
 
     # --- copy the dependencies and fix RPATH (look in the same directory)
