@@ -344,6 +344,13 @@ void pyCC_setupPaths(pyCC* capi)
         capi->m_ShaderPath = (theDir.absolutePath() + "/shaders");
         capi->m_TranslationPath = (theDir.absolutePath() + "/CloudCompare/translations");
     }
+    else if ( theDir.dirName() == "site-packages" ) // PyPI
+    {
+        CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
+        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy");
+        capi->m_ShaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        capi->m_TranslationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
+    }
     else
     {
         // Choose a reasonable default to look in
