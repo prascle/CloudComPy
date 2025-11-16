@@ -235,5 +235,6 @@ TODO List
 - TODO: (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
 - TODO: (issue #216) Hough Plugin
 - TODO: (issue #218) Las Shift
+- TODO: (issue #219) wrap viewport
 
 
