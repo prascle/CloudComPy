@@ -5,4 +5,4 @@ conda activate ${CONDA_ENV}
 export LD_LIBRARY_PATH=.:${CMAKE_PREFIX_PATH}/lib:${LD_LIBRARY_PATH}
 rm @SPHINXDOCTREES@/*.doctree
 @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
-python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy"
+python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" ${CONDA_PREFIX}
