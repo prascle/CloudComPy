@@ -33,7 +33,7 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", condaPrefix="---
     if not os.path.exists(qtPluginsPath):
         print(" ************************ Error: Qt plugins path does not exist: ", qtPluginsPath)
         sys.exit(1) 
-    shutil.copytree(qtPluginsPath, os.path.join(packagePath, "plugins"), dirs_exist_ok=False)
+    shutil.copytree(qtPluginsPath, os.path.join(packagePath, "plugins"), dirs_exist_ok=True)
     # --- list the Qt plugins libraries
     libsQtPlugins = []
     for root, dirs, files in os.walk(os.path.join(packagePath, "plugins")): 
