@@ -347,7 +347,7 @@ void pyCC_setupPaths(pyCC* capi)
     else if ( theDir.dirName() == "site-packages" ) // PyPI
     {
         CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
-        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy");
+        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
         capi->m_ShaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
         capi->m_TranslationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
     }
