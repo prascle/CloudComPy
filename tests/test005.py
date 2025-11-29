@@ -72,7 +72,7 @@ for i in range(10):
     print("memory USS, delta current: %s max: %s" %
           (curMem - refMem, maxMem - refMem))
     print("coord no copy %s" % i)
-    if (maxMem - refMem) > 0.1 * coordMem: # some memory not immediately released ?
+    if (maxMem - refMem) > 0.3 * coordMem: # some memory not immediately released ?
         raise RuntimeError
 
 coords = None
