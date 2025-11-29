@@ -24,7 +24,7 @@ message(STATUS "Python3 and pybind11 processing")
 # --- Python detection: if several versions installed, select one with all the required packages installed
 
 set(PYTHON_PREFERED_VERSION "3.9" CACHE STRING "Select a Python version: it should be installed with all packages required for CloudCompare (pybind11, numpy)")
-set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.9" "3.10" "3.11")
+set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.8" "3.9" "3.10" "3.11" "3.12" "3.13" "3.14")
 
 message(STATUS "  python prefered version: " ${PYTHON_PREFERED_VERSION})
 
