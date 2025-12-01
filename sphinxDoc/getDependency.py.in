@@ -6,19 +6,19 @@ import subprocess
 import sys
 import shutil
 
-def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", condaPrefix="--- IGNORE ---"):
+def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", QtPrefix="--- IGNORE ---"):
     """
     Linux only!
     Find all the libraries (*.so*) used by cloudComPy, CloudCompare, ccViewer, to be added to the bundle.
     The system libraries (in /usr and /lib) are not taken into account.
     Also fix the RPATH of each library to look in the same directory (with $ORIGIN).
     The steps are:
-    0) check that condaPrefix is valid and copy the Qt plugins
+    0) check that QtPrefix is valid and copy the Qt plugins
     1) look for all the executables and libraries in the package
     2) for each of them, use ldd to find the dependencies
     3) copy the dependencies in the package directory
     4) fix the RPATH of each library to look in the same directory (with $ORIGIN)
-    5) also look for Qt plugins dependencies in the conda Qt plugins directory
+    5) also look for Qt plugins dependencies in the Qt plugins directory
     6) copy the Qt plugins dependencies in the package directory
     7) fix the RPATH of each Qt plugin to look in the same directory (with $ORIGIN)
     8) done
@@ -27,8 +27,8 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", condaPrefix="---
     print(os.environ)
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++++")
     
-    # --- copy the conda Qt plugins path
-    qtPluginsPath = os.path.join(condaPrefix, "plugins")
+    # --- copy the Qt plugins path
+    qtPluginsPath = os.path.join(QtPrefix, "plugins")
     print("Qt plugins path: ", qtPluginsPath)
     if not os.path.exists(qtPluginsPath):
         print(" ************************ Error: Qt plugins path does not exist: ", qtPluginsPath)
@@ -78,6 +78,9 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", condaPrefix="---
         dest = os.path.join(packagePath, os.path.basename(orig))
         print(dest)
         if orig != dest:
+            if not os.path.isfile(orig):
+                print(" ************** Warning: dependency library does not exist: ", orig)
+                continue
             shutil.copy(orig, dest)
         subprocess.Popen(["patchelf", "--set-rpath", r"$ORIGIN", str(dest)])
 
@@ -93,8 +96,8 @@ if __name__ == "__main__":
         help="Path where cloudComPy is installed (CMake install dir)"
     )
     parser.add_argument(
-        "CONDA_PREFIX",
-        help="CONDA prefix Path where Qt plugins are located (plugins directory)"
+        "QT_PREFIX",
+        help="Qt prefix Path where Qt plugins are located (where is plugins directory)"
     )
     arguments = parser.parse_args()
-    getDepLibs(arguments.install_path, arguments.CONDA_PREFIX) 
+    getDepLibs(arguments.install_path, arguments.QT_PREFIX) 

@@ -162,9 +162,9 @@ else()
 endif()
 
 if(NOT WIN32)
-    if (USE_CONDA_PACKAGES)
+    #if (USE_CONDA_PACKAGES)
         install(PROGRAMS ${ENV_SCRIPTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
-    endif()
+    #endif()
 endif()
 
 if(WIN32)

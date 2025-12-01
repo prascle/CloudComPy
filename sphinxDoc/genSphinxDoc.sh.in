@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
-export LD_LIBRARY_PATH=@CMAKE_INSTALL_PREFIX@/lib/cloudcompare/plugins:@CMAKE_INSTALL_PREFIX@/lib/cloudcompare:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=.:${QT_PREFIX}/lib:${LD_LIBRARY_PATH}
 rm @SPHINXDOCTREES@/*.doctree
-@SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/doc/html 
+@SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
+python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" ${QT_PREFIX}
