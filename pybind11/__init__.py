@@ -32,9 +32,26 @@ Python3 access to cloudCompare objects is done like this:
  
 """
 import os
-here = os.path.dirname(__file__)
-os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"]=os.path.join(here, "plugins")
+cloudComPyInstallDir = os.path.dirname(__file__)
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"]=os.path.join(cloudComPyInstallDir, "plugins")
 print("QT_QPA_PLATFORM_PLUGIN_PATH", os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
 from ._cloudComPy import *
 initCC()
 initCloudCompare()
+
+def launchCloudCompareGUI():
+    """
+    Launch the CloudCompare GUI in a subprocess, and return immediately.
+    """
+    import subprocess
+    subprocess.Popen(os.path.join(cloudComPyInstallDir, "CloudCompare"))
+    
+def launchTests():
+    """
+    Launch the cloudComPy Python tests
+    """
+    import subprocess
+    oldCWD = os.getcwd()
+    os.chdir(os.path.join(cloudComPyInstallDir,"doc/PythonAPI_test"))
+    subprocess.run("ctest")
+    os.chdir(oldCWD)
