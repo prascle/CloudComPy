@@ -261,9 +261,9 @@ pyCC* initCloudCompare()
         CCTRACE("initCloudCompare");
     	//viewerPyApplication::InitOpenGL();
         QDir appDir = initCC::moduleDir;
-        appDir.cdUp();
-        appDir.cdUp();
-        QString appliDir = appDir.absolutePath() + "/bin";
+        //appDir.cdUp();
+        //appDir.cdUp();
+        QString appliDir = appDir.absolutePath() + "/cloudComPy";
     	viewerPyApplication* app = new viewerPyApplication(pyCC_argc, pyCC_argv, true, appliDir);
     	//QApplication* app = new QApplication(pyCC_argc, pyCC_argv);
         s_pyCCInternals = new pyCC;

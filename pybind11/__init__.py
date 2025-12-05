@@ -31,6 +31,10 @@ Python3 access to cloudCompare objects is done like this:
   cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
  
 """
+import os
+here = os.path.dirname(__file__)
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"]=os.path.join(here, "plugins")
+print("QT_QPA_PLATFORM_PLUGIN_PATH", os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
 from ._cloudComPy import *
 initCC()
 initCloudCompare()
