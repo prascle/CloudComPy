@@ -34,6 +34,7 @@ Python3 access to cloudCompare objects is done like this:
 import os
 cloudComPyInstallDir = os.path.dirname(__file__)
 os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"]=os.path.join(cloudComPyInstallDir, "plugins")
+#os.environ["QT_XCB_GL_INTEGRATION"]="xcb_egl" # 3 possibles values : xcb_egl, xcb_glx, none
 print("QT_QPA_PLATFORM_PLUGIN_PATH", os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
 from ._cloudComPy import *
 initCC()
