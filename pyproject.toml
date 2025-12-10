@@ -133,6 +133,7 @@ WHEEL_TAG = {env="SKBUILD_WHEEL_TAG", default="wheel_tag_not_set"}
 XercesC_INCLUDE_DIR = {env="XercesC_INCLUDE_DIR", default="XercesC_INCLUDE_DIR_not_set"}
 XercesC_LIBRARY_DEBUG = {env="XercesC_LIBRARY_DEBUG", default="XercesC_LIBRARY_DEBUG_not_set"}
 XercesC_LIBRARY_RELEASE = {env="XercesC_LIBRARY_RELEASE", default="XercesC_LIBRARY_RELEASE_not_set"}
+XercesC_VERSION = {env="XercesC_VERSION", default="XercesC_VERSION_not_set"}
 #ZLIB_INCLUDE_DIR = {env="ZLIB_INCLUDE_DIR", default="ZLIB_INCLUDE_DIR_not_set"}
 #ZLIB_LIBRARY_RELEASE = {env="ZLIB_LIBRARY_RELEASE", default="ZLIB_LIBRARY_RELEASE_not_set"}
 pybind11_DIR = {env="pybind11_DIR", default="pybind11_DIR_not_set"}
