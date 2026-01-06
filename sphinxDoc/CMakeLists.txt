@@ -44,6 +44,12 @@ set(SPHINXDOCTREES "${CMAKE_CURRENT_BINARY_DIR}/doctrees")
 set(ALLSPHINXOPTS "${SPHINXOPTS} ${SOURCEDIR}")
 set(SPHINXBUILD sphinx-build)
 
+if( BUILD_PYPI )
+    set(IS_PYPI_BUILD "true")
+else()
+    set(IS_PYPI_BUILD "false")
+endif()
+
 configure_file(conf.py.in conf.py)
 configure_file(getDependency.py.in getDependency.py)
 

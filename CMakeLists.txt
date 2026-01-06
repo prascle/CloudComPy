@@ -21,12 +21,18 @@
 
 cmake_minimum_required(VERSION 3.17)
 
-# Scikit-build-core sets these values for you, or you can just hard-code the
-# name and version.
-project(
-  ${SKBUILD_PROJECT_NAME}
-  VERSION ${SKBUILD_PROJECT_VERSION}
-  LANGUAGES CXX)
+if ( BUILD_PYPI )
+    # Scikit-build-core sets these values for you, or you can just hard-code the name and version.
+    project(
+    ${SKBUILD_PROJECT_NAME}
+    VERSION ${SKBUILD_PROJECT_VERSION}
+    LANGUAGES CXX)
+else()
+    project(
+    CloudComPy
+    VERSION 2.13.1
+    LANGUAGES CXX)
+endif()
 
 # specify the C++ standard: C++14 required for boost python (use of variable templates for some pointer functions)
 set(CMAKE_CXX_STANDARD 14)
@@ -70,7 +76,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 # since they are only used by qCC/ccViewer
 if( UNIX AND NOT APPLE )
 	include( GNUInstallDirs )
-	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+    if ( BUILD_PYPI )
+        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/cloudcompare")
+    else()
+    	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+    endif()
 endif()
 
 # scripts to set environment
@@ -110,5 +120,8 @@ set( README_DOCS
     README.md
     License.txt
     )
-install(FILES ${README_DOCS} DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
-    
+if ( BUILD_PYPI )
+    install(FILES ${README_DOCS} DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+else()
+    install(FILES ${README_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX})    
+endif()

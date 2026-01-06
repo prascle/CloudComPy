@@ -22,22 +22,21 @@
 ##########################################################################
 
 """
-MeshBoolean is a standard plugin of cloudComPy.
+Cork is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginMeshBoolean` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCork` function:
 ::
 
-  isMeshBoolean_available = cc.isPluginMeshBoolean()
+  isCork_available = cc.isPluginCork()
 
-MeshBoolean is a submodule of cloudCompy:
+Cork is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginMeshBoolean():
-      import cloudComPy.MeshBoolean
-      cc.MeshBoolean.computeMeshBoolean(...)
+  if cc.isPluginCork():
+      import cloudComPy.Cork
+      mesh = cc.Cork.Cork.Compute(...)
 """
-from cloudComPy._MeshBoolean import *
-initTrace_MeshBoolean()
-
+from @CLOUDCOMPY_IMPORT_PREFIX@_Cork import *
+initTrace_Cork()

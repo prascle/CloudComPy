@@ -22,22 +22,22 @@
 ##########################################################################
 
 """
-SRA is a standard plugin of cloudComPy.
+MeshBoolean is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginSRA` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginMeshBoolean` function:
 ::
 
-  isSRA_available = cc.isPluginSRA()
+  isMeshBoolean_available = cc.isPluginMeshBoolean()
 
-SRA is a submodule of cloudCompy:
+MeshBoolean is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginSRA():
-      import cloudComPy.SRA
-      cc.SRA.loadProfile(...)
+  if cc.isPluginMeshBoolean():
+      import cloudComPy.MeshBoolean
+      cc.MeshBoolean.computeMeshBoolean(...)
 """
-from cloudComPy import DEFAULT_SCALES
-from cloudComPy._SRA import *
-initTrace_SRA()
+from @CLOUDCOMPY_IMPORT_PREFIX@_MeshBoolean import *
+initTrace_MeshBoolean()
+

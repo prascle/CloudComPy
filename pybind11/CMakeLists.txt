@@ -24,7 +24,7 @@ message(STATUS "Python3 and pybind11 processing")
 # --- Python detection: if several versions installed, select one with all the required packages installed
 
 set(PYTHON_PREFERED_VERSION "3.9" CACHE STRING "Select a Python version: it should be installed with all packages required for CloudCompare (pybind11, numpy)")
-set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.8" "3.9" "3.10" "3.11" "3.12" "3.13" "3.14")
+set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.8" "3.9" "3.10" "3.11" "3.12" "3.13" "3.14" "3.15")
 
 message(STATUS "  python prefered version: " ${PYTHON_PREFERED_VERSION})
 
@@ -139,6 +139,13 @@ endif()
 option(USE_CONDA_PACKAGES "Use Conda packages and environment for build: add commands for set/unset run environment" OFF)
 
 # --- Python scripts with added functions
+if( BUILD_PYPI )
+    set(IS_PYPI_BUILD 1)
+    set(CLOUDCOMPY_IMPORT_PREFIX "cloudComPy.")
+else()
+    set(IS_PYPI_BUILD 0)
+    set(CLOUDCOMPY_IMPORT_PREFIX "")
+endif
 
 set(PYTHONAPI_SCRIPTS
     __init__.py
@@ -155,16 +162,28 @@ elseif( APPLE )
 	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )	
 else()
-    set(INSTALL_CLOUDCOMPARE_PYTHON "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
+    if( BUILD_PYPI )
+        set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    else()
+        set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare )
+    endif()
     message(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
     install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON} )
-    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON})
+    if( BUILD_PYPI )
+        install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON})
+    else()
+        install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON}/cloudComPy)
+    endif()
 endif()
 
 if(NOT WIN32)
-    #if (USE_CONDA_PACKAGES)
-        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
-    #endif()
+    if( BUILD_PYPI )
+        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    else()
+        if (USE_CONDA_PACKAGES)
+            install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_BINDIR} )
+        endif()
+    endif()
 endif()
 
 if(WIN32)

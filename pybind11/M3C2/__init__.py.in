@@ -22,21 +22,22 @@
 ##########################################################################
 
 """
-Canupo is a standard plugin of cloudComPy.
+M3C2 is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCanupo` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginM3C2` function:
 ::
 
-  isCanupo_available = cc.isPluginCanupo()
+  isM3C2_available = cc.isPluginM3C2()
 
-Canupo is a submodule of cloudCompy:
+M3C2 is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginCanupo():
-      import cloudComPy.Canupo
-      cc.Canupo.computeCanupo(...)
+  if cc.isPluginM3C2():
+      import cloudComPy.M3C2
+      cc.M3C2.computeM3C2(...)
 """
-from cloudComPy._Canupo import *
-initTrace_Canupo()
+from @CLOUDCOMPY_IMPORT_PREFIX@_M3C2 import *
+initTrace_M3C2()
+

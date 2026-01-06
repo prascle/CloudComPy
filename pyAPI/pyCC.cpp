@@ -261,9 +261,13 @@ pyCC* initCloudCompare()
         CCTRACE("initCloudCompare");
     	//viewerPyApplication::InitOpenGL();
         QDir appDir = initCC::moduleDir;
-        //appDir.cdUp();
-        //appDir.cdUp();
+#ifdef BUILD_PYPI
         QString appliDir = appDir.absolutePath() + "/cloudComPy";
+#else
+        appDir.cdUp();
+        appDir.cdUp();
+        QString appliDir = appDir.absolutePath() + "/bin";
+#endif
     	viewerPyApplication* app = new viewerPyApplication(pyCC_argc, pyCC_argv, true, appliDir);
     	//QApplication* app = new QApplication(pyCC_argc, pyCC_argv);
         s_pyCCInternals = new pyCC;
@@ -3268,8 +3272,11 @@ public:
                                         vertices->setEnabled(false);
 
                                         ++realCount;
+#ifdef BUILD_PYPI
                                         poly->setMetaData(ccContourLinesGenerator_::MetaKeySubIndex(), realCount);
-
+#else
+                                        poly->setMetaData(ccContourLinesGenerator::MetaKeySubIndex(), realCount);
+#endif
                                         //add the 'const altitude' meta-data as well
                                         poly->setMetaData(ccPolyline::MetaKeyConstAltitude(), QVariant(v));
 
