@@ -34,8 +34,11 @@ elseif( APPLE )
     execute_process( COMMAND chmod +x sphinxDoc/genSphinxDoc.zsh )
     execute_process( COMMAND zsh sphinxDoc/genSphinxDoc.zsh ERROR_QUIET )
 else()
-    message( STATUS "generate documentation ...")
-    execute_process( COMMAND bash sphinxDoc/genSphinxDoc.sh )
+    execute_process( COMMAND pwd )
+    # specific behavior for post install script, while builing wheel package on Linux
+    message( STATUS "generate documentation ... ${CMAKE_BINARY_DIR}/build/${WHEEL_TAG}/sphinxDoc/genSphinxDoc.sh")
+    execute_process( COMMAND bash ${CMAKE_BINARY_DIR}/build/${WHEEL_TAG}/sphinxDoc/genSphinxDoc.sh )
+    #execute_process( COMMAND bash ${CMAKE_CURRENT_BINARY_DIR}/genSphinxDoc.sh )
 endif()
 message( STATUS "... Done")
 

@@ -38,6 +38,7 @@ cmake.build-type = "Release"
 build.verbose = true
 
 [tool.scikit-build.cmake.define]
+BUILD_PYPI = true
 BUILD_PY_TESTING = true
 BUILD_REFERENCE_DOC = true
 BUILD_TESTING = false

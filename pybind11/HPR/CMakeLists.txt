@@ -85,8 +85,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET "hidden"
 
 # --- Python scripts with added functions
 
+configure_file(__init__.py.in __init__.py)
+
 set(PYTHONAPI_SCRIPTS
-    __init__.py
+    ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
     )
 
 # --- install
