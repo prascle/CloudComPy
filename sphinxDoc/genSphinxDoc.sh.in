@@ -3,10 +3,14 @@
 isPypiBuild=@IS_PYPI_BUILD@
 
 if [ $isPypiBuild = "true" ] ; then
-    export LD_LIBRARY_PATH=.:${QT_PREFIX}/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH=.:${QT_PREFIX}/lib:@CMAKE_INSTALL_PREFIX@/cloudComPy:@CMAKE_INSTALL_PREFIX@/cloudComPy/plugins/CC:${LD_LIBRARY_PATH}
+    export PYTHONPATH=@CMAKE_INSTALL_PREFIX@:${PYTHONPATH}
 else
     export LD_LIBRARY_PATH=@CMAKE_INSTALL_PREFIX@/lib/cloudcompare/plugins:@CMAKE_INSTALL_PREFIX@/lib/cloudcompare:${LD_LIBRARY_PATH}
 fi
+
+echo ${LD_LIBRARY_PATH}
+ldd @CMAKE_INSTALL_PREFIX@/cloudComPy/_cloudComPy.cpython-39-x86_64-linux-gnu.so
 
 rm @SPHINXDOCTREES@/*.doctree
 
