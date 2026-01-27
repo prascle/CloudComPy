@@ -7,9 +7,9 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "home": "C:/Users/paulr",
       "buildRoot": "${home}/CloudComPy/build2022/${name}",
-      "installRoot": "${home}/CloudComPy/install/CloudComPy311",
+      "installRoot": "${home}/CloudComPy/install/CloudComPy312",
       "condaBase": "${home}/miniconda3",
-      "condaRoot": "${condaBase}/envs/CloudComPy311",
+      "condaRoot": "${condaBase}/envs/CloudComPy312",
       "cmakeExecutable": "${condaRoot}/Library/bin/cmake.exe",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
@@ -22,7 +22,7 @@
         },
         {
           "name": "PYTHON_PREFERED_VERSION",
-          "value": "3.11",
+          "value": "3.12",
           "type": "STRING"
         },
         {
