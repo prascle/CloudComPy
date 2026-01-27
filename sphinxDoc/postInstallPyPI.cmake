@@ -22,7 +22,7 @@
 message( STATUS "post install process ...")
 if (WIN32)
     message( STATUS "generate documentation ...")
-    execute_process( COMMAND sphinxDoc\genSphinxDoc.bat )
+    execute_process( COMMAND sphinxDoc/genSphinxDoc.bat )
 elseif( APPLE )
     execute_process( COMMAND pwd )
     message( STATUS "add libraries to bundle ...")
