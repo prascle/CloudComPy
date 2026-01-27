@@ -131,7 +131,7 @@ set(PYTHONAPI_TEST_UTILITIES
 if(WIN32)
     install(PROGRAMS DartTestfile.win.txt
             DESTINATION ${PYTHONAPI_TEST_SCRIPTS_DIRECTORY}
-            RENAME DartTestfile.txt
+            RENAME CTestTestfile.cmake
            )
 else()
     install(PROGRAMS DartTestfile.txt
