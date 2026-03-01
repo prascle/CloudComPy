@@ -442,22 +442,22 @@
         },
         {
           "name": "FBX_SDK_INCLUDE_DIR",
-          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.2.1/include",
+          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9/include",
           "type": "PATH"
         },
         {
           "name": "FBX_SDK_LIBRARY_FILE",
-          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.2.1/lib/vs2019/x64/release/libfbxsdk-md.lib",
+          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9/lib/x64/release/libfbxsdk-md.lib",
           "type": "FILEPATH"
         },
         {
           "name": "FBX_XML2_LIBRARY_FILE",
-          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.2.1/lib/vs2019/x64/release/libxml2-md.lib",
+          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9/lib/x64/release/libxml2-md.lib",
           "type": "FILEPATH"
         },
         {
           "name": "FBX_ZLIB_LIBRARY_FILE",
-          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.2.1/lib/vs2019/x64/release/zlib-md.lib",
+          "value": "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9/lib/x64/release/zlib-md.lib",
           "type": "FILEPATH"
         },
         {
