@@ -35,7 +35,7 @@ py::array ToNpArray_copy(CCCoreLib::ScalarField &self)
     CCTRACE("ScalarField ToNpArray with copy, ownership transfered to Python");
     size_t nRows = self.size();
     double offset = self.getOffset();
-    float* data = self.getInternalData();
+    float* data = (float*)self.getLocalValues();
 
     py::array_t<double> result(nRows);
     auto buf = result.request();
@@ -50,8 +50,8 @@ py::array ToNpArray_copy(CCCoreLib::ScalarField &self)
 py::array ToNpArray_py(CCCoreLib::ScalarField &self)
 {
     CCTRACE("ScalarField ToNpArray without copy, ownership stays in C++. Offset non included");
-    auto capsule = py::capsule(self.getInternalData(), [](void *v) { CCTRACE("C++ ScalarField not deleted"); });
-    return py::array(self.size(), self.getInternalData(), capsule);
+    auto capsule = py::capsule((float*)self.getLocalValues(), [](void *v) { CCTRACE("C++ ScalarField not deleted"); });
+    return py::array(self.size(), (float*)self.getLocalValues(), capsule);
 }
 
 void fromNPArray_copy(CCCoreLib::ScalarField &self, py::array_t<double, py::array::c_style | py::array::forcecast> array)
@@ -84,7 +84,7 @@ void fromNPArray_copyFloat(CCCoreLib::ScalarField &self, py::array_t<float, py::
     self.reserveSafe(nRows);
     self.resizeSafe(nRows);
     const PyScalarType *s = reinterpret_cast<const PyScalarType*>(array.data());
-    float *d = self.getInternalData();
+    float *d = (float*)self.getLocalValues();
     memcpy(d, s, nRows*sizeof(float));
     CCTRACE("copied " << nRows*sizeof(float) << " bytes");
     self.setOffset(offset);

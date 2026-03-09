@@ -82,7 +82,7 @@ dic = vertices2.getScalarFieldDic()
 if dic != {'coordX': 0, 'coordY': 1, 'coordZ': 2}:
     raise RuntimeError
 
-# -- read only the scalar fields whose name ends in dX or dZ (regular expression, see Qt, QRegExp)
+# -- read only the scalar fields whose name ends in dX or dZ (regular expression, see Qt, QRegularExpression)
 #    the letters should be given in uppercase (CloudCompare filter works in uppercase)
 
 nameFilter = ".+D[XZ]" # meaning one or more character followed by DX or DZ

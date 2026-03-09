@@ -29,13 +29,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # --- Qt5 detection
 
-find_package( Qt5
+find_package( Qt6
     COMPONENTS
         Concurrent
         Core
         Gui
         OpenGL
-        OpenGLExtensions
         PrintSupport
         Svg
         Widgets
@@ -43,6 +42,9 @@ find_package( Qt5
 )
 
 #find_package( FLANN REQUIRED )
+
+# Build CloudComPy for PyPI packages
+option( BUILD_PYPI_PACKAGE "Build CloudComPy for PyPI packages" ON )
 
 # Testing
 option( BUILD_PY_TESTING "Build tests for CloudComPy" ON )

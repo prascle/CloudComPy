@@ -35,12 +35,12 @@ if (WIN32)
     QPCL_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
-    Qt5::WinMain
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
+    Qt6::WinMain
     )
 else()
     target_link_libraries( ${PROJECT_NAME}
@@ -48,11 +48,11 @@ else()
     QPCL_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 endif()
 

@@ -23,8 +23,8 @@ file( GLOB ui_list ${CMAKE_CURRENT_SOURCE_DIR}/../CloudCompare/ccViewer/ui_templ
 file( GLOB qrc_list ${CMAKE_CURRENT_SOURCE_DIR}/../CloudCompare/qCC/*.qrc )
 file( GLOB rc_list ${CMAKE_CURRENT_SOURCE_DIR}/../CloudCompare/qCC/*.rc )
  
-qt5_wrap_ui( generated_ui_list ${ui_list} )
-qt5_add_resources( generated_qrc_list ${qrc_list} )
+qt6_wrap_ui( generated_ui_list ${ui_list} )
+qt6_add_resources( generated_qrc_list ${qrc_list} )
 
 target_sources( ${PROJECT_NAME} PRIVATE ${generated_ui_list} ${generated_qrc_list} ${rc_list} )
 
@@ -35,14 +35,14 @@ target_link_libraries( ${PROJECT_NAME}
 # Qt libraries
 
 target_link_libraries( ${PROJECT_NAME}
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 
 if (WIN32)
-   target_link_libraries( ${PROJECT_NAME} Qt5::WinMain)
+   target_link_libraries( ${PROJECT_NAME} Qt6::WinMain)
 endif()
     

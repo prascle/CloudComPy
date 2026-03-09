@@ -50,7 +50,7 @@ bool computeShadeVIS(std::vector<ccHObject*> clouds,
                         bool isClosedMesh = false)
 {
     CCTRACE("computeShadeVIS");
-    std::vector<CCVector3> rays;
+    std::vector<CCVector3d> rays;
     if (cloudWithNormals)
     {
         if (cloudWithNormals->hasNormals())
@@ -67,7 +67,7 @@ bool computeShadeVIS(std::vector<ccHObject*> clouds,
             }
             for (unsigned i = 0; i < count; ++i)
             {
-                rays[i] = CCVector3(cloudWithNormals->getPointNormal(i));
+                rays[i] = CCVector3d(cloudWithNormals->getPointNormal(i));
             }
         }
         else

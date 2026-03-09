@@ -61,7 +61,7 @@ These release notes start with the October 18, 2021 CloudComPy release.
 ## October 26, 2023 CloudComPy release:
 
  - update to CloudCompare master (October 26, 2023)
- - (issue #130) bug on the selection of scans to import in a multi-scan e57 file (should use QRegExp::exactMatch)
+ - (issue #130) bug on the selection of scans to import in a multi-scan e57 file (should use QRegularExpression::exactMatch)
  - (issue #134) access to normals as a Numpy array
  - fix path related to CloudComPy web site changes, in documentation and tests
  - improve documentation

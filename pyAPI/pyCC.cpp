@@ -201,7 +201,7 @@ struct CLLoadParameters: public FileIOFilter::LoadParameters
 
     bool m_coordinatesShiftEnabled;
     CCVector3d m_coordinatesShift;
-    QRegExp m_extraData;
+    QRegularExpression m_extraData;
 };
 
 //! internal attributes (cloned from plugins/ccCommandLineInterface.h)
