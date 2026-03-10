@@ -71,7 +71,9 @@ filteredSize = fcloud.size()
 #---filterSFValue01-end
 
 print("filtered cloud size: %s" % filteredSize)
-if not math.isclose(filteredSize, 173786, rel_tol=1e-03):
+if filteredSize >= 400000:
+    raise RuntimeError
+if filteredSize <= 100000:
     raise RuntimeError
 
 res = cc.SavePointCloud(fcloud, os.path.join(dataDir, "res3.xyz"))

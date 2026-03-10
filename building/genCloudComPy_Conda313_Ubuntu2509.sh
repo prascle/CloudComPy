@@ -51,7 +51,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
-    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu20.04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_313_Ubuntu25.09 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -170,7 +170,8 @@ cloudcompy_build()
 {
     echo "# --- build and install CloudComPy ---"
     cd ${CLOUDCOMPY_BUILD} && make -j${NBTHREADS} && make install
-    # cd ${OPENCASCADE_REP}/lib && \
+    cp ${CLOUDCOMPY_BUILD}/CloudCompare/plugins/core/IO/qPhotoscanIO/extern/quazip/quazip/libquazip1-qt6.so.1.5 \
+    ${CLOUDCOMPY_INSTALL}/lib/cloudcompare/libquazip1-qt6.so.1.5.0
     # # cp -f libTKDESTEP.so libTKDE.so libTKXCAF.so libTKXSBase.so libTKLCAF.so libTKShHealing.so \
     # libTKTopAlgo.so libTKBRep.so libTKGeomBase.so libTKG3d.so libTKG2d.so libTKMath.so libTKernel.so \
     # libTKVCAF.so libTKV3d.so libTKService.so libTKCAF.so libTKCDF.so libTKGeomAlgo.so libTKMesh.so \
@@ -199,7 +200,7 @@ cloudcompy_test()
     cd doc/PythonAPI_test && ctest
 }
 
-#conda_buildenv && \
+conda_buildenv && \
 cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \
