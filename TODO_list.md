@@ -201,6 +201,9 @@ TODO List
 * DONE: (issue #196) add a binding for mesh transformations
 * DONE: (issue #208) read correctly submeshes and some other CloudCompare types in .obj
 * DONE: embed install and build docs in binaries 
+* DONE: (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
+* DONE: Qt6 migration, following CloudCompare
+* DONE: (issue #216) Hough Plugin
 - TODO: try to have ctest working at build step on Windows and Linux (incomplete)
 - TODO: A kind of automatic test coverage, to find examples for a particular function.
 - TODO: Fix the Link problem in Windows to avoid the option /force:multiple at link step
@@ -217,7 +220,6 @@ TODO List
 - TODO: Fit: sphere, 2D polygon, 2.5D Quadric
 - TODO: remove duplicate points
 - TODO: plugin animation
-- TODO: plugin hough normal
 - TODO: plugin Virtual broom ?
 - TODO: plugin compass ?
 - TODO: plugin 3Dmasc ?
@@ -232,7 +234,5 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
-- TODO: (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
-- TODO: (issue #216) Hough Plugin
 
 

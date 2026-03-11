@@ -2802,6 +2802,8 @@ PYBIND11_MODULE(_cloudComPy, m0)
 
     m0.def("isPluginCork", &pyccPlugins::isPluginCork, cloudComPy_isPluginCork_doc);
 
+    m0.def("isPluginHoughNormals", &pyccPlugins::isPluginHoughNormals, cloudComPy_isPluginHoughNormals_doc);
+
     m0.def("computeCurvature", &computeCurvature, cloudComPy_computeCurvature_doc);
 
     m0.def("computeFeature", &computeFeature, cloudComPy_computeFeature_doc);

@@ -261,5 +261,8 @@ endif()
 if ( PLUGIN_STANDARD_QCORK )
     add_subdirectory( Cork )
 endif()
+if ( PLUGIN_STANDARD_QHOUGH_NORMALS )
+    add_subdirectory( HoughNormals )
+endif()
 
 

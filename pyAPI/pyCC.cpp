@@ -183,6 +183,12 @@ bool pyccPlugins::_isPluginCork = true;
 bool pyccPlugins::_isPluginCork = false;
 #endif
 
+#ifdef PLUGIN_STANDARD_QHOUGH_NORMALS
+bool pyccPlugins::_isPluginHoughNormals = true;
+#else
+bool pyccPlugins::_isPluginHoughNormals = false;
+#endif
+
 // --- internal struct
 
 //* Extended file loading parameters, from plugins/ccCommandLineInterface.h
