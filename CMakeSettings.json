@@ -6,10 +6,10 @@
       "configurationType": "RelWithDebInfo",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "home": "C:/Users/paulr",
-      "buildRoot": "${home}/CloudComPy/build2022/${name}",
-      "installRoot": "${home}/CloudComPy/install/CloudComPy312",
+      "buildRoot": "${home}/CloudComPy/build2026/${name}",
+      "installRoot": "${home}/CloudComPy/install/CloudComPy313",
       "condaBase": "${home}/miniconda3",
-      "condaRoot": "${condaBase}/envs/CloudComPy312",
+      "condaRoot": "${condaBase}/envs/CloudComPy313",
       "cmakeExecutable": "${condaRoot}/Library/bin/cmake.exe",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
@@ -22,7 +22,7 @@
         },
         {
           "name": "PYTHON_PREFERED_VERSION",
-          "value": "3.12",
+          "value": "3.13",
           "type": "STRING"
         },
         {
@@ -197,7 +197,7 @@
         },
         {
           "name": "PLUGIN_IO_QSTEP",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
@@ -227,7 +227,7 @@
         },
         {
           "name": "PLUGIN_STANDARD_QCANUPO",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
@@ -242,7 +242,7 @@
         },
         {
           "name": "PLUGIN_STANDARD_QCORK",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
@@ -277,7 +277,7 @@
         },
         {
           "name": "PLUGIN_STANDARD_QMESH_BOOLEAN",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
@@ -287,7 +287,7 @@
         },
         {
           "name": "PLUGIN_STANDARD_QPCL",
-          "value": "True",
+          "value": "False",
           "type": "BOOL"
         },
         {
@@ -326,18 +326,18 @@
           "type": "BOOL"
         },
         {
-          "name": "Qt5_DIR",
-          "value": "${condaRoot}/Library/lib/cmake/Qt5",
+          "name": "Qt6_DIR",
+          "value": "${condaRoot}/Library/lib/cmake/Qt6",
           "type": "STRING"
         },
         {
-          "name": "Qt5LinguistTools_DIR",
-          "value": "${condaRoot}/Library/lib/cmake/Qt5LinguistTools",
+          "name": "Qt6LinguistTools_DIR",
+          "value": "${condaRoot}/Library/lib/cmake/Qt6LinguistTools",
           "type": "STRING"
         },
         {
-          "name": "Qt5Test_DIR",
-          "value": "${condaRoot}/Library/lib/cmake/Qt5Test",
+          "name": "Qt6Test_DIR",
+          "value": "${condaRoot}/Library/lib/cmake/Qt6Test",
           "type": "STRING"
         },
         {
@@ -407,7 +407,7 @@
         },
         {
           "name": "PCL_DIR",
-          "value": "${home}/CloudComPy/pcl/install/cmake",
+          "value": "${condaRoot}/Library/cmake",
           "type": "PATH"
         },
         {
@@ -502,17 +502,17 @@
         },
         {
           "name": "OPENCASCADE_INC_DIR",
-          "value": "C:/OpenCASCADE-7.5.0-vc14-64/opencascade-7.5.0/inc",
+          "value": "${condaRoot}/Library/include/opencascade",
           "type": "PATH"
         },
         {
           "name": "OPENCASCADE_LIB_DIR",
-          "value": "C:/OpenCASCADE-7.5.0-vc14-64/opencascade-7.5.0/win64/vc14/lib",
+          "value": "${condaRoot}/Library/lib",
           "type": "PATH"
         },
         {
           "name": "OPENCASCADE_DLL_DIR",
-          "value": "C:/OpenCASCADE-7.5.0-vc14-64/opencascade-7.5.0/win64/vc14/bin",
+          "value": "${condaRoot}/Library/bin",
           "type": "PATH"
         },
         {

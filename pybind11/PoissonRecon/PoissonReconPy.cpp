@@ -26,6 +26,7 @@
 #include <QtCore>
 #include <QtConcurrentRun>
 #include <QApplication>
+#include <qthread>
 
 #include <ccPointCloud.h>
 #include <ccScalarField.h>
@@ -318,7 +319,7 @@ struct PoissonRecon
             while (!future.isFinished())
             {
     #if defined(CC_WINDOWS)
-                ::Sleep(500);
+                QThread::msleep(500);  // ← Remplace ::Sleep(500);
     #else
                 usleep(500 * 1000);
     #endif

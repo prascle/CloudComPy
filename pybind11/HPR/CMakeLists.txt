@@ -40,7 +40,6 @@ if (WIN32)
     Qt6::Widgets
     Qt6::OpenGL
     Qt6::PrintSupport
-    Qt6::WinMain
     )
 else()
     target_link_libraries( ${PROJECT_NAME}
