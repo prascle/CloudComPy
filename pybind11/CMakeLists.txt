@@ -167,7 +167,8 @@ if(NOT WIN32)
 endif()
 
 if(WIN32)
-  if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+  #if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+  if( INSTALL_PREREQUISITE_LIBRARIES )
 
     if ( PLUGIN_IO_QRDB )
         message( STATUS "rdblib.dll ${CMAKE_CURRENT_BINARY_DIR}/../_deps/rdb_sdk-src/library/rdblib.dll")

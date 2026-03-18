@@ -1,4 +1,9 @@
 # build.ps1 - PowerShell 7 + MSVC + Conda CloudComPyxxx
+#param([switch]$Clean)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $true
 
 $CondaBase = "$Home/miniconda3"
 $CondaRoot = "$CondaBase/envs/CloudComPy313"
@@ -11,6 +16,7 @@ $corkDir = "${home}/CloudComPy/cork"
 $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
 $libiglDir = "${home}/CloudComPy/libigl/libigl"
 
+Clear-Host
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green
 
 # 1. CAPTURE MSVC ENV VARS (solution Perplexity)
@@ -29,12 +35,12 @@ $output | Select-String '^([^=]*)=(.*)$' | ForEach-Object {
     }
 }
 
-Write-Host "✅ cl.exe: $(where.exe cl.exe 2>$null)" -ForegroundColor Green
-
 # 2. Clean + CMake
+
+Write-Host "✅ cl.exe: $(where.exe cl.exe 2>$null)" -ForegroundColor Green
 if (Test-Path $BuildDir) { Remove-Item -Recurse -Force $BuildDir }
 New-Item -ItemType Directory -Force $BuildDir | Out-Null
-#Set-Location $BuildDir
+
 
 Write-Host "🔧 CMake..." -ForegroundColor Green
 
@@ -43,6 +49,7 @@ $cmakeArgs = @(
     "-B$BuildDir",
     "-G", "Ninja",
     "-DCMAKE_BUILD_TYPE=$Configuration",
+    "-DCMAKE_SHARED_LINKER_FLAGS='/machine:x64 /FORCE:MULTIPLE'",
     "-DPYTHON_PREFERED_VERSION=3.13",
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCONDA_BASE_DIRECTORY=$CondaBase",
@@ -63,6 +70,7 @@ $cmakeArgs = @(
     "-DEIGEN_ROOT_DIR=$CondaRoot/Library/include/eigen3",
     "-DFBX_SDK_INCLUDE_DIR=$fbxSdk/include",
     "-DFBX_SDK_LIBRARY_FILE=$fbxSdk/lib/x64/release/libfbxsdk-md.lib",
+    "-DINSTALL_PREREQUISITE_LIBRARIES=1",
     "-DLIBIGL_INCLUDE_DIR=$libiglDir/include",
     "-DLIBIGL_RELEASE_LIBRARY_FILE=$libiglDir/out/install/x64-Release/lib/igl.lib",
     "-DMPIR_INCLUDE_DIR=$condaRoot/Library/include",
@@ -77,14 +85,14 @@ $cmakeArgs = @(
     "-DPLUGIN_IO_QADDITIONAL=1",
     "-DPLUGIN_IO_QCORE=1",
     "-DPLUGIN_IO_QCSV_MATRIX=1",
-    "-DPLUGIN_IO_QDRACO=1",
+    "-DPLUGIN_IO_QDRACO=0",
     "-DPLUGIN_IO_QE57=1",
-    "-DPLUGIN_IO_QFBX=1",
+    "-DPLUGIN_IO_QFBX=0",
     "-DPLUGIN_IO_QLAS=1",
     "-DPLUGIN_IO_QLAS_FWF=0",
     "-DPLUGIN_IO_QPDAL=0",
     "-DPLUGIN_IO_QPHOTOSCAN=1",
-    "-DPLUGIN_IO_QRDB=0",
+    "-DPLUGIN_IO_QRDB=1",
     "-DPLUGIN_IO_QRDB_FETCH_DEPENDENCY=1",
     "-DPLUGIN_IO_QRDB_INSTALL_DEPENDENCY=1",
     "-DPLUGIN_IO_QSTEP=0",
@@ -94,18 +102,18 @@ $cmakeArgs = @(
     "-DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG=1",
     "-DPLUGIN_STANDARD_QANIMATION=1",
     "-DPLUGIN_STANDARD_QBROOM=1",
-    "-DPLUGIN_STANDARD_QCANUPO=1",
+    "-DPLUGIN_STANDARD_QCANUPO=0",
     "-DPLUGIN_STANDARD_QCLOUDLAYERS=1",
     "-DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER=1",
     "-DPLUGIN_STANDARD_QCOMPASS=1",
-    "-DPLUGIN_STANDARD_QCORK=1",
+    "-DPLUGIN_STANDARD_QCORK=0",
     "-DPLUGIN_STANDARD_QCSF=1",
     "-DPLUGIN_STANDARD_QFACETS=1",
     "-DPLUGIN_STANDARD_QHOUGH_NORMALS=1",
     "-DPLUGIN_STANDARD_QHPR=1",
     "-DPLUGIN_STANDARD_QJSONRPC=1",
     "-DPLUGIN_STANDARD_QM3C2=1",
-    "-DPLUGIN_STANDARD_QMESH_BOOLEAN=1",
+    "-DPLUGIN_STANDARD_QMESH_BOOLEAN=0",
     "-DPLUGIN_STANDARD_QMPLANE=1",
     "-DPLUGIN_STANDARD_QPCL=1",
     "-DPLUGIN_STANDARD_QPCV=1",
@@ -124,7 +132,7 @@ cmake @cmakeArgs
 
 Write-Host "🚀 Build..." -ForegroundColor Green
 Set-Location $BuildDir
-cmake --build .
+cmake --build . -v
 Write-Host "📦 Install..." -ForegroundColor Green
 cmake --install . 
 
