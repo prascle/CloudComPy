@@ -7,6 +7,9 @@ $BuildRoot = "$Home/CloudComPy/build2026"
 $InstallRoot = "$Home/CloudComPy/install/CloudComPy313"
 $Configuration = "RelWithDebInfo"
 $BuildDir = "$BuildRoot/x64-$Configuration"
+$corkDir = "${home}/CloudComPy/cork"
+$fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
+$libiglDir = "${home}/CloudComPy/libigl/libigl"
 
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green
 
@@ -31,22 +34,99 @@ Write-Host "✅ cl.exe: $(where.exe cl.exe 2>$null)" -ForegroundColor Green
 # 2. Clean + CMake
 if (Test-Path $BuildDir) { Remove-Item -Recurse -Force $BuildDir }
 New-Item -ItemType Directory -Force $BuildDir | Out-Null
-Set-Location $BuildDir
+#Set-Location $BuildDir
 
 Write-Host "🔧 CMake..." -ForegroundColor Green
-cmake -G "Ninja" `
-    -DCMAKE_BUILD_TYPE="$Configuration" `
-    -DUSE_CONDA_PACKAGES=ON `
-    -DCONDA_ROOT_DIRECTORY="$CondaRoot" `
-    -DQt6_DIR="$CondaRoot\Library\lib\cmake\Qt6" `
-    -DCMAKE_PREFIX_PATH="$CondaRoot\Library" `
-	-DCMAKE_INSTALL_PREFIX="$InstallRoot" `
-	-DPYTHON_PREFERED_VERSION="3.13" `
-    "$SourceDir"
+
+$cmakeArgs = @(
+    "-S$SourceDir",
+    "-B$BuildDir",
+    "-G", "Ninja",
+    "-DCMAKE_BUILD_TYPE=$Configuration",
+    "-DPYTHON_PREFERED_VERSION=3.13",
+    "-DUSE_CONDA_PACKAGES=ON",
+    "-DCONDA_BASE_DIRECTORY=$CondaBase",
+    "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
+    "-DQt6_DIR=$CondaRoot/Library/lib/cmake/Qt6",
+    "-DCMAKE_PREFIX_PATH=$CondaRoot/Library",
+    "-DCMAKE_INSTALL_PREFIX=$InstallRoot",
+    "-DBUILD_PYPI_PACKAGE=0",
+    "-DBUILD_PY_TESTING=1",
+    "-DBUILD_REFERENCE_DOC=1",
+    "-DBUILD_TESTING=1",
+    "-DCCCORELIB_SHARED=1",
+    "-DCCCORELIB_USE_CGAL=1",
+    "-DCCCORELIB_USE_QT_CONCURRENT=1",
+    "-DCCCORELIB_USE_TBB=0",
+    "-DCORK_INCLUDE_DIR:PATH=$corkDir/src",
+    "-DCORK_RELEASE_LIBRARY_FILE=$corkDir/win/VS2022/x64/Release/wincork2022.lib",
+    "-DEIGEN_ROOT_DIR=$CondaRoot/Library/include/eigen3",
+    "-DFBX_SDK_INCLUDE_DIR=$fbxSdk/include",
+    "-DFBX_SDK_LIBRARY_FILE=$fbxSdk/lib/x64/release/libfbxsdk-md.lib",
+    "-DLIBIGL_INCLUDE_DIR=$libiglDir/include",
+    "-DLIBIGL_RELEASE_LIBRARY_FILE=$libiglDir/out/install/x64-Release/lib/igl.lib",
+    "-DMPIR_INCLUDE_DIR=$condaRoot/Library/include",
+    "-DMPIR_RELEASE_LIBRARY_FILE=$condaRoot/Library/lib/mpir.lib",
+    "-DOPENCASCADE_78_OR_NEWER=1",
+    "-DOPTION_USE_GDAL=1",
+    "-DPLUGIN_EXAMPLE_GL=1",
+    "-DPLUGIN_EXAMPLE_IO=1",
+    "-DPLUGIN_EXAMPLE_STANDARD=1",
+    "-DPLUGIN_GL_QEDL=1",
+    "-DPLUGIN_GL_QSSAO=1",
+    "-DPLUGIN_IO_QADDITIONAL=1",
+    "-DPLUGIN_IO_QCORE=1",
+    "-DPLUGIN_IO_QCSV_MATRIX=1",
+    "-DPLUGIN_IO_QDRACO=1",
+    "-DPLUGIN_IO_QE57=1",
+    "-DPLUGIN_IO_QFBX=1",
+    "-DPLUGIN_IO_QLAS=1",
+    "-DPLUGIN_IO_QLAS_FWF=0",
+    "-DPLUGIN_IO_QPDAL=0",
+    "-DPLUGIN_IO_QPHOTOSCAN=1",
+    "-DPLUGIN_IO_QRDB=0",
+    "-DPLUGIN_IO_QRDB_FETCH_DEPENDENCY=1",
+    "-DPLUGIN_IO_QRDB_INSTALL_DEPENDENCY=1",
+    "-DPLUGIN_IO_QSTEP=0",
+    "-DPLUGIN_PYTHON=OFF",
+    "-DPLUGIN_STANDARD_3DMASC=1",
+    "-DPLUGIN_STANDARD_MASONRY_QAUTO_SEG=1",
+    "-DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG=1",
+    "-DPLUGIN_STANDARD_QANIMATION=1",
+    "-DPLUGIN_STANDARD_QBROOM=1",
+    "-DPLUGIN_STANDARD_QCANUPO=1",
+    "-DPLUGIN_STANDARD_QCLOUDLAYERS=1",
+    "-DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER=1",
+    "-DPLUGIN_STANDARD_QCOMPASS=1",
+    "-DPLUGIN_STANDARD_QCORK=1",
+    "-DPLUGIN_STANDARD_QCSF=1",
+    "-DPLUGIN_STANDARD_QFACETS=1",
+    "-DPLUGIN_STANDARD_QHOUGH_NORMALS=1",
+    "-DPLUGIN_STANDARD_QHPR=1",
+    "-DPLUGIN_STANDARD_QJSONRPC=1",
+    "-DPLUGIN_STANDARD_QM3C2=1",
+    "-DPLUGIN_STANDARD_QMESH_BOOLEAN=1",
+    "-DPLUGIN_STANDARD_QMPLANE=1",
+    "-DPLUGIN_STANDARD_QPCL=1",
+    "-DPLUGIN_STANDARD_QPCV=1",
+    "-DPLUGIN_STANDARD_QPOISSON_RECON=1",
+    "-DPLUGIN_STANDARD_QRANSAC_SD=1",
+    "-DPLUGIN_STANDARD_QSRA=1",
+    "-DPLUGIN_STANDARD_QTREEISO=1",
+    "-DPYTHONAPI_TEST_DIRECTORY=CloudComPy/Data",
+    "-DPYTHONAPI_EXTDATA_DIRECTORY=CloudComPy/ExternalData",
+    "-DPYTHONAPI_TRACES=1",
+    "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
+    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0"
+)
+
+cmake @cmakeArgs
 
 Write-Host "🚀 Build..." -ForegroundColor Green
-cmake --build . --config "$Configuration" -v
+Set-Location $BuildDir
+cmake --build .
 Write-Host "📦 Install..." -ForegroundColor Green
-cmake --install . --config "$Configuration"
+cmake --install . 
 
 Write-Host "✅ TERMINÉ ! $BuildDir" -ForegroundColor Green
+Set-Location $SourceDir
