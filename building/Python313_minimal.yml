@@ -4,3 +4,7 @@ channels:
  - nodefaults
 dependencies:
  - python=3.13
+ - numpy
+ - requests
+ - psutil
+ - scipy
