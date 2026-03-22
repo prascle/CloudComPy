@@ -7,6 +7,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 $CondaBase = "$Home/miniconda3"
 $CondaRoot = "$CondaBase/envs/CloudComPy313"
+$Qt6root = "C:/Qt/6.10.2/msvc2022_64"
 $SourceDir = "$Home/cloudComPy/CloudComPy"
 $BuildRoot = "$Home/CloudComPy/build2026"
 $InstallRoot = "$Home/CloudComPy/install/CloudComPy313"
@@ -18,6 +19,13 @@ $libiglDir = "${home}/CloudComPy/libigl/libigl"
 
 Clear-Host
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green
+
+# 🔥 AJOUT 1 : Nettoyage du PATH pour éliminer Qt Conda
+# (Conda reste actif, mais Qt Conda est neutralisé)
+$env:PATH = ($env:PATH -split ';' | Where-Object { $_ -notmatch 'Library\\bin\\Qt' -and $_ -notmatch 'Library\\bin\\qt' }) -join ';'
+
+# 🔥 AJOUT 2 : Supprimer CMAKE_PREFIX_PATH venant de Conda
+Remove-Item Env:CMAKE_PREFIX_PATH -ErrorAction Ignore
 
 # 1. CAPTURE MSVC ENV VARS (solution Perplexity)
 #    cmd /c "vcvars64.bat && set" → capture TOUTES les variables MSVC
@@ -54,8 +62,8 @@ $cmakeArgs = @(
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCONDA_BASE_DIRECTORY=$CondaBase",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
-    "-DQt6_DIR=$CondaRoot/Library/lib/cmake/Qt6",
-    "-DCMAKE_PREFIX_PATH=$CondaRoot/Library",
+    "-DQt6_DIR=$Qt6root/lib/cmake/Qt6",
+    "-DCMAKE_PREFIX_PATH=$Qt6root",
     "-DCMAKE_INSTALL_PREFIX=$InstallRoot",
     "-DBUILD_PYPI_PACKAGE=0",
     "-DBUILD_PY_TESTING=1",

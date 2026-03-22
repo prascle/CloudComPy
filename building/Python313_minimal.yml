@@ -1,0 +1,6 @@
+name: Python313
+channels:
+ - conda-forge
+ - nodefaults
+dependencies:
+ - python=3.13

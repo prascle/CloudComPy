@@ -31,6 +31,33 @@ Python3 access to cloudCompare objects is done like this:
   cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
  
 """
+# --- get rid of Qt from conda before import
+import os
+
+# paths = os.environ["PATH"].split(";")
+# cleaned = []
+# for p in paths:
+    # lower = p.lower()
+    # if "miniconda3" in lower and "library" in lower and "bin" in lower:
+        # if "qt" in lower or "qt6" in lower:
+            # continue
+    # cleaned.append(p)
+# os.environ["PATH"] = ";".join(cleaned)
+
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
+print(os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
+print(os.environ["PATH"])
+
+# --- check   
+import ctypes
+ctypes.WinDLL("Qt6Core.dll")
+
+import psutil, os
+p = psutil.Process(os.getpid())
+for m in p.memory_maps():
+    if "qt6" in m.path.lower():
+        print(m.path)
+# # ---    
 from _cloudComPy import *
 initCC()
 initCloudCompare()
