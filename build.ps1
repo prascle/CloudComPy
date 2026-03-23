@@ -11,7 +11,7 @@ $Qt6root = "C:/Qt/6.10.2/msvc2022_64"
 $SourceDir = "$Home/cloudComPy/CloudComPy"
 $BuildRoot = "$Home/CloudComPy/build2026"
 $InstallRoot = "$Home/CloudComPy/install/CloudComPy313"
-$Configuration = "RelWithDebInfo"
+$Configuration = "Release"
 $BuildDir = "$BuildRoot/x64-$Configuration"
 $corkDir = "${home}/CloudComPy/cork"
 $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
@@ -142,7 +142,11 @@ Write-Host "🚀 Build..." -ForegroundColor Green
 Set-Location $BuildDir
 cmake --build . -v
 Write-Host "📦 Install..." -ForegroundColor Green
+if (Test-Path $InstallRoot) {
+    Remove-Item $InstallRoot -Recurse -Force
+}
 cmake --install . 
+
 
 Write-Host "✅ TERMINÉ ! $BuildDir" -ForegroundColor Green
 Set-Location $SourceDir

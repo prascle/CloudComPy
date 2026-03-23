@@ -234,5 +234,7 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
+- TODO: automatize windows build and test in a script
+- TODO: Set automatically the build date on documentation
 
 

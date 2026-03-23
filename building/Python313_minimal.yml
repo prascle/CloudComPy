@@ -8,3 +8,4 @@ dependencies:
  - requests
  - psutil
  - scipy
+ - sphinx_rtd_theme
