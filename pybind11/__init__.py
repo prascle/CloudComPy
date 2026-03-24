@@ -32,10 +32,44 @@ Python3 access to cloudCompare objects is done like this:
  
 """
 import os
+import sys
+from pathlib import Path
 
+# ---------------------------------------------------------------------------
+# 1. Localisation du dossier CloudCompare (racine de CloudComPy)
+# ---------------------------------------------------------------------------
+_this_dir = Path(__file__).resolve().parent
+print(_this_dir)
+_cc_root = _this_dir.parent  # CloudCompare/
+print(_cc_root)
+_cc_plugins = _cc_root / "plugins"
+print(_cc_plugins)
+# ---------------------------------------------------------------------------
+# 2. Ajout explicite des répertoires contenant les DLL CloudCompare
+#    Cela force Windows à charger ces DLL en priorité.
+# ---------------------------------------------------------------------------
+os.add_dll_directory(str(_cc_root))
+os.add_dll_directory(str(_cc_plugins))
+
+# ---------------------------------------------------------------------------
+# 3. Optionnel : protection contre les DLL parasites dans le PATH
+#    (utile si un autre logiciel fournit Qt6 ou des libs CC)
+# ---------------------------------------------------------------------------
+# On retire du PATH les dossiers Conda susceptibles de contenir des DLL conflictuelles.
+#_clean_path = []
+#for p in os.environ["PATH"].split(";"):
+#    if "miniconda3" not in p.lower():  # évite les DLL Conda
+#        _clean_path.append(p)
+#os.environ["PATH"] = ";".join(_clean_path)
+
+# ---------------------------------------------------------------------------
+# 4. Plugins Qt
+# ---------------------------------------------------------------------------
 os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
-print(os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"])
-print(os.environ["PATH"])
+
+# ---------------------------------------------------------------------------
+# 5. Import du module natif CloudComPy
+# ---------------------------------------------------------------------------
 
 from _cloudComPy import *
 initCC()
