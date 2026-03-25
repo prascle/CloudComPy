@@ -52,6 +52,16 @@ os.add_dll_directory(str(_cc_root))
 os.add_dll_directory(str(_cc_plugins))
 
 # ---------------------------------------------------------------------------
+# 2b. charger tout de suite les bonnes ddl Qt6
+# ---------------------------------------------------------------------------
+import ctypes
+qt_core = ctypes.WinDLL(os.path.join(_cc_root, "Qt6Core.dll"))
+qt_gui = ctypes.WinDLL(os.path.join(_cc_root, "Qt6Gui.dll"))
+qt_widgets = ctypes.WinDLL(os.path.join(_cc_root, "Qt6Widgets.dll"))
+qt_opengl = ctypes.WinDLL(os.path.join(_cc_root, "Qt6OpenGL.dll"))
+qt_openglwidgets = ctypes.WinDLL(os.path.join(_cc_root, "Qt6OpenGLWidgets.dll"))
+
+# ---------------------------------------------------------------------------
 # 3. Optionnel : protection contre les DLL parasites dans le PATH
 #    (utile si un autre logiciel fournit Qt6 ou des libs CC)
 # ---------------------------------------------------------------------------
@@ -65,6 +75,7 @@ os.add_dll_directory(str(_cc_plugins))
 # ---------------------------------------------------------------------------
 # 4. Plugins Qt
 # ---------------------------------------------------------------------------
+os.environ["QT_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
 os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
 
 # ---------------------------------------------------------------------------

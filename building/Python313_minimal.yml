@@ -9,3 +9,4 @@ dependencies:
  - psutil
  - scipy
  - sphinx_rtd_theme
+ - quaternion
