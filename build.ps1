@@ -6,11 +6,11 @@ $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
 $CondaBase = "$Home/miniconda3"
-$CondaRoot = "$CondaBase/envs/CloudComPy313"
+$CondaRoot = "$CondaBase/envs/CloudComPy312b"
 $Qt6root = "C:/Qt/6.10.2/msvc2022_64"
 $SourceDir = "$Home/cloudComPy/CloudComPy"
 $BuildRoot = "$Home/CloudComPy/build2026"
-$InstallRoot = "$Home/CloudComPy/install/CloudComPy313"
+$InstallRoot = "$Home/CloudComPy/install/CloudComPy312b"
 $Configuration = "Release"
 $BuildDir = "$BuildRoot/x64-$Configuration"
 $corkDir = "${home}/CloudComPy/cork"
@@ -58,7 +58,7 @@ $cmakeArgs = @(
     "-G", "Ninja",
     "-DCMAKE_BUILD_TYPE=$Configuration",
     "-DCMAKE_SHARED_LINKER_FLAGS='/machine:x64 /FORCE:MULTIPLE'",
-    "-DPYTHON_PREFERED_VERSION=3.13",
+    "-DPYTHON_PREFERED_VERSION=3.12",
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCONDA_BASE_DIRECTORY=$CondaBase",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",

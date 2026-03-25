@@ -1,9 +1,9 @@
-name: Python313
+name: Python312
 channels:
  - conda-forge
  - nodefaults
 dependencies:
- - python=3.13
+ - python=3.12
  - numpy
  - requests
  - psutil
