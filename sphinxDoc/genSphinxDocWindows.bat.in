@@ -1,6 +1,4 @@
-
-call @CONDA_BASE_DIRECTORY@\Scripts\activate.bat @CONDA_BASE_DIRECTORY@
-call conda activate CloudComPy312b
-call @CMAKE_INSTALL_PREFIX@\envCloudComPy.bat
+cd "@WORKROOT@"
+call @CMAKE_INSTALL_PREFIX@\envCloudComPy.bat doc
 del @SPHINXDOCTREES@\*.doctree
-@SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@\doc\html 
+"@PYTHONVENV@/Scripts/python.exe" -m sphinx -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@\doc\html

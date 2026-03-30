@@ -7,15 +7,18 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 $CondaBase = "$Home/miniconda3"
 $CondaRoot = "$CondaBase/envs/CloudComPy312b"
+$PyMinVersion = "12"
 $Qt6root = "C:/Qt/6.10.2/msvc2022_64"
-$SourceDir = "$Home/cloudComPy/CloudComPy"
-$BuildRoot = "$Home/CloudComPy/build2026"
-$InstallRoot = "$Home/CloudComPy/install/CloudComPy312b"
+$WorkRoot = "$Home/cloudComPy"
+$SourceDir = "$WorkRoot/CloudComPy"
+$BuildRoot = "$WorkRoot/build2026"
+$InstallRoot = "$WorkRoot/install/CloudComPy312b"
 $Configuration = "Release"
 $BuildDir = "$BuildRoot/x64-$Configuration"
-$corkDir = "${home}/CloudComPy/cork"
+$corkDir = "$WorkRoot/cork"
+$libiglDir = "$WorkRoot/libigl/libigl"
 $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
-$libiglDir = "${home}/CloudComPy/libigl/libigl"
+$PythonVenv = "$WorkRoot/venv3$PyMinVersion"
 
 Clear-Host
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green
@@ -58,7 +61,7 @@ $cmakeArgs = @(
     "-G", "Ninja",
     "-DCMAKE_BUILD_TYPE=$Configuration",
     "-DCMAKE_SHARED_LINKER_FLAGS='/machine:x64 /FORCE:MULTIPLE'",
-    "-DPYTHON_PREFERED_VERSION=3.12",
+    "-DPYTHON_PREFERED_VERSION=3.$PyMinVersion",
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCONDA_BASE_DIRECTORY=$CondaBase",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
@@ -132,8 +135,10 @@ $cmakeArgs = @(
     "-DPYTHONAPI_TEST_DIRECTORY=CloudComPy/Data",
     "-DPYTHONAPI_EXTDATA_DIRECTORY=CloudComPy/ExternalData",
     "-DPYTHONAPI_TRACES=1",
+    "-DPYTHONVENV=$PythonVenv",
     "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
-    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0"
+    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
+    "-DWORKROOT=$WorkRoot"
 )
 
 cmake @cmakeArgs

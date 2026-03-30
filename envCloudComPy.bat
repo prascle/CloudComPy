@@ -6,4 +6,6 @@
 @set PATH=%CLOUDCOMPY_ROOT%CloudCompare;%CLOUDCOMPY_ROOT%ccViewer;%SCRIPT_DIR%;%PATH%
 @set PATH=%CLOUDCOMPY_ROOT%CloudCompare\plugins;%PATH%
 
-2>NUL python "%CLOUDCOMPY_ROOT%checkenv.py" || echo "Incorrect Environment! Problem with Python test!"
+if "%1"=="" (
+    2>NUL python "%CLOUDCOMPY_ROOT%checkenv.py" || echo "Incorrect Environment! Problem with Python test!"
+)
