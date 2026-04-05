@@ -21,7 +21,8 @@
 
 message( STATUS "post install process ...")
 if (WIN32)
-message( STATUS "generate documentation ...")
+message( STATUS "generate bundle and documentation (a few minutes, silent mode)...")
+execute_process( COMMAND sphinxDoc/genBundle.bat )
 execute_process( COMMAND sphinxDoc/genSphinxDoc.bat )
 elseif( APPLE )
 execute_process( COMMAND pwd )
