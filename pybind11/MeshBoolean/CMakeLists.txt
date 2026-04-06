@@ -29,6 +29,7 @@ project( _MeshBoolean VERSION 0.1 )
 add_library( ${PROJECT_NAME} MODULE )
 
 if (WIN32)
+    target_compile_definitions(_MeshBoolean PRIVATE NOMINMAX)
     target_link_libraries( ${PROJECT_NAME}
 	PUBLIC pybind11::module
     PRIVATE
