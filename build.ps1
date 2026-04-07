@@ -81,7 +81,9 @@ $cmakeArgs = @(
     "-DCCCORELIB_USE_TBB=0",
     "-DCORK_INCLUDE_DIR:PATH=$corkDir/src",
     "-DCORK_RELEASE_LIBRARY_FILE=$corkDir/win/VS2022/x64/Release/wincork2022.lib",
-    "-DEIGEN_ROOT_DIR=$CondaRoot/Library/include/eigen3",
+    "-DDRACO_INCLUDE_DIRS=$condaRoot/Library/include",
+    "-DDRACO_LIBRARIES=$condaRoot/Library/lib/draco.lib",
+    "-DEIGEN_ROOT_DIR=$condaRoot/Library/include/eigen3",
     "-DFBX_SDK_INCLUDE_DIR=$fbxSdk/include",
     "-DFBX_SDK_LIBRARY_FILE=$fbxSdk/lib/x64/release/libfbxsdk-md.lib",
     "-DINSTALL_PREREQUISITE_LIBRARIES=0",
@@ -100,7 +102,7 @@ $cmakeArgs = @(
     "-DPLUGIN_IO_QADDITIONAL=1",
     "-DPLUGIN_IO_QCORE=1",
     "-DPLUGIN_IO_QCSV_MATRIX=1",
-    "-DPLUGIN_IO_QDRACO=0",
+    "-DPLUGIN_IO_QDRACO=1",
     "-DPLUGIN_IO_QE57=1",
     "-DPLUGIN_IO_QFBX=0",
     "-DPLUGIN_IO_QLAS=1",
@@ -149,7 +151,7 @@ cmake @cmakeArgs
 
 Write-Host "🚀 Build..." -ForegroundColor Green
 Set-Location $BuildDir
-cmake --build . -v
+cmake --build . 
 Write-Host "📦 Install..." -ForegroundColor Green
 if (Test-Path $InstallRoot) {
     Remove-Item $InstallRoot -Recurse -Force
