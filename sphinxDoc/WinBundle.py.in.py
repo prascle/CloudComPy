@@ -70,7 +70,7 @@ class winBundle:
 
         deps = []
         for line in output.splitlines():
-            m = re.search(r"\s+([A-Za-z0-9_.-]+\.dll)", line)
+            m = re.search(r"\s+([A-Za-z0-9_.-]+\.dll)", line, re.IGNORECASE)
             if m:
                 deps.append(m.group(1))
         #print("Direct dependencies for " + str(binary) + ": " + ", ".join(deps))
