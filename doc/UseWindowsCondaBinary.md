@@ -1,46 +1,38 @@
-## Installing, testing and using a CloudComPy binary on Windows 10 or 11, with Conda
+## Installing, testing and using a CloudComPy binary on Windows 10 or 11 in a Python 3.12 environment
 
 The binary *CloudComPy\*_-date-.7z* available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads) is built in a Conda environment.
 (see [here](BuildWindowsConda.md) for the corresponding building instructions).
 
-As CloudComPy is under development, these instructions and the link are subject to change from time to time...
+As CloudComPy is still under development, these instructions and the link are subject to change from time to time...
 
-**This binary works only on Windows 10 or 11, and with a Conda environment as described below, not anywhere else!**
+**This binary works only on Windows 10 or 11, and with a (virtual) Python 3.12 environment as described below**.
 
-You need a recent installation of Anaconda3 or miniconda3.
+**Note:** CloudComPy versions released in 2025 and earlier were built using a **Conda** **Python 3.10** or **Python 3.11** environment: **CloudComPy310** or  **CloudComPy311**.
+Now, new versions require only a **Python 3.12** environment. **Conda is not needed anymore**, unless you want it to provide your Python packages.
 
-**Note:** CloudComPy versions released in 2024 and earlier were built using a Conda **Python 3.10** environment: **CloudComPy310**.
-Now, new versions are built with a **Python 3.11** Conda environment: **CloudComPy311**
+The Python 3.12 environment must contain the following packages to run all the tests : 
+```numpy requests psutil scipy numpy-quaternion cmake matplotlib```
 
-You need to create a conda environment for CloudComPy: for instance, in Anaconda3, use the Anaconda3 prompt console:
+Create a Python virtual environment with venv (*adapt the path for Your Python 3.12 install and for the virtual env*). In the Command Prompt (```cmd```) :
 
 ```
-conda activate
-conda update -y -n base -c defaults conda
-```
-If your environment CloudComPy311 does not exist or to recreate it from scratch:
-(**note:** it's better to regularly recreate the environment, because there are sometimes a lot of changes)
-```
-conda create -y --name CloudComPy311 python=3.11
-   # --- erase previous env with the same name if existing
-```
-Add or update the packages 
-```
-conda activate CloudComPy311
-conda config --add channels conda-forge
-conda config --set channel_priority flexible
-conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.9" "mpir=3.0" "mysql=8" notebook numpy "opencv=4.9" "openmp=8.0" "openssl>=3.1" "pcl=1.14" "pdal=2.6" "psutil=6.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2"
+cd "%USERPROFILE%\AppData\Local\Programs\Python\Python312"
+python -m venv "%USERPROFILE%\CloudComPy\venv312"
+cd "%USERPROFILE%\CloudComPy"
+venv312\Scripts\activate
+pip install numpy requests psutil scipy numpy-quaternion cmake matplotlib
 ```
 
-Install the binary in the directory of your choice.
+Unzip the cloudComPy binary in the directory of your choice. 
 
 ### Using CloudCompare and CloudComPy:
 
-From the conda prompt, you have to set the Path and Pythonpath once :
+From the Command Prompt, activate the Python venv, cd to the cloudComPy install and launch envCloudComPy.bat, to set the CloudComPy PATH and PYTHONPATH.
 
 ```
-conda activate CloudComPy310
-cd <path install>\CloudComPy310
+cd %USERPROFILE%\CloudComPy
+venv312\Scripts\activate
+cd install\CloudComPy312
 envCloudComPy.bat
 ```
 
@@ -72,9 +64,9 @@ An example of notebook is provided in ```doc/samples/histogramOnDistanceComputat
 
 ### Execute all the Python tests:
 
+In the virtual environment above :
 ```
-conda activate CloudComPy310
-cd  <path install>\CloudComPy310\doc\PythonAPI_test
+cd  <path install>\CloudComPy312\doc\PythonAPI_test
 ```
 NB: ```envCloudComPy.bat``` is OK but not mandatory here, ```ctest``` resets the necessary paths
 
@@ -88,6 +80,4 @@ The files created with the tests are in your user space: %USERPROFILE%\CloudComP
 
 ### In case of problem:
 
-There may be differences in the versions of conda packages. When updating the conda configuration, the package versions may change slightly.This is usually not a problem, but since the CloudComPy binary is fixed, there may be a version difference on a package, which makes it incompatible with CloudComPy. For your information, here is the list of package versions when CloudComPy was built.
-
-The result of ```conda list``` command is provided in the sources in [building directory](../building)
+The ```envCloudComPy.bat``` file checks whether cloudComPy has been imported into your Python environment. If everything is in order, it displays ```Environment OK!```. Otherwise, there may be a conflict between the Qt6 libraries included in the cloudComPy package and any Qt6 libraries provided by your Python environment. 
