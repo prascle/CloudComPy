@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
 $CondaBase = "$Home/miniconda3"
-$CondaEnvName = "CloudComPy312b"
+$CondaEnvName = "CloudComPy312"
 $CondaRoot = "$CondaBase/envs/$CondaEnvName"
 $PyMinVersion = "12"
 $Qt6root = "C:/Qt/6.10.2/msvc2022_64"
@@ -19,7 +19,7 @@ $BuildDir = "$BuildRoot/x64-$Configuration"
 $corkDir = "$WorkRoot/cork"
 $libiglDir = "$WorkRoot/libigl/libigl"
 $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
-$PythonVenv = "$WorkRoot/venv3$PyMinVersion"
+$PythonVenv = "$WorkRoot/venv3${PyMinVersion}doc"
 
 Clear-Host
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green

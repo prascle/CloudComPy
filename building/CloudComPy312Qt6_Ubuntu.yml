@@ -1,4 +1,4 @@
-name: CloudComPy312b
+name: CloudComPy312
 channels:
  - conda-forge
  - nodefaults
