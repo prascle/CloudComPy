@@ -45,10 +45,29 @@ project = 'CloudComPy'
 copyright = '2021-2025, Paul RASCLE'
 author = 'Paul RASCLE'
 
+# Variables injectées par CMake
+cloudcompy_version = "@BUILD_DATE@"
+cc_version = "@CLOUDCOMPARE_VERSION@"
+cpy_commit = "@CLOUDCOMPY_GIT_COMMIT@"
+cpy_commit_date = "@CLOUDCOMPY_COMMIT_DATE@"
+cc_commit = "@CLOUDCOMPARE_GIT_COMMIT@"
+cc_commit_date = "@CLOUDCOMPARE_COMMIT_DATE@"
+
+# Substitutions Sphinx
+rst_epilog = f"""
+.. |cloudcompy_version| replace:: {cloudcompy_version}
+.. |build_date| replace:: {cloudcompy_version}
+.. |cc_version| replace:: {cc_version}
+.. |cpy_commit| replace:: {cpy_commit}
+.. |cpy_commit_date| replace:: {cpy_commit_date}
+.. |cc_commit| replace:: {cc_commit}
+.. |cc_commit_date| replace:: {cc_commit_date}
+"""
+
 # The short X.Y version
-version = '2.14'
+version = '@CLOUDCOMPARE_VERSION@ @BUILD_DATE@'
 # The full version, including alpha/beta/rc tags
-release = 'CloudComPy 2025/06/19 based on CloudCompare 2.14.alpha 2025/05/08'
+release = 'CloudComPy @CLOUDCOMPARE_VERSION@ @BUILD_DATE@ based on CloudCompare @CLOUDCOMPARE_VERSION@'
 
 # -- General configuration ---------------------------------------------------
 

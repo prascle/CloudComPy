@@ -20,6 +20,7 @@ $corkDir = "$WorkRoot/cork"
 $libiglDir = "$WorkRoot/libigl/libigl"
 $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
 $PythonVenv = "$WorkRoot/venv3${PyMinVersion}doc"
+$CloudCompareVersion = "2.14.beta"
 
 Clear-Host
 Write-Host "🐍 Conda actif ✅" -ForegroundColor Green
@@ -65,6 +66,7 @@ $cmakeArgs = @(
     "-DPYTHON_PREFERED_VERSION=3.$PyMinVersion",
     "-DPYTHON_MIN_VERSION=$PyMinVersion",
     "-DUSE_CONDA_PACKAGES=ON",
+    "-DCLOUDCOMPARE_VERSION=$CloudCompareVersion",
     "-DCONDA_BASE_DIRECTORY=$CondaBase",
     "-DCONDA_ENV_NAME=$CondaEnvName",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",

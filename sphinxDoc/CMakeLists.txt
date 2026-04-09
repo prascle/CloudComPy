@@ -24,18 +24,43 @@ message(STATUS "cloudComPy Sphinx doc generation")
 # --- Sphinx Documentation
 
 set(RSTFILES
+    Canupo.rst
     ccFacet.rst
     ccMesh.rst
     ccOctree.rst
     ccPointCloud.rst
     ccPolyline.rst
     ccPrimitives.rst
+    ccSensor.rst
     cloudComPy.rst
+    cloudSamplingTools.rst
     colors.rst
+    CSF.rst
     DistanceComputationTools.rst
+    GeometricalAnalysisTools.rst
+    HoughNormals.rst
+    HPR.rst
     index.rst
     introduction.rst
+    license.rst
+    M3C2.rst
+    MeshBoolean.rst
+    MinimalBoundingBox.rst
+    Neighbourhood.rst
+    PCL.rst
+    PCV.rst
+    PoissonRecon.rst
+    RANSAC_SD.rst
     ScalarField.rst
+    SRA.rst
+    tables.rst
+    userEntities.rst
+    userIntro.rst
+    userLoad.rst
+    userNumpy.rst
+    userSave.rst
+    userUseCases.rst
+    version.rst
     )
 
 set(SPHINXOPTS )
@@ -44,7 +69,37 @@ set(SPHINXDOCTREES "${CMAKE_CURRENT_BINARY_DIR}/doctrees")
 set(ALLSPHINXOPTS "${SPHINXOPTS} ${SOURCEDIR}")
 set(SPHINXBUILD sphinx-build)
 
-configure_file(conf.py.in conf.py)
+string(TIMESTAMP BUILD_DATE "%Y/%m/%d")
+
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE CLOUDCOMPY_GIT_COMMIT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/CloudCompare
+    OUTPUT_VARIABLE CLOUDCOMPARE_GIT_COMMIT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git log -1 --format=%cd --date=format:%Y/%m/%d
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE CLOUDCOMPY_COMMIT_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git log -1 --format=%cd --date=format:%Y/%m/%d
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/CloudCompare
+    OUTPUT_VARIABLE CLOUDCOMPARE_COMMIT_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+configure_file(conf.py.in conf.py @ONLY)
 
 if(WIN32)
     if (INSTALL_PREREQUISITE_LIBRARIES)
