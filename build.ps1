@@ -166,6 +166,56 @@ if (Test-Path $InstallRoot) {
 }
 cmake --install . 
 
+# --- PACKAGE CloudComPy ---
+Write-Host "📦 Packaging CloudComPy..." -ForegroundColor Cyan
+
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$packageName = "CloudComPy_${CondaEnvName}_$timestamp.7z"
+$sevenZip = "C:\Program Files\7-Zip\7z.exe"
+
+# & parce que le path contient des espaces. Compression LZMA2 maximale
+& $sevenZip a `
+    -t7z `
+    -m0=lzma2 `
+    -mx=9 `
+    -mmt=on `
+    -ms=on `
+    $packageName `
+    $InstallRoot
+
+Write-Host "🎉 Package créé : $packageName" -ForegroundColor Green
+
+# --- TESTS CTest ---
+Write-Host "🧪 Lancement des tests PythonAPI..." -ForegroundColor Cyan
+
+# Activation du venv Python
+$venvActivate = Join-Path $PythonVenv "Scripts/Activate.ps1"
+if (-Not (Test-Path $venvActivate)) {
+    throw "Venv introuvable : $venvActivate"
+}
+& $venvActivate
+
+# Aller dans l'install
+Push-Location $InstallRoot
+
+# Charger l'environnement CloudComPy
+$envBat = Join-Path $InstallRoot "envCloudComPy.bat"
+if (-Not (Test-Path $envBat)) {
+    throw "envCloudComPy.bat introuvable dans l'install"
+}
+cmd /c "`"$envBat`""
+
+# Aller dans le dossier de tests
+$testDir = Join-Path $InstallRoot "doc/PythonAPI_test"
+Push-Location $testDir
+
+# Lancer CTest
+ctest --output-on-failure
+
+Pop-Location
+Pop-Location
+
+Write-Host "🧪 Tests terminés." -ForegroundColor Green
 
 Write-Host "✅ TERMINÉ ! $BuildDir" -ForegroundColor Green
 Set-Location $SourceDir

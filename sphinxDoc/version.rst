@@ -51,5 +51,6 @@ History
 
 For more information on recent changes, see:
 
+- The `CloudComPy release notes <https://github.com/prascle/CloudComPy/blob/master/doc/ReleaseNotes.md>`_
 - The `CloudComPy git repository <https://github.com/prascle/CloudComPy.git>`_
 - The `CloudCompare git repository <https://github.com/prascle/CloudCompare.git>`_ (fork for cloudComPy)

@@ -2,10 +2,21 @@
 
 These release notes start with the October 18, 2021 CloudComPy release.
 
+## April 10, 2026 CloudComPy release:
+
+ - cloudComPy is based on CloudCompare 2.14alpha (master March 16, 2026), with various patches needed by cloudComPy.
+ - cloudComPy is now built with a Conda Python 3.12 environment and Qt6.10.
+ - The Windows packaging embeds all the required DLLs: easier to install and maintain,
+   needs just a Python 3.12 environment with some packages to run.
+ - A new procedure to build the Windows pacakging
+ - (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
+ - (issue #216) Hough Plugin
+ - several minor fixes and doc improvement.
+
 ## June 19, 2025 CloudComPy release:
 
- - cloudComPy is now built with a Conda Python 3.11 enivronment (instead of 3.10)
- - cloudComPy is based on CloudCompare 2.14aplha (master May 8, 2025), with patch to work on macOS Sequoia 15.4 and more.
+ - cloudComPy is now built with a Conda Python 3.11 environment (instead of 3.10)
+ - cloudComPy is based on CloudCompare 2.14alpha (master May 8, 2025), with patch to work on macOS Sequoia 15.4 and more.
  - (issue #192) improve behaviour when converting float into int is harmless
  - (issue #195) improve documentation on normal generation with quadric fitting
  - (issue #198) get transformation history

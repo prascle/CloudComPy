@@ -204,6 +204,8 @@ TODO List
 * DONE: (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
 * DONE: Qt6 migration, following CloudCompare
 * DONE: (issue #216) Hough Plugin
+* DONE: Set automatically the build date on documentation
+* DONE: automatize windows build and test in a script
 - TODO: try to have ctest working at build step on Windows and Linux (incomplete)
 - TODO: A kind of automatic test coverage, to find examples for a particular function.
 - TODO: Fix the Link problem in Windows to avoid the option /force:multiple at link step
@@ -234,7 +236,7 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
-- TODO: automatize windows build and test in a script
-- TODO: Set automatically the build date on documentation
+
+
 
 
