@@ -1,3 +1,4 @@
+
 param(
     [switch]$All,         # Clean + Configure + Build + Install + Package + Tests
     [switch]$FromScratch, # Clean + Configure + Build
@@ -11,7 +12,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
-# --- VARIABLES ORIGINALES ---
+# --- VARIABLES ORIGINALES -----------------------------------------------------
+
 $CondaBase = "$Home/miniconda3"
 $CondaEnvName = "CloudComPy312"
 $CondaRoot = "$CondaBase/envs/$CondaEnvName"
@@ -29,21 +31,78 @@ $fbxSdk = "C:/Program Files/Autodesk/FBX/FBX SDK/2020.3.9"
 $PythonVenv = "$WorkRoot/venv3${PyMinVersion}doc"
 $CloudCompareVersion = "2.14.beta"
 
-# --- FONCTIONS ---
+# --- LOGGING & TIMING ---------------------------------------------------------
 
-function Invoke-Clean {
+$Global:StepTimes = @{}
+$Global:LogFile = Join-Path $WorkRoot "build.log"
+
+# Reset log file
+if (Test-Path $Global:LogFile) { Remove-Item $Global:LogFile -Force }
+New-Item -ItemType File -Path $Global:LogFile | Out-Null
+
+function Write-Log($text) {
+    Add-Content -Path $Global:LogFile -Value $text
+}
+
+function Write-Step($text, $color="Cyan") {
     [Console]::Out.Flush()
     Write-Host ""
-    Write-Host "🧹 Clean build + install..." -ForegroundColor Cyan
+    Write-Host $text -ForegroundColor $color
+    Write-Log $text
+}
+
+function Start-Step($name) {
+    $Global:StepTimes[$name] = [ordered]@{
+        Start = Get-Date
+        End   = $null
+        Elapsed = $null
+    }
+    Write-Step "▶️  $name" "Yellow"
+}
+
+function End-Step($name) {
+    $Global:StepTimes[$name].End = Get-Date
+    $Global:StepTimes[$name].Elapsed = `
+        ($Global:StepTimes[$name].End - $Global:StepTimes[$name].Start)
+
+    $msg = "⏱️  Durée : $($Global:StepTimes[$name].Elapsed)"
+    Write-Host $msg -ForegroundColor DarkGray
+    Write-Log $msg
+}
+
+function Show-Summary {
+    Write-Host ""
+    Write-Host "======================" -ForegroundColor Cyan
+    Write-Host "   RÉCAPITULATIF BUILD" -ForegroundColor Cyan
+    Write-Host "======================" -ForegroundColor Cyan
+
+    Write-Log ""
+    Write-Log "======================"
+    Write-Log "   RÉCAPITULATIF BUILD"
+    Write-Log "======================"
+
+    foreach ($k in $Global:StepTimes.Keys) {
+        $t = $Global:StepTimes[$k].Elapsed
+        $line = ("{0,-20} {1}" -f $k, $t)
+        Write-Host $line -ForegroundColor Green
+        Write-Log $line
+    }
+}
+
+# --- FONCTIONS BUILD ----------------------------------------------------------
+
+function Invoke-Clean {
+    Start-Step "Clean"
     if (Test-Path $BuildDir) { Remove-Item -Recurse -Force $BuildDir }
     if (Test-Path $InstallRoot) { Remove-Item -Recurse -Force $InstallRoot }
+    End-Step "Clean"
 }
 
 function Invoke-PrepareEnvironment {
-    [Console]::Out.Flush()
-    Write-Host ""
+    Start-Step "PrepareEnvironment"
+
     Clear-Host
-    Write-Host "🐍 Conda actif (Qt Conda neutralisé)..." -ForegroundColor Green
+    Write-Step "🐍 Activation Conda (Qt neutralisé)" "Green"
 
     # Nettoyage PATH Qt Conda
     $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -notmatch 'Library\\bin\\Qt' -and $_ -notmatch 'Library\\bin\\qt' }) -join ';'
@@ -51,8 +110,7 @@ function Invoke-PrepareEnvironment {
     # Supprimer CMAKE_PREFIX_PATH venant de Conda
     Remove-Item Env:CMAKE_PREFIX_PATH -ErrorAction Ignore
 
-    # Charger MSVC
-    Write-Host "⚙️  MSVC environment..." -ForegroundColor Cyan
+    Write-Step "⚙️  Chargement MSVC..." "Cyan"
     $vcvarsPath = "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat"
     $output = cmd /c "`"$vcvarsPath`" && set"
 
@@ -62,15 +120,19 @@ function Invoke-PrepareEnvironment {
         }
     }
 
-    Write-Host "✅ cl.exe: $(where.exe cl.exe 2>$null)" -ForegroundColor Green
+    Write-Host "cl.exe: $(where.exe cl.exe 2>$null)" -ForegroundColor Green
+    Write-Log "cl.exe: $(where.exe cl.exe 2>$null)"
+
+    End-Step "PrepareEnvironment"
 }
 
 function Invoke-Configure {
-    [Console]::Out.Flush()
-    Write-Host ""
-    Write-Host "🔧 CMake configure..." -ForegroundColor Green
+    Start-Step "Configure"
+
     if (Test-Path $BuildDir) { Remove-Item -Recurse -Force $BuildDir }
     New-Item -ItemType Directory -Force $BuildDir | Out-Null
+
+    Write-Step "🔧 CMake configure..." "Green"
 
     $cmakeArgs = @(
         "-S$SourceDir",
@@ -170,71 +232,77 @@ function Invoke-Configure {
         "-DWORKROOT=$WorkRoot"
     )
 
-    cmake @cmakeArgs
+    cmake @cmakeArgs 2>&1 | Tee-Object -FilePath $Global:LogFile -Append
+
+    End-Step "Configure"
 }
 
 function Invoke-Build {
-    [Console]::Out.Flush()
-    Write-Host ""
-    Write-Host "🚀 Build..." -ForegroundColor Green
+    Start-Step "Build"
+    Write-Step "🚀 Build..." "Green"
+
     Set-Location $BuildDir
-    cmake --build .
+    cmake --build . 2>&1 | Tee-Object -FilePath $Global:LogFile -Append
     Set-Location $SourceDir
+
+    End-Step "Build"
 }
 
 function Invoke-Install {
-    [Console]::Out.Flush()
-    Write-Host ""
-    Write-Host "📦 Install..." -ForegroundColor Green
+    Start-Step "Install"
+    Write-Step "📦 Install..." "Green"
+
     if (Test-Path $InstallRoot) { Remove-Item -Recurse -Force $InstallRoot }
     Set-Location $BuildDir
-    cmake --install .
+    cmake --install . 2>&1 | Tee-Object -FilePath $Global:LogFile -Append
     Set-Location $SourceDir
+
+    End-Step "Install"
 }
 
 function Invoke-Package {
-    [Console]::Out.Flush()
-    Write-Host ""
-    Write-Host "📦 Packaging CloudComPy..." -ForegroundColor Cyan
+    Start-Step "Package"
+    Write-Step "📦 Packaging CloudComPy..." "Cyan"
 
     $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
     $packageName = "CloudComPy_${CondaEnvName}_$timestamp.7z"
     $packagePath = Join-Path "$WorkRoot/install" $packageName
 
     $sevenZip = "C:\Program Files\7-Zip\7z.exe"
-    if (-not (Test-Path $sevenZip)) {
-        throw "7z.exe introuvable : $sevenZip"
-    }
 
-    & $sevenZip a `
-        -t7z -m0=lzma2 -mx=9 -mmt=on -ms=on `
-        $packagePath `
-        $InstallRoot
+    & $sevenZip a -t7z -m0=lzma2 -mx=9 -mmt=on -ms=on $packagePath $InstallRoot `
+        2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
     Write-Host "🎉 Package créé : $packagePath" -ForegroundColor Green
+    Write-Log "Package créé : $packagePath"
+
+    End-Step "Package"
 }
 
 function Invoke-Tests {
-    [Console]::Out.Flush()
-    Write-Host ""
-    Write-Host "🧪 Lancement des tests PythonAPI..." -ForegroundColor Cyan
+    Start-Step "Tests"
+    Write-Step "🧪 Lancement des tests PythonAPI..." "Cyan"
 
     $venvActivate = Join-Path $PythonVenv "Scripts/Activate.ps1"
     & $venvActivate
 
     Push-Location $InstallRoot
-    cmd /c "`"$(Join-Path $InstallRoot 'envCloudComPy.bat')`""
+    cmd /c "`"$(Join-Path $InstallRoot 'envCloudComPy.bat')`"" `
+        2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
     Push-Location (Join-Path $InstallRoot "doc/PythonAPI_test")
-    ctest --output-on-failure
+    ctest --output-on-failure 2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
     Pop-Location
     Pop-Location
 
     Write-Host "🧪 Tests terminés." -ForegroundColor Green
+    Write-Log "Tests terminés."
+
+    End-Step "Tests"
 }
 
-# --- LOGIQUE PRINCIPALE ---
+# --- LOGIQUE PRINCIPALE -------------------------------------------------------
 
 Invoke-PrepareEnvironment
 
@@ -245,6 +313,7 @@ if ($All) {
     Invoke-Install
     Invoke-Package
     Invoke-Tests
+    Show-Summary
     exit
 }
 
@@ -252,26 +321,31 @@ if ($FromScratch) {
     Invoke-Clean
     Invoke-Configure
     Invoke-Build
+    Show-Summary
     exit
 }
 
 if ($BuildOnly) {
     Invoke-Build
+    Show-Summary
     exit
 }
 
 if ($InstallOnly) {
     Invoke-Install
+    Show-Summary
     exit
 }
 
 if ($Package) {
     Invoke-Package
+    Show-Summary
     exit
 }
 
 if ($Tests) {
     Invoke-Tests
+    Show-Summary
     exit
 }
 
