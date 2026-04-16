@@ -33,7 +33,7 @@ $CloudCompareVersion = "2.14.beta"
 
 # --- LOGGING & TIMING ---------------------------------------------------------
 
-$Global:StepTimes = @{}
+$Global:StepTimes = [ordered]@{}
 $Global:LogFile = Join-Path $WorkRoot "build.log"
 
 # Reset log file
@@ -65,7 +65,9 @@ function End-Step($name) {
     $Global:StepTimes[$name].Elapsed = `
         ($Global:StepTimes[$name].End - $Global:StepTimes[$name].Start)
 
-    $msg = "⏱️  Durée : $($Global:StepTimes[$name].Elapsed)"
+    $elapsed = $Global:StepTimes[$name].Elapsed
+    $formatted = "{0:hh\:mm\:ss\.ff}" -f $elapsed
+    $msg = "⏱️  Durée : $formatted"
     Write-Host $msg -ForegroundColor DarkGray
     Write-Log $msg
 }
@@ -83,7 +85,8 @@ function Show-Summary {
 
     foreach ($k in $Global:StepTimes.Keys) {
         $t = $Global:StepTimes[$k].Elapsed
-        $line = ("{0,-20} {1}" -f $k, $t)
+        $formatted = "{0:hh\:mm\:ss\.ff}" -f $t
+        $line = ("{0,-20} {1}" -f $k, $formatted)
         Write-Host $line -ForegroundColor Green
         Write-Log $line
     }
