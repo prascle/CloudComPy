@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python - projet (venv)",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "python": "C:\\Users\\paulr\\cloudComPy\\venv312doc\\Scripts\\python.exe",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}\\CloudCompare;${workspaceFolder}\\doc\\PythonAPI_test",
+        "PATH": "${workspaceFolder}\\CloudCompare;${workspaceFolder}\\CloudCompare\\plugins;${workspaceFolder};${env:PATH}"
+      }
+    }
+  ]
+}

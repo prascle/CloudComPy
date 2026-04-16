@@ -72,9 +72,14 @@ endif()
 
 # scripts to set environment
 if(WIN32)
-	set(ENV_CLOUDCOMPY envCloudComPy.bat checkenv.py)
+    configure_file(activate_cloudcompy_env.bat.in ${CMAKE_CURRENT_BINARY_DIR}/activate_cloudcompy_env.bat @ONLY)
+	set(ENV_CLOUDCOMPY envCloudComPy.bat checkenv.py ${CMAKE_CURRENT_BINARY_DIR}/activate_cloudcompy_env.bat)
     install(PROGRAMS ${ENV_CLOUDCOMPY}
             DESTINATION .
+           )
+    set (VSCODE_FILES .vscode/launch.json .vscode/settings.json)
+    install(FILES ${VSCODE_FILES}
+            DESTINATION .vscode
            )
 endif()
 
