@@ -48,19 +48,13 @@ To execute a Python script (for instance myscript.py) using CloudComPy:
 python myscript.py
 ```
 
-The IDE [Spyder](https://www.spyder-ide.org/) and [Jupyter](https://jupyter.org/) can be launched in this environment:
+### Working with an Integrated Development Environment
 
-```
-spyder
-```
-The first time you run Spyder, you may need to add the paths to CloudCompare and the test scripts to the PYTHONPATH,
-using the menu Tools / PYTHONPATH Manager. These paths are the same as those defined in the envCloudComPy.bat script.
+On Windows, the integrated development environments [Spyder](https://www.spyder-ide.org/) and [Jupyter](https://jupyter.org/) do not yet work with this version of cloudComPy.
+There are version conflicts between the DLLs included in the cloudComPy package and those used by Jupyter and Spyder. No practical solution has been found to resolve these conflicts.
 
-```
-jupyter notebook
-```
+If you're looking for an integrated development environment to write, run, and debug your Python scripts, [VS Code](https://code.visualstudio.com/) is an excellent choice. You need to open the package folder in VS Code; it contains a preconfigured ```.vscode``` directory to set up the cloudComPy environment for the integrated terminal and the debugger. You need to modify the venv path in ```.vscode/launch.json```, depending on your installation.
 
-An example of notebook is provided in ```doc/samples/histogramOnDistanceComputation.ipynb```.
 
 ### Execute all the Python tests:
 
@@ -80,4 +74,4 @@ The files created with the tests are in your user space: %USERPROFILE%\CloudComP
 
 ### In case of problem:
 
-The ```envCloudComPy.bat``` file checks whether cloudComPy has been imported into your Python environment. If everything is in order, it displays ```Environment OK!```. Otherwise, there may be a conflict between the Qt6 libraries included in the cloudComPy package and any Qt6 libraries provided by your Python environment. 
+The ```envCloudComPy.bat``` file checks whether cloudComPy has been successfully imported into your Python environment. If everything is in order, it displays ```Environment OK!```. If not, there may be a version conflict between certain DLLs included in the cloudComPy package and those provided by your Python environment. This can happen, for example, when you install a package that depends on Qt6, or if you use Spyder or Jupyter. Conda and PyPI packages are not built in the same way; for this version of cloudComPy, it is simpler to use a Python venv environment and PyPI packages rather than a Conda environment.

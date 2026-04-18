@@ -6,7 +6,7 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
-      "python": "C:\\Users\\paulr\\cloudComPy\\venv312doc\\Scripts\\python.exe",
+      "python": "C:\\Users\\paulr\\cloudComPy\\venv312\\Scripts\\python.exe",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "env": {

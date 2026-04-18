@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $true
 
-# --- VARIABLES ORIGINALES -----------------------------------------------------
+# --- LOCAL CONFIGURATION ------------------------------------------------------
 
 $CondaBase = "$Home/miniconda3"
 $CondaEnvName = "CloudComPy312"
@@ -67,7 +67,7 @@ function End-Step($name) {
 
     $elapsed = $Global:StepTimes[$name].Elapsed
     $formatted = "{0:hh\:mm\:ss\.ff}" -f $elapsed
-    $msg = "⏱️  Durée : $formatted"
+    $msg = "⏱️  Duration : $formatted"
     Write-Host $msg -ForegroundColor DarkGray
     Write-Log $msg
 }
@@ -75,12 +75,12 @@ function End-Step($name) {
 function Show-Summary {
     Write-Host ""
     Write-Host "======================" -ForegroundColor Cyan
-    Write-Host "   RÉCAPITULATIF BUILD" -ForegroundColor Cyan
+    Write-Host "   BUILD SUMMARY      " -ForegroundColor Cyan
     Write-Host "======================" -ForegroundColor Cyan
 
     Write-Log ""
     Write-Log "======================"
-    Write-Log "   RÉCAPITULATIF BUILD"
+    Write-Log "   BUILD SUMMARY      "
     Write-Log "======================"
 
     foreach ($k in $Global:StepTimes.Keys) {
@@ -92,7 +92,7 @@ function Show-Summary {
     }
 }
 
-# --- FONCTIONS BUILD ----------------------------------------------------------
+# --- BUILD FUNCTIONS ----------------------------------------------------------
 
 function Invoke-Clean {
     Start-Step "Clean"
@@ -105,15 +105,15 @@ function Invoke-PrepareEnvironment {
     Start-Step "PrepareEnvironment"
 
     Clear-Host
-    Write-Step "🐍 Activation Conda (Qt neutralisé)" "Green"
+    Write-Step "🐍 Conda Activation (Qt neutralized)" "Green"
 
-    # Nettoyage PATH Qt Conda
+    # Cleaning PATH / Qt Conda
     $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -notmatch 'Library\\bin\\Qt' -and $_ -notmatch 'Library\\bin\\qt' }) -join ';'
 
-    # Supprimer CMAKE_PREFIX_PATH venant de Conda
+    # Supress CMAKE_PREFIX_PATH from Conda
     Remove-Item Env:CMAKE_PREFIX_PATH -ErrorAction Ignore
 
-    Write-Step "⚙️  Chargement MSVC..." "Cyan"
+    Write-Step "⚙️ MSVC Loading..." "Cyan"
     $vcvarsPath = "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvars64.bat"
     $output = cmd /c "`"$vcvarsPath`" && set"
 
@@ -276,15 +276,15 @@ function Invoke-Package {
     & $sevenZip a -t7z -m0=lzma2 -mx=9 -mmt=on -ms=on $packagePath $InstallRoot `
         2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
-    Write-Host "🎉 Package créé : $packagePath" -ForegroundColor Green
-    Write-Log "Package créé : $packagePath"
+    Write-Host "🎉 Package generated : $packagePath" -ForegroundColor Green
+    Write-Log "Package generated : $packagePath"
 
     End-Step "Package"
 }
 
 function Invoke-Tests {
     Start-Step "Tests"
-    Write-Step "🧪 Lancement des tests PythonAPI..." "Cyan"
+    Write-Step "🧪 Launching PythonAPI tests..." "Cyan"
 
     $venvActivate = Join-Path $PythonVenv "Scripts/Activate.ps1"
     & $venvActivate
@@ -299,13 +299,13 @@ function Invoke-Tests {
     Pop-Location
     Pop-Location
 
-    Write-Host "🧪 Tests terminés." -ForegroundColor Green
-    Write-Log "Tests terminés."
+    Write-Host "🧪 Tests completed." -ForegroundColor Green
+    Write-Log "Tests completed."
 
     End-Step "Tests"
 }
 
-# --- LOGIQUE PRINCIPALE -------------------------------------------------------
+# --- MAIN LOGIC ---------------------------------------------------------------
 
 Invoke-PrepareEnvironment
 
@@ -352,4 +352,4 @@ if ($Tests) {
     exit
 }
 
-Write-Host "ℹ️ Aucun switch fourni. Utilise -All, -FromScratch, -BuildOnly, -InstallOnly, -Package ou -Tests"
+Write-Host "ℹ️ No switch provided. Use -All, -FromScratch, -BuildOnly, -InstallOnly, -Package or -Tests"

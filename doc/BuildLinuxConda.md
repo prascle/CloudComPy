@@ -1,6 +1,8 @@
 
 ## Build on Linux64, with Anaconda3 or miniconda3
 
+## **WARNING: these building instructions are not up to date!**
+
 The script [genCloudComPy_Conda311_Ubuntu2004.sh](../building/genCloudComPy_Conda311_Ubuntu2004.sh) executes the following:
 
  - create or update the conda environment

@@ -21,7 +21,7 @@
 
 if(WIN32)
         set( BUILDING_DOCS
-            conda-list_Windows11_311
+            conda-list_Windows11_312
             )
 elseif (USE_CONDA_PACKAGES)
     if(APPLE)

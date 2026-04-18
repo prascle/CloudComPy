@@ -1,6 +1,8 @@
 
 ## Build on Linux64, with Docker and Conda
 
+## **WARNING: these building instructions are not up to date!**
+
 The build procedure is very similar to the [procedure used on Ubuntu with conda](BuildLinuxConda.md), 
 but uses a docker container which provides a better control of the environment.
 
