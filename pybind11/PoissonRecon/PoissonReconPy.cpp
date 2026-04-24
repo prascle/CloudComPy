@@ -26,7 +26,7 @@
 #include <QtCore>
 #include <QtConcurrentRun>
 #include <QApplication>
-#include <qthread>
+#include <QThread>
 
 #include <ccPointCloud.h>
 #include <ccScalarField.h>

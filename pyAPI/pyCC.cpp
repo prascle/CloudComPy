@@ -267,9 +267,13 @@ pyCC* initCloudCompare()
         CCTRACE("initCloudCompare");
     	//viewerPyApplication::InitOpenGL();
         QDir appDir = initCC::moduleDir;
+#ifdef Q_OS_LINUX
+        QString appliDir = appDir.absolutePath() + "/cloudComPy";
+#else
         appDir.cdUp();
         appDir.cdUp();
         QString appliDir = appDir.absolutePath() + "/bin";
+#endif
     	viewerPyApplication* app = new viewerPyApplication(pyCC_argc, pyCC_argv, true, appliDir);
     	//QApplication* app = new QApplication(pyCC_argc, pyCC_argv);
         s_pyCCInternals = new pyCC;
@@ -350,12 +354,19 @@ void pyCC_setupPaths(pyCC* capi)
         capi->m_ShaderPath = (theDir.absolutePath() + "/shaders");
         capi->m_TranslationPath = (theDir.absolutePath() + "/CloudCompare/translations");
     }
+    else if ( theDir.dirName() == "site-packages" ) // PyPI
+    {
+        CCTRACE("cloudComPy PyPI: " << theDir.absolutePath().toStdString());
+        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
+        capi->m_ShaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        capi->m_TranslationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
+    }
     else
     {
-        // Choose a reasonable default to look in
-        capi->m_PluginPaths << "/usr/lib/cloudcompare/plugins";
-        capi->m_ShaderPath = "/usr/share/cloudcompare/shaders";
-        capi->m_TranslationPath = "/usr/share/cloudcompare/translations";
+        CCTRACE("cloudComPy Linux: " << theDir.absolutePath().toStdString());
+        capi->m_PluginPaths << (theDir.absolutePath() + "/cloudComPy/plugins/CC");
+        capi->m_ShaderPath = (theDir.absolutePath() + "/cloudComPy/share/shaders");
+        capi->m_TranslationPath = (theDir.absolutePath() + "/cloudComPy/share/translations");
     }
 #else
 #warning Need to specify the shader path for this OS.

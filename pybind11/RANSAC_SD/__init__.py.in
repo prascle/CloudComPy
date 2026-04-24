@@ -22,21 +22,23 @@
 ##########################################################################
 
 """
-CSF is a standard plugin of cloudComPy.
+RANSAC_SD is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCSF` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginRANSAC_SD` function:
 ::
 
-  isCSF_available = cc.isPluginCSF()
+  isRANSAC_SD_available = cc.isPluginRANSAC_SD()
 
-CSF is a submodule of cloudCompy:
+RANSAC_SD is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginCSF():
-      import cloudComPy.CSF
-      cc.CSF.computeCSF(...)
+  if cc.isPluginRANSAC_SD():
+      import cloudComPy.RANSAC_SD
+      params = cc.RANSAC_SD.RansacParams()
+      results = cc.RANSAC_SD.computeRANSAC_SD(cloud, params)
 """
-from _CSF import *
-initTrace_CSF()
+from @CLOUDCOMPY_IMPORT_PREFIX@_RANSAC_SD import *
+initTrace_RANSAC_SD()
+

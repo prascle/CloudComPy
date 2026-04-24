@@ -22,22 +22,21 @@
 ##########################################################################
 
 """
-HoughNormals is a standard plugin of cloudComPy.
+Canupo is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginHoughNormals` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCanupo` function:
 ::
 
-  isHoughNormals_available = cc.isPluginHoughNormals()
+  isCanupo_available = cc.isPluginCanupo()
 
-HoughNormals is a submodule of cloudCompy:
+Canupo is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginHoughNormals():
-      import cloudComPy.HoughNormals
-      cc.HoughNormals.computeHoughNormals(...)
+  if cc.isPluginCanupo():
+      import cloudComPy.Canupo
+      cc.Canupo.computeCanupo(...)
 """
-from _HoughNormals import *
-initTrace_HoughNormals()
-
+from @CLOUDCOMPY_IMPORT_PREFIX@_Canupo import *
+initTrace_Canupo()

@@ -22,22 +22,21 @@
 ##########################################################################
 
 """
-HPR is a standard plugin of cloudComPy.
+CSF is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginHPR` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCSF` function:
 ::
 
-  isHPR_available = cc.isPluginHPR()
+  isCSF_available = cc.isPluginCSF()
 
-HPR is a submodule of cloudCompy:
+CSF is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginHPR():
-      import cloudComPy.HPR
-      cc.HPR.computeHPR(...)
+  if cc.isPluginCSF():
+      import cloudComPy.CSF
+      cc.CSF.computeCSF(...)
 """
-from _HPR import *
-initTrace_HPR()
-
+from @CLOUDCOMPY_IMPORT_PREFIX@_CSF import *
+initTrace_CSF()

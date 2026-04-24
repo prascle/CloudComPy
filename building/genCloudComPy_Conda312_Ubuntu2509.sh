@@ -33,14 +33,14 @@ error_exit()
 conda_buildenv()
 {
     echo "# --- build conda environment ---"
-    conda install -n base mamba -c conda-forge
+    conda install -y -n base mamba -c conda-forge
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
     ret=1 # --- force rebuild environment from scratch
     if [ $ret != "0" ]; then
         conda activate && \
-        mamba env create -n CloudComPy312 -f CloudComPy312_Ubuntu.yml && \
+        mamba env create -y -n CloudComPy312 -f CloudComPy312Qt6_Ubuntu.yml && \
         conda activate ${CONDA_ENV} || error_exit "conda environment ${CONDA_ENV} cannot be built"
     fi
 }

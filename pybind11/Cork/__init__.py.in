@@ -22,21 +22,21 @@
 ##########################################################################
 
 """
-PoissonRecon is a standard plugin of cloudComPy.
+Cork is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginPoissonRecon` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCork` function:
 ::
 
-  isPoissonRecon_available = cc.isPluginPoissonRecon()
+  isCork_available = cc.isPluginCork()
 
-PoissonRecon is a submodule of cloudCompy:
+Cork is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginPoissonRecon():
-      import cloudComPy.PoissonRecon
-      mesh = cc.PoissonRecon.PR.PoissonReconstruction(...)
+  if cc.isPluginCork():
+      import cloudComPy.Cork
+      mesh = cc.Cork.Cork.Compute(...)
 """
-from _PoissonRecon import *
-initTrace_PoissonRecon()
+from @CLOUDCOMPY_IMPORT_PREFIX@_Cork import *
+initTrace_Cork()

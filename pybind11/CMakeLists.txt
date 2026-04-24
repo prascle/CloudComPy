@@ -140,29 +140,40 @@ option(USE_CONDA_PACKAGES "Use Conda packages and environment for build: add com
 # --- Python scripts with added functions
 
 set(PYTHONAPI_SCRIPTS
-    __init__.py
 	minimalBoundingBox.py
+    ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
 	)
+
+# --- PyPI build: used by plugins
+
+if( BUILD_PYPI )
+    set(IS_PYPI_BUILD 1)
+    set(CLOUDCOMPY_IMPORT_PREFIX "cloudComPy.")
+else()
+    set(IS_PYPI_BUILD 0)
+    set(CLOUDCOMPY_IMPORT_PREFIX "")
+endif()
 
 # --- install
 
 if( WIN32 )
+    configure_file(__init__-Windows.py.in __init__.py @ONLY)
 	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION CloudCompare )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION CloudCompare/cloudComPy )
 elseif( APPLE )
+    configure_file(__init__-macOS.py.in __init__.py @ONLY)
 	message( STATUS "install MacOS PYTHON : ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks" )
 	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )	
 else()
-    set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare )
-    message(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
-    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON} )
-    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON}/cloudComPy)
-endif()
-
-if(NOT WIN32)
-    if (USE_CONDA_PACKAGES)
-        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_BINDIR})
+    configure_file(__init__-Linux.py.in __init__.py @ONLY)
+    message(STATUS "INSTALL_Linux_PYTHON: " ${CMAKE_INSTALL_PREFIX}/cloudComPy)
+    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy)
+    if( BUILD_PYPI )
+        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    else()
+        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_BINDIR} )
     endif()
 endif()
 

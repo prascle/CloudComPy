@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ##########################################################################
 #                                                                        #
 #                              CloudComPy                                #
@@ -19,25 +21,40 @@
 #                                                                        #
 ##########################################################################
 
-message( STATUS "post install process ...")
-if (WIN32)
-    message( STATUS "generate bundle and documentation (a few minutes, silent mode)...")
-    execute_process( COMMAND sphinxDoc/genBundle.bat )
-    execute_process( COMMAND sphinxDoc/genSphinxDoc.bat )
-elseif( APPLE )
-    execute_process( COMMAND pwd )
-    message( STATUS "add libraries to bundle ...")
-    execute_process( COMMAND python ${CMAKE_SOURCE_DIR}/CloudCompare/scripts/mac/bundle/libBundleCloudCompare.py ${CMAKE_INSTALL_PREFIX})
-    message( STATUS "signature ...")
-    # --- developper signature (CC_BUNDLE_SIGN) is set in .zshrc 
-    execute_process( COMMAND python ${CMAKE_SOURCE_DIR}/CloudCompare/scripts/mac/bundle/signatureCloudCompare.py ${CMAKE_INSTALL_PREFIX})
-    message( STATUS "generate documentation ...")
-    execute_process( COMMAND chmod +x sphinxDoc/genSphinxDoc.zsh )
-    execute_process( COMMAND zsh sphinxDoc/genSphinxDoc.zsh ERROR_QUIET )
-else()
-    execute_process( COMMAND pwd )
-    message( STATUS "generate documentation ...")
-    execute_process( COMMAND bash sphinxDoc/genSphinxDoc.sh )
-endif()
-message( STATUS "... Done")
+"""
+cloudComPy is the Python module interfacing cloudCompare library.
+Python3 access to cloudCompare objects is done like this:
+::
 
+  import cloudComPy as cc 
+  cc.initCC()  # to do once before using plugins
+  cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
+ 
+"""
+import os
+import sys
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# 1. Localisation du dossier CloudCompare (racine de CloudComPy)
+# ---------------------------------------------------------------------------
+# _this_dir = Path(__file__).resolve().parent
+# print(_this_dir)
+# _cc_root = _this_dir.parent  # CloudCompare/
+# print(_cc_root)
+# _cc_plugins = _cc_root / "plugins"
+# print(_cc_plugins)
+
+# ---------------------------------------------------------------------------
+# 4. Plugins Qt
+# ---------------------------------------------------------------------------
+# os.environ["QT_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
+# os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
+
+# ---------------------------------------------------------------------------
+# 5. Import du module natif CloudComPy
+# ---------------------------------------------------------------------------
+
+from _cloudComPy import *
+initCC()
+initCloudCompare()
