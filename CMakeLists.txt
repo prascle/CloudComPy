@@ -81,6 +81,13 @@ if(WIN32)
     install(FILES ${VSCODE_FILES}
             DESTINATION .vscode
            )
+elseif(APPLE)
+
+else()
+    set(ENV_CLOUDCOMPY envCloudComPy.sh checkenv.py)
+    install(PROGRAMS ${ENV_CLOUDCOMPY}
+            DESTINATION bin
+           )
 endif()
 
 # --- wrap plugin options

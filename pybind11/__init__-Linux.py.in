@@ -48,8 +48,8 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # 4. Plugins Qt
 # ---------------------------------------------------------------------------
-# os.environ["QT_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
-# os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "platforms")
+#os.environ["QT_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "plugins")
+#os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "plugins", "platforms")
 
 # ---------------------------------------------------------------------------
 # 5. Import du module natif CloudComPy

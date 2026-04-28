@@ -7,7 +7,8 @@ if [ $isPypiBuild = "true" ] ; then
     @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
     python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" ${QT_PREFIX}
 else
-    . @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate ${CONDA_DEFAULT_ENV}
+    source @PYTHONVENV_DIR@/bin/activate
+    . @CMAKE_INSTALL_PREFIX@/bin/envCloudComPy.sh activate
     rm @SPHINXDOCTREES@/*.doctree
     @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
 fi

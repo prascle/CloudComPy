@@ -57,6 +57,10 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", QtPrefix="--- IG
     # --- the dependency libraries will be added a set to avoid duplicates
     libs = set()
 
+    # --- extra libs set mannually added (not found by ldd, but needed for the plugins to work)
+    libs.add("@CONDA_PATH@/lib/libcblas.so.3")
+   
+
     # --- for each library or executable in the package, find all dependencies
     for pathLibmain in pathlibs:
         libs.add(str(pathLibmain))
@@ -90,6 +94,7 @@ def getDepLibs(packagePath="@CMAKE_INSTALL_PREFIX@/cloudComPy", QtPrefix="--- IG
 
 if __name__ == "__main__":
     # CLI parser
+    print("CloudComPy - get dependencies for Linux bundle")
     parser = argparse.ArgumentParser("cloudComPyBundle")
     parser.add_argument(
         "install_path",
@@ -100,5 +105,7 @@ if __name__ == "__main__":
         help="Qt prefix Path where Qt plugins are located (where is plugins directory)"
     )
     arguments = parser.parse_args()
+    print("install_path: ", arguments.install_path)
+    print("QT_PREFIX: ", arguments.QT_PREFIX)
     getDepLibs(arguments.install_path, arguments.QT_PREFIX) 
     

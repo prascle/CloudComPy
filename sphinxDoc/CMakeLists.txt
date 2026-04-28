@@ -123,9 +123,13 @@ elseif (USE_CONDA_PACKAGES)
 	    #configure_file(signatureCloudComPy.sh.in signatureCloudComPy.sh @ONLY )
     else()
 	    configure_file(genSphinxDocConda.sh.in genSphinxDoc.sh @ONLY)
+        configure_file(getDependency.py.in getDependency.py @ONLY)
+        configure_file(genLinuxBundle.sh.in genLinuxBundle.sh)
     endif()
 else()
     configure_file(genSphinxDoc.sh.in genSphinxDoc.sh)
+    configure_file(getDependency.py.in getDependency.py @ONLY)
+    configure_file(genLinuxBundle.sh.in genLinuxBundle.sh)
 endif()
 
 add_custom_target(BUILD_HTML ALL
