@@ -1,13 +1,13 @@
 #!/bin/bash
 
-export PYMINVER="12"                                                                        # Python minor version
-export PYBASE=${HOME}/projets/CloudComPy/install/3.12.13                                    # Python used to build venv for doc and tests
-export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                                 # CloudComPy source directory
-export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda3${PYMINVER}                   # CloudComPy build directory
-export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                           # directory for CloudComPy installs
-export CLOUDCOMPY_INSTNAME=CloudComPy3${PYMINVER}                                           # CloudComPy install directory name
-export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                      # CloudComPy install directory
-export CLOUDCOMPY_TARFILE=CloudComPy_Conda3${PYMINVER}_Linux64_"$(date +"%Y%m%d-%H%M")".tgz # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
+export PYMINVER="12"                                                                           # Python minor version
+export PYBASE=${HOME}/projets/CloudComPy/install/3.12.13                                       # Python used to build venv for doc and tests
+export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                                    # CloudComPy source directory
+export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda3${PYMINVER}                      # CloudComPy build directory
+export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                              # directory for CloudComPy installs
+export CLOUDCOMPY_INSTNAME=CloudComPy3${PYMINVER}                                              # CloudComPy install directory name
+export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                         # CloudComPy install directory
+export CLOUDCOMPY_TARFILE=CloudComPy_Conda3${PYMINVER}_Linux64_"$(date +"%Y%m%d-%H%M")".tar.xz # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
 
 export CONDA_ROOT=${HOME}/miniconda3                                                   # root directory of conda installation
 export CONDA_ENV=CloudComPy3${PYMINVER}                                                # conda environment name
@@ -197,7 +197,7 @@ cloudcompy_tarfile()
     echo "# --- generate CloudComPy binaries tarfile ---"
     cd ${CLOUDCOMPY_INSTNAME} && find . -type d -name __pycache__ -exec rm -rf {} \;
     cd ${CLOUDCOMPY_INSTDIR} && rm -f ${CLOUDCOMPY_TARFILE} &&\
-    tar cvzf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
+    tar -I 'xz -9e' -cvf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
 }
 
 cloudcompy_test()
