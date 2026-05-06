@@ -1,30 +1,27 @@
 #!/bin/zsh
 
-export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                            # CloudComPy source directory
-export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda312                       # CloudComPy build directory
-export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                      # directory for CloudComPy installs
-export CLOUDCOMPY_INSTNAME=CloudComPy312                                               # CloudComPy install directory name
-export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                 # CloudComPy install directory
-export CLOUDCOMPY_TARFILE=CloudComPy_Conda312_MacOS_"$(date +"%Y%m%d-%H%M")".tgz     # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
-if [ -d ${HOME}/anaconda3 ]; then
-    export CONDA_ROOT=${HOME}/anaconda3                                                # root directory of conda installation
-else
-    export CONDA_ROOT=${HOME}/miniconda3                                               # root directory of conda installation
-fi
-export CONDA_ENV=CloudComPy312                                                         # conda environment name
+export PYMINVER="12"                                                                           # Python minor version
+export PYBASE=${HOME}/projets/CloudComPy/install/3.12.13                                       # Python used to build venv for doc and tests
+export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                                    # CloudComPy source directory
+export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda3${PYMINVER}                      # CloudComPy build directory
+export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                              # directory for CloudComPy installs
+export CLOUDCOMPY_INSTNAME=CloudComPy3${PYMINVER}                                              # CloudComPy install directory name
+export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                         # CloudComPy install directory
+export CLOUDCOMPY_TARFILE=CloudComPy_Conda3${PYMINVER}_MacOS_"$(date +"%Y%m%d-%H%M")".tar.xz   # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
+
+export CONDA_ROOT=${HOME}/miniconda3                                                   # root directory of conda installation
+export CONDA_ENV=CloudComPy3${PYMINVER}                                                # conda environment name
 export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                                      # conda environment directory
+export QT_PREFIX=${CONDA_PATH}/lib/qt6                                                 # prefix for qt (if qt plugins are needed, otherwise set to empty or remove from cmake options)
+
+export PYTHONVENV=${HOME}/projets/CloudComPy/.venv3${PYMINVER}doc                      # Python venv for documentation and tests
 export CORK_REP=${HOME}/projets/CloudComPy/Cork/cork                                   # directory of cork (remove the plugin in cmake options if not needed)
 export FBXSDK_REP="/Applications/Autodesk/FBX SDK/2020.2.1"                            # directory of fbx sdk (remove the plugin in cmake options if not needed)
 export LIBIGL_REP=${HOME}/projets/CloudComPy/libigl                                    # directory of libigl (remove the plugin in cmake options if not needed)
-if [ -d ${HOME}/projets/CloudComPy/Occ-740p3_opt ]; then
-    export OPENCASCADE_REP=${HOME}/projets/CloudComPy/Occ-740p3_opt                    # directory of OpenCascade (remove the plugin in cmake options if not needed)
-elif [ -d ${HOME}/projets/hydro95/prerequisites/install/Occ-740p3_opt ]; then
-    export OPENCASCADE_REP=${HOME}/projets/hydro95/prerequisites/install/Occ-740p3_opt
-else
-    export OPENCASCADE_REP=${HOME}/projets/hydro95/prerequisites/install/Occ-740p3EDFp1
-fi
-export PCLLIB_REP=${HOME}/projets/CloudComPy/pcl/install                               # patch on pcl lib (issue #100): libpcl_common.so
+export OPENCASCADE_REP=${CONDA_PATH}                                                   # directory of OpenCascade (remove the plugin in cmake options if not needed)
+# export PCLLIB_REP=${HOME}/projets/CloudComPy/pcl/install                               # patch on pcl lib (issue #100): libpcl_common.so
 export NBTHREADS=10                                                                    # number of threads for parallel make
+export CLOUDCOMPARE_VERSION="2.14.beta"                                                # CloudCompare version for documentation sed for doc)
 
 . ${CONDA_ROOT}/etc/profile.d/conda.sh                                                 # required to have access to conda commands in a shell script
 
@@ -40,20 +37,30 @@ error_exit()
 conda_buildenv()
 {
     echo "# --- build conda environment ---"
+    conda install -y -n base mamba -c conda-forge
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
-    ret=1
+    ret=1 # --- force rebuild environment from scratch
     if [ $ret != "0" ]; then
         conda activate && \
-        conda create -y --name ${CONDA_ENV} python=3.12 && \
+        mamba env create -y -n CloudComPy3${PYMINVER} -f CloudComPy3${PYMINVER}Qt6_macOS.yml && \
         conda activate ${CONDA_ENV} || error_exit "conda environment ${CONDA_ENV} cannot be built"
     fi
-    conda config --add channels conda-forge && \
-    conda config --set channel_priority flexible && \
-    conda install -y "boost" "cgal" cmake "draco" "ffmpeg" "gdal" jupyterlab laszip "matplotlib" "mysql" notebook numpy "opencv" "openssl" "pcl" "pdal" "psutil" pybind11 quaternion "qhull" "qt" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
-    #conda install -y "boost=1.84" "cgal=5.6" cmake "draco=1.5" "ffmpeg=6.1" "gdal=3.8" jupyterlab laszip "matplotlib=3.10" "mysql=8.0" notebook numpy "opencv=4.9" "openssl=3.5" "pcl=1.14" "pdal=2.7" "psutil=7.0" pybind11 quaternion "qhull=2020.2" "qt=5.15.8" scipy sphinx_rtd_theme spyder tbb tbb-devel "xerces-c=3.2" xorg-libx11  || error_exit "conda environment ${CONDA_ENV} cannot be completed"
 }
+
+# --- python venv for documentation and tests
+
+python_buildenv()
+{
+    echo "# --- build Python venv ---"
+    rm -rf ${PYTHONVENV}
+    ${PYBASE}/bin/python3.${PYMINVER} -m venv ${PYTHONVENV}
+    source ${PYTHONVENV}/bin/activate
+    python3 -m pip install --upgrade pip
+    pip install numpy scipy requests psutil matplotlib numpy-quaternion pybind11 cmake
+}
+
 
 # --- CloudComPy build
 
@@ -84,8 +91,9 @@ cloudcompy_configure()
     -DCCCORELIB_USE_CGAL:BOOL="1" \
     -DCCCORELIB_USE_QT_CONCURRENT:BOOL="1" \
     -DCCCORELIB_USE_TBB:BOOL="0" \
+    -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
     -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
-    -DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
+    -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_C_FLAGS="-mmacosx-version-min=12.7" \
     -DCMAKE_CXX_FLAGS="-mmacosx-version-min=12.7" \
     -DCMAKE_LD_FLAGS="-mmacosx-version-min=12.7" \
@@ -93,6 +101,7 @@ cloudcompy_configure()
     -DCMAKE_INSTALL_RPATH="${CLOUDCOMPY_INSTALL}/lib;${CLOUDCOMPY_INSTALL}/CloudCompare/CloudCompare.app/Contents/Frameworks" \
     -DCMAKE_MACOSX_RPATH=ON \
     -DCONDA_LIBS:PATH="${CONDA_PATH}/lib" \
+    -DCONDA_PATH:PATH="${CONDA_PATH}" \
     -DCORK_INCLUDE_DIR:PATH="${CORK_REP}/src" \
     -DCORK_RELEASE_LIBRARY_FILE:FILEPATH="${CORK_REP}/lib/libcork.a" \
     -DDRACO_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
@@ -100,6 +109,8 @@ cloudcompy_configure()
     -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
     -DEIGEN_INCLUDE_DIR:PATH="${CONDA_PATH}/include/eigen3" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
+    -DFFMPEG_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DFFMPEG_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
     -DFBX_SDK_INCLUDE_DIR:PATH="${FBXSDK_REP}/include" \
     -DFBX_SDK_LIBRARY_DIR:PATH="${FBXSDK_REP}/lib/clang/release" \
     -DFBX_SDK_LIBRARY_FILE:FILEPATH="${FBXSDK_REP}/lib/clang/release/libfbxsdk.dylib" \
@@ -119,6 +130,11 @@ cloudcompy_configure()
     -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib" \
     -DMPIR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DMPIR_RELEASE_LIBRARY_FILE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
+    -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
+    -DOPENCASCADE_DLL_DIR:PATH="${OPENCASCADE_REP}/lib" \
+    -DOPENCASCADE_INC_DIR:PATH="${OPENCASCADE_REP}/include/opencascade" \
+    -DOPENCASCADE_LIB_DIR:PATH="${OPENCASCADE_REP}/lib" \
+    -DOPENCASCADE_TBB_DLL_DIR:PATH="${OPENCASCADE_REP}/lib" \
     -DOPTION_BUILD_CCVIEWER:BOOL="0" \
     -DOPTION_USE_GDAL:BOOL="1" \
     -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
@@ -133,7 +149,7 @@ cloudcompy_configure()
     -DPLUGIN_IO_QCSV_MATRIX:BOOL="1" \
     -DPLUGIN_IO_QDRACO:BOOL="1" \
     -DPLUGIN_IO_QE57:BOOL="1" \
-    -DPLUGIN_IO_QFBX:BOOL="0" \
+    -DPLUGIN_IO_QFBX:BOOL="1" \
     -DPLUGIN_IO_QLAS:BOOL="1" \
     -DPLUGIN_IO_QLAS_FWF:BOOL="0" \
     -DPLUGIN_IO_QPDAL:BOOL="0" \
@@ -141,13 +157,14 @@ cloudcompy_configure()
     -DPLUGIN_IO_QRDB:BOOL="0" \
     -DPLUGIN_IO_QRDB_FETCH_DEPENDENCY:BOOL="1" \
     -DPLUGIN_IO_QRDB_INSTALL_DEPENDENCY:BOOL="1" \
-    -DPLUGIN_IO_QSTEP:BOOL="0" \
+    -DPLUGIN_IO_QSTEP:BOOL="1" \
+    -DPLUGIN_PYTHON="OFF" \
     -DPLUGIN_STANDARD_3DMASC:BOOL="1" \
     -DPLUGIN_STANDARD_MASONRY_QAUTO_SEG:BOOL="1" \
     -DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG:BOOL="1" \
     -DPLUGIN_STANDARD_QANIMATION:BOOL="1" \
     -DPLUGIN_STANDARD_QBROOM:BOOL="1" \
-    -DPLUGIN_STANDARD_QCANUPO:BOOL="0" \
+    -DPLUGIN_STANDARD_QCANUPO:BOOL="1" \
     -DPLUGIN_STANDARD_QCLOUDLAYERS:BOOL="1" \
     -DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER:BOOL="1" \
     -DPLUGIN_STANDARD_QCOMPASS:BOOL="1" \
@@ -158,29 +175,26 @@ cloudcompy_configure()
     -DPLUGIN_STANDARD_QHPR:BOOL="1" \
     -DPLUGIN_STANDARD_QJSONRPC:BOOL="1" \
     -DPLUGIN_STANDARD_QM3C2:BOOL="1" \
-    -DPLUGIN_STANDARD_QMESH_BOOLEAN:BOOL="0" \
+    -DPLUGIN_STANDARD_QMESH_BOOLEAN:BOOL="1" \
     -DPLUGIN_STANDARD_QMPLANE:BOOL="1" \
     -DPLUGIN_STANDARD_QPCL:BOOL="1" \
     -DPLUGIN_STANDARD_QPCV:BOOL="1" \
     -DPLUGIN_STANDARD_QPOISSON_RECON:BOOL="1" \
     -DPLUGIN_STANDARD_QRANSAC_SD:BOOL="1" \
     -DPLUGIN_STANDARD_QSRA:BOOL="1" \
-    -DPLUGIN_STANDARD_QTREEISO:BOOL="0" \
+    -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
     -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11" \
     -DPYTHONAPI_TEST_DIRECTORY:STRING="CloudComPy/Data" \
     -DPYTHONAPI_EXTDATA_DIRECTORY:STRING="CloudComPy/ExternalData" \
     -DPYTHONAPI_TRACES:BOOL="1" \
-    -DPYTHON_PREFERED_VERSION:STRING="3.12" \
+    -DPYTHON_PREFERED_VERSION:STRING="3.${PYMINVER}" \
+    -DPYTHONVENV_DIR:PATH="${PYTHONVENV}" \
     -DQANIMATION_WITH_FFMPEG_SUPPORT:BOOL="1" \
     -DQHULL_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libqhullcpp.a" \
     -DQHULL_LIBRARY_DEBUG_STATIC:FILEPATH="${CONDA_PATH}/lib/libqhullstatic_r.a" \
     -DQHULL_LIBRARY_SHARED:FILEPATH="${CONDA_PATH}/lib/libqhull_r.dylib" \
     -DQHULL_LIBRARY_STATIC:FILEPATH="${CONDA_PATH}/lib/libqhullstatic_r.a" \
     -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull" \
-    -DQt5LinguistTools_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt5LinguistTools" \
-    -DQt5Test_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt5Test" \
-    -DQt5OpenGL_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt5OpenGL" \
-    -DQt5_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt5" \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
     -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
@@ -190,6 +204,11 @@ cloudcompy_configure()
     -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
 }
+
+    # -DQt6LinguistTools_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6LinguistTools" \
+    # -DQt6Test_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6Test" \
+    # -DQt6OpenGL_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6OpenGL" \
+    # -DQt6_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6" \
 
 cloudcompy_build()
 {
@@ -202,19 +221,21 @@ cloudcompy_tarfile()
     echo "# --- generate CloudComPy binaries tarfile ---"
     cd ${CLOUDCOMPY_INSTNAME} && find . -type d -name __pycache__ -exec rm -rf {} \;
     cd ${CLOUDCOMPY_INSTDIR} && rm -f ${CLOUDCOMPY_TARFILE} &&\
-    tar cvzf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
+    tar -cvJf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
 }
 
 cloudcompy_test()
 {
     echo "# --- test CloudComPy ---"
+    source ${PYTHONVENV}/bin/activate
     cd ${CLOUDCOMPY_INSTALL} && \
-    . bin/condaCloud.zsh activate ${CLOUDCOMPY_INSTNAME} && \
-    rm -rf ~/CloudComPy/Data &&
-    cd doc/PythonAPI_test && ctest
+    source bin/envCloudComPyMacOS.zsh activate && \
+    rm -rf ~/CloudComPy/Data && \
+    cd ${CLOUDCOMPY_INSTALL}/doc/PythonAPI_test && ctest
 }
 
-conda_buildenv && \
+#conda_buildenv && \
+python_buildenv &&\
 cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \

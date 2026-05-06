@@ -82,7 +82,10 @@ if(WIN32)
             DESTINATION .vscode
            )
 elseif(APPLE)
-
+    set(ENV_CLOUDCOMPY envCloudComPyMacOS.zsh checkenv.py)
+    install(PROGRAMS ${ENV_CLOUDCOMPY}
+            DESTINATION bin
+           )
 else()
     set(ENV_CLOUDCOMPY envCloudComPy.sh checkenv.py)
     install(PROGRAMS ${ENV_CLOUDCOMPY}
