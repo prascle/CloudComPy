@@ -419,7 +419,7 @@ public:
                                     const CCCoreLib::SquareMatrix* toLocalOrientation = nullptr,
                                     const ccGLMatrix* transMat = nullptr,
                                     QString name = QString("Quadric"),
-                                    unsigned precision = ccQuadric::DEFAULT_DRAWING_PRECISION)
+                                    unsigned precision = 24)
     {
         if (eqv.size() != 6)
             throw std::range_error("equation parameters: vector of 6 float/double required");
@@ -628,7 +628,7 @@ void export_ccPrimitives(py::module &m0)
         .def(py::init(&ccQuadricWrap::initWrapper5),
             py::arg("minCorner"), py::arg("maxCorner"), py::arg("eqv"),
             py::arg("toLocalOrientation")=nullptr, py::arg("transMat")=nullptr,
-            py::arg("name")=QString("Quadric"), py::arg("precision")= ccQuadric::DEFAULT_DRAWING_PRECISION,
+            py::arg("name")=QString("Quadric"), py::arg("precision")= 24,
             ccPrimitivesPy_ccQuadric_ctor_doc )
         ;
 
