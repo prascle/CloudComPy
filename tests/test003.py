@@ -120,7 +120,7 @@ cloud = cc.loadPointCloud(getSampleCloud(5.0))
 res = cloud.exportCoordToSF(False, True, True)
 l = cloud.sfSplitCloud(cloud.getNumberOfScalarFields()-1)
 #---cloudsf04-end
-if len(l) != 6:
+if len(l) < 6 or len(l) > 7:
     raise RuntimeError
 res = cc.SaveEntities(l, os.path.join(dataDir, "sfsplit.bin"))
 

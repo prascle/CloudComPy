@@ -60,7 +60,8 @@ Returns the vector size.
 const char* ScalarFieldPy_fill_doc= R"(
 Fills the array with a particular value.
 
-:param float value: the value to use to fill the array )";
+:param float,optional value: the value to use to fill the array, default is 0.0
+:param bool,optional autoResetOffset: whether to reset the offset to 0, default is True )";
 
 const char* ScalarFieldPy_flagValueAsInvalid_doc= R"(
 Sets the value as 'invalid' (i.e. CCCoreLib::NAN_VALUE).
