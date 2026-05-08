@@ -1,25 +1,23 @@
 ## Installing, testing and using a CloudComPy binary on MacOS, with conda
 
-**Note:** CloudComPy versions released in 2024 and earlier were built using a Conda **Python 3.10** environment: **CloudComPy310**.
-Now, new versions are built with a **Python 3.11** Conda environment: **CloudComPy311**
+**Note:** CloudComPy versions released in 2025 and earlier were built using a **Conda** **Python 3.10** or **Python 3.11** environment: **CloudComPy310** or  **CloudComPy311**.
 
-The binary *CloudComPy_Conda311_MacOS-date-.zip* available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads)
+The binary *CloudComPy_Conda312_MacOS-date-.zip* available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads)
  is built with a Conda environment.
 
 **This binary works only on macOS Apple arm64 architecture (not on Intel processors), on recent macOS versions, not anywhere else!**
 
-**Built and tested on macOS Sonoma 14.7.
-Please post issues on CloudComPy [GitHub](https://github.com/CloudCompare/CloudComPy/issues)
-or [GitLab](https://gitlab.com/openfields1/CloudComPy/-/issues) in case of problem**
+**Built and tested on macOS Tahoe 26.4.1.
+Please post issues on CloudComPy [GitHub](https://github.com/CloudCompare/CloudComPy/issues) in case of problem**
 
 The macOS binary provides **CloudCompare** and **CloudCompy** (same as binaries for Windows and Linux).
 
 As CloudComPy is under development, these instructions and the link are subject to change from time to time...
 
 **CloudCompare** works as it is (no specific environment).
-It is located in CloudComPy311/CloudCompare/CloudCompare.app and can be launched from the Finder.
+It is located in CloudComPy312/CloudCompare/CloudCompare.app and can be launched from the Finder.
 
-**CloudComPy** needs a Python 3.11 configuration with at least the following packages, either with conda or not:
+**CloudComPy** needs a Python 3.12 configuration with at least the following packages, either with aPython virtual env or with conda:
 
 ```
 numpy
@@ -27,6 +25,7 @@ scipy
 requests
 psutils
 matplotlib
+cmake
 ```
 
 You can create an environment for CloudComPy with conda, from the terminal
