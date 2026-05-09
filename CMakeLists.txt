@@ -19,9 +19,20 @@
 #                                                                        #
 ##########################################################################
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.17)
 
-project( CloudCompareProjects )
+if ( BUILD_PYPI )
+    # Scikit-build-core sets these values for you, or you can just hard-code the name and version.
+    project(
+    ${SKBUILD_PROJECT_NAME}
+    VERSION ${SKBUILD_PROJECT_VERSION}
+    LANGUAGES CXX)
+else()
+    project(
+    CloudComPy
+    VERSION 2.14.0
+    LANGUAGES CXX)
+endif()
 
 # specify the C++ standard: C++14 required for boost python (use of variable templates for some pointer functions)
 set(CMAKE_CXX_STANDARD 14)
