@@ -1,8 +1,12 @@
 project( viewerPy VERSION 1.38.0 )
 
-	add_library( ${PROJECT_NAME} STATIC )
+add_library( ${PROJECT_NAME} STATIC )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY AUTOMOC ON)
+
+if ( UNIX AND NOT APPLE )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
 
 target_sources( ${PROJECT_NAME}
     PRIVATE

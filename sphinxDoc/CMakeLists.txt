@@ -127,9 +127,10 @@ elseif (USE_CONDA_PACKAGES)
         configure_file(genLinuxBundle.sh.in genLinuxBundle.sh)
     endif()
 else()
-    configure_file(genSphinxDoc.sh.in genSphinxDoc.sh)
+    message( STATUS "Sphinx doc will be generated without conda dependencies (native build)" )
+    configure_file(genSphinxDoc.sh.in genSphinxDoc.sh @ONLY)
     configure_file(getDependency.py.in getDependency.py @ONLY)
-    configure_file(genLinuxBundle.sh.in genLinuxBundle.sh)
+    configure_file(genLinuxBundle_native.sh.in genLinuxBundle.sh @ONLY)
 endif()
 
 add_custom_target(BUILD_HTML ALL

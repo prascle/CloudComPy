@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+export LD_LIBRARY_PATH=@CMAKE_INSTALL_PREFIX@/cloudComPy/plugins/CC:@CMAKE_INSTALL_PREFIX@/cloudComPy:${LD_LIBRARY_PATH}
+echo "genLinuxBundle_native LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+
+cd @CMAKE_BINARY_DIR@/sphinxDoc
+python3 getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" @QT_PREFIX@

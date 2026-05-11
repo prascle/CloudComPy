@@ -27,6 +27,12 @@ if ( BUILD_PYPI )
     ${SKBUILD_PROJECT_NAME}
     VERSION ${SKBUILD_PROJECT_VERSION}
     LANGUAGES CXX)
+    if (UNIX AND NOT APPLE)
+        # set architecture flag to x86-64 (and not native or x86-64-v2) for linux wheel (manylinux) compatibility
+        # (since manylinux2014, see https://www.python.org/dev/peps/pep-0599/)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64")
+    endif()
 else()
     project(
     CloudComPy
