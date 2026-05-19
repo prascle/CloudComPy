@@ -9,6 +9,8 @@ dependencies:
  - cmake>=3.29
  - draco>=1.5.7
  - ffmpeg>=6.1
+ - gcc
+ - gxx
  - gdal>=3.12
  - jupyterlab
  - laszip>=3.4.3
