@@ -67,7 +67,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
-    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu20_04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu20.04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
