@@ -7,9 +7,9 @@ As CloudComPy is under development, these instructions and the link are subject 
 
 **This binary works only on Linux 64, on recent distributions, and with a (virtual) Python 3.12 environment as described below**.
 
-**Only tested un Ubuntu 25.09 and Ubuntu 24.04, please report any problems on other distributions.**
+**Only tested un Ubuntu 26.04 and Ubuntu 20.04, please report any problems on other distributions.**
 
-GLIBC version should be 2.29 or more. To know your version of GLIBC:
+GLIBC version should be 2.28 or more. To know your version of GLIBC:
 
 ```
 ldd --version

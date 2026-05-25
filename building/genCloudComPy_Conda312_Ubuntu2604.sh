@@ -67,7 +67,7 @@ cloudcompy_setenv()
 {
     echo "# --- set CloudComPy build environment ---"
     conda activate ${CONDA_ENV} || error_exit "${CONDA_ENV} is not a conda environment"
-    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu25.09 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
+    conda list > ${CLOUDCOMPY_SRC}/building/conda-list_Ubuntu26.04 || error_exit "access problem to ${CLOUDCOMPY_SRC}"
     echo ${CLOUDCOMPY_BUILD}
     echo ${CLOUDCOMPY_INSTALL}
     rm -rf ${CLOUDCOMPY_BUILD}
@@ -112,6 +112,8 @@ cloudcompy_configure()
     -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DGMP_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.so" \
     -DGMP_LIBRARIES_DIR:FILEPATH="${CONDA_PATH}" \
+    -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.so" \
     -DLIBIGL_INCLUDE_DIR:PATH="${LIBIGL_REP}/libigl/include" \
     -DLIBIGL_RELEASE_LIBRARY_FILE:FILEPATH="${LIBIGL_REP}/install/lib/libigl.a" \
     -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
@@ -210,7 +212,7 @@ cloudcompy_test()
     cd cloudComPy/doc/PythonAPI_test && ctest
 }
 
-#conda_buildenv && \
+conda_buildenv && \
 python_buildenv &&\
 cloudcompy_setenv && \
 cloudcompy_configure && \

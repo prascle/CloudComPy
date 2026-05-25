@@ -2,12 +2,13 @@
 
 These release notes start with the October 18, 2021 CloudComPy release.
 
-## April 18, 2026 CloudComPy release:
+## may 26, 2026 CloudComPy release:
 
- - cloudComPy is based on CloudCompare 2.14alpha (master March 16, 2026), with various patches needed by cloudComPy.
+ - cloudComPy is based on CloudCompare 2.14alpha (master May 1st, 2026), with various patches needed by cloudComPy.
  - cloudComPy is now built with a Conda Python 3.12 environment and Qt6.10.
- - The Windows packaging embeds all the required DLLs: easier to install and maintain,
-   needs just a Python 3.12 environment with some packages to run. Does not work with Spyder or Jupyter, but with VS code.
+ - All the packagings (Windows, Linux, macOS) embed all the required libraries: easier to install and maintain,
+   needs just a Python 3.12 environment with some packages. Windows packaging does not work with Spyder or Jupyter, but with VS code.
+ - This new packaging is a step toward creating PyPI wheels, but it is not yet operational.
  - A new procedure to build the Windows packaging
  - (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
  - (issue #216) Hough Plugin

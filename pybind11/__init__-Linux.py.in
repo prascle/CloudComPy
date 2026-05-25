@@ -59,7 +59,6 @@ else:
 initCC()
 initCloudCompare()
 
-
 def launchCloudCompareGUI():
     """
     Launch the CloudCompare GUI in a subprocess, and return immediately.
@@ -76,3 +75,10 @@ def launchTests():
     os.chdir(os.path.join(cloudComPyInstallDir,"doc/PythonAPI_test"))
     subprocess.run("ctest")
     os.chdir(oldCWD)
+
+def launchDoc():
+    """
+    Launch the cloudComPy documentation in a web browser.
+    """
+    import webbrowser
+    webbrowser.open(os.path.join(cloudComPyInstallDir,"doc/html/index.html"))
