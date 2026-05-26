@@ -205,11 +205,6 @@ cloudcompy_configure()
     -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
 }
 
-    # -DQt6LinguistTools_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6LinguistTools" \
-    # -DQt6Test_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6Test" \
-    # -DQt6OpenGL_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6OpenGL" \
-    # -DQt6_DIR:PATH="${CONDA_PATH}/lib/cmake/Qt6" \
-
 cloudcompy_build()
 {
     echo "# --- build and install CloudComPy ---"

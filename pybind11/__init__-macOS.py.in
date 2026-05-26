@@ -35,6 +35,8 @@ import os
 import sys
 from pathlib import Path
 
+cloudComPyInstallDir = os.path.dirname(__file__)
+
 # ---------------------------------------------------------------------------
 # 1. Localisation du dossier CloudCompare (racine de CloudComPy)
 # ---------------------------------------------------------------------------
@@ -64,7 +66,7 @@ def launchCloudCompareGUI():
     Launch the CloudCompare GUI in a subprocess, and return immediately.
     """
     import subprocess
-    subprocess.Popen(os.path.join(cloudComPyInstallDir, "CloudCompare"))
+    subprocess.Popen(os.path.join(cloudComPyInstallDir, "..", "CloudCompare", "CloudCompare.app", "Contents", "MacOS", "CloudCompare"))
     
 def launchTests():
     """
@@ -72,7 +74,7 @@ def launchTests():
     """
     import subprocess
     oldCWD = os.getcwd()
-    os.chdir(os.path.join(cloudComPyInstallDir,"doc/PythonAPI_test"))
+    os.chdir(os.path.join(cloudComPyInstallDir, "..", "doc", "PythonAPI_test"))
     subprocess.run("ctest")
     os.chdir(oldCWD)
 
@@ -81,4 +83,5 @@ def launchDoc():
     Launch the cloudComPy documentation in a web browser.
     """
     import webbrowser
-    webbrowser.open(os.path.join(cloudComPyInstallDir,"doc/html/index.html"))
+    doc = Path(cloudComPyInstallDir).parent / "doc" / "html" / "index.html"
+    webbrowser.open(doc.resolve().as_uri())
