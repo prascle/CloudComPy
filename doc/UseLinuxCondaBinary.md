@@ -46,7 +46,7 @@ source ${HOME}/.venv312/bin/activate
 
 ```
 cd path/to/CloudComPy312
-source bin/activate
+source bin/envCloudComPy.sh activate
 ```
 
 To run CloudCompare:
