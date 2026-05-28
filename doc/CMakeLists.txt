@@ -29,6 +29,7 @@ set( USE_DOCS
     UseDockerLinuxConda.md
     UseDockerLinuxCondaBinary.md
     UseLinuxCondaBinary.md
+    UseMacOSCondaBinary.md
     UseWindowsCondaBinary.md
     )
 if ( LINUX )
