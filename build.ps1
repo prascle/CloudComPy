@@ -138,6 +138,8 @@ function Invoke-Configure {
 
     Write-Step "🔧 CMake configure..." "Green"
 
+    conda list > "$SourceDir\building\conda-list_conda3$PyMinVersion"
+
     $cmakeArgs = @(
         "-S$SourceDir",
         "-B$BuildDir",
