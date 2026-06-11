@@ -22,21 +22,21 @@
 ##########################################################################
 
 """
-Canupo is a standard plugin of cloudComPy.
+PCV is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCanupo` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginPCV` function:
 ::
 
-  isCanupo_available = cc.isPluginCanupo()
+  isPCV_available = cc.isPluginPCV()
 
-Canupo is a submodule of cloudCompy:
+PCV is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginCanupo():
-      import cloudComPy.Canupo
-      cc.Canupo.computeCanupo(...)
+  if cc.isPluginPCV():
+      import cloudComPy.PCV
+      cc.PCV.computeShadeVIS(...)
 """
-from _Canupo import *
-initTrace_Canupo()
+from @CLOUDCOMPY_IMPORT_PREFIX@_PCV import *
+initTrace_PCV()

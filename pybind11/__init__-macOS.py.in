@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+##########################################################################
+#                                                                        #
+#                              CloudComPy                                #
+#                                                                        #
+#  This program is free software; you can redistribute it and/or modify  #
+#  it under the terms of the GNU General Public License as published by  #
+#  the Free Software Foundation; either version 3 of the License, or     #
+#  any later version.                                                    #
+#                                                                        #
+#  This program is distributed in the hope that it will be useful,       #
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #
+#  GNU General Public License for more details.                          #
+#                                                                        #
+#  You should have received a copy of the GNU General Public License     #
+#  along with this program. If not, see <https://www.gnu.org/licenses/>. #
+#                                                                        #
+#          Copyright 2020-2025 Paul RASCLE www.openfields.fr             #
+#                                                                        #
+##########################################################################
+
+"""
+cloudComPy is the Python module interfacing cloudCompare library.
+Python3 access to cloudCompare objects is done like this:
+::
+
+  import cloudComPy as cc 
+  cc.initCC()  # to do once before using plugins
+  cloud = cc.loadPointCloud("/home/paul/CloudComPy/Data/boule.bin")
+ 
+"""
+import os
+import sys
+from pathlib import Path
+
+cloudComPyInstallDir = os.path.dirname(__file__)
+
+# ---------------------------------------------------------------------------
+# 1. Localisation du dossier CloudCompare (racine de CloudComPy)
+# ---------------------------------------------------------------------------
+# _this_dir = Path(__file__).resolve().parent
+# print(_this_dir)
+# _cc_root = _this_dir.parent  # CloudCompare/
+# print(_cc_root)
+# _cc_plugins = _cc_root / "plugins"
+# print(_cc_plugins)
+
+# ---------------------------------------------------------------------------
+# 4. Plugins Qt
+# ---------------------------------------------------------------------------
+os.environ["QT_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "CloudCompare", "CloudCompare.app", "Contents", "plugins")
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file__), "..", "CloudCompare", "CloudCompare.app", "Contents", "plugins", "platforms")
+
+# ---------------------------------------------------------------------------
+# 5. Import du module natif CloudComPy
+# ---------------------------------------------------------------------------
+
+from _cloudComPy import *
+initCC()
+initCloudCompare()
+
+def launchCloudCompareGUI():
+    """
+    Launch the CloudCompare GUI in a subprocess, and return immediately.
+    """
+    import subprocess
+    subprocess.Popen(os.path.join(cloudComPyInstallDir, "..", "CloudCompare", "CloudCompare.app", "Contents", "MacOS", "CloudCompare"))
+    
+def launchTests():
+    """
+    Launch the cloudComPy Python tests
+    """
+    import subprocess
+    oldCWD = os.getcwd()
+    os.chdir(os.path.join(cloudComPyInstallDir, "..", "doc", "PythonAPI_test"))
+    subprocess.run("ctest")
+    os.chdir(oldCWD)
+
+def launchDoc():
+    """
+    Launch the cloudComPy documentation in a web browser.
+    """
+    import webbrowser
+    doc = Path(cloudComPyInstallDir).parent / "doc" / "html" / "index.html"
+    webbrowser.open(doc.resolve().as_uri())

@@ -1,0 +1,18 @@
+name: cpy312
+channels:
+ - conda-forge
+ - nodefaults
+dependencies:
+ - python=3.12
+ - cmake
+ - matplotlib
+ - numpy
+ - psutil
+ - quaternion
+ - requests
+ - scipy
+ - ipykernel
+ - jupyter
+ - jupyterlab
+ - spyder
+ 

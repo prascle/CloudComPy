@@ -21,7 +21,8 @@
 
 if(WIN32)
         set( BUILDING_DOCS
-            conda-list_Windows11_311
+            conda-list_Windows11_312
+            cpy312.yml
             )
 elseif (USE_CONDA_PACKAGES)
     if(APPLE)
@@ -35,4 +36,8 @@ elseif (USE_CONDA_PACKAGES)
     endif()
 endif()
 
-install(FILES ${BUILDING_DOCS} DESTINATION doc)
+if ( LINUX )
+    install(FILES ${BUILDING_DOCS} DESTINATION cloudComPy/doc)
+else()
+    install(FILES ${BUILDING_DOCS} DESTINATION doc)
+endif()

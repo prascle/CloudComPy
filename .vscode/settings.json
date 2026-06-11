@@ -1,0 +1,15 @@
+{
+  "terminal.integrated.profiles.windows": {
+    "Projet Python": {
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "args": [
+        "/K",
+        "${workspaceFolder}\\activate_cloudcompy_env.bat"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "Projet Python",
+  "python.envFile": "${workspaceFolder}\\.vscode\\.env",
+  "python.terminal.useEnvFile": true,
+  "python.terminal.activateEnvironment": false
+}

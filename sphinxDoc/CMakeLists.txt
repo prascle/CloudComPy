@@ -24,18 +24,43 @@ message(STATUS "cloudComPy Sphinx doc generation")
 # --- Sphinx Documentation
 
 set(RSTFILES
+    Canupo.rst
     ccFacet.rst
     ccMesh.rst
     ccOctree.rst
     ccPointCloud.rst
     ccPolyline.rst
     ccPrimitives.rst
+    ccSensor.rst
     cloudComPy.rst
+    cloudSamplingTools.rst
     colors.rst
+    CSF.rst
     DistanceComputationTools.rst
+    GeometricalAnalysisTools.rst
+    HoughNormals.rst
+    HPR.rst
     index.rst
     introduction.rst
+    license.rst
+    M3C2.rst
+    MeshBoolean.rst
+    MinimalBoundingBox.rst
+    Neighbourhood.rst
+    PCL.rst
+    PCV.rst
+    PoissonRecon.rst
+    RANSAC_SD.rst
     ScalarField.rst
+    SRA.rst
+    tables.rst
+    userEntities.rst
+    userIntro.rst
+    userLoad.rst
+    userNumpy.rst
+    userSave.rst
+    userUseCases.rst
+    version.rst
     )
 
 set(SPHINXOPTS )
@@ -44,10 +69,53 @@ set(SPHINXDOCTREES "${CMAKE_CURRENT_BINARY_DIR}/doctrees")
 set(ALLSPHINXOPTS "${SPHINXOPTS} ${SOURCEDIR}")
 set(SPHINXBUILD sphinx-build)
 
-configure_file(conf.py.in conf.py)
+string(TIMESTAMP BUILD_DATE "%Y/%m/%d")
+
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE CLOUDCOMPY_GIT_COMMIT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/CloudCompare
+    OUTPUT_VARIABLE CLOUDCOMPARE_GIT_COMMIT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git log -1 --format=%cd --date=format:%Y/%m/%d
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE CLOUDCOMPY_COMMIT_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND git log -1 --format=%cd --date=format:%Y/%m/%d
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/CloudCompare
+    OUTPUT_VARIABLE CLOUDCOMPARE_COMMIT_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if( BUILD_PYPI )
+    set(IS_PYPI_BUILD "true")
+else()
+    set(IS_PYPI_BUILD "false")
+endif()
+configure_file(conf.py.in conf.py @ONLY)
+configure_file(getDependency.py.in getDependency.py)
 
 if(WIN32)
-    configure_file(genSphinxDocWindows.bat.in genSphinxDoc.bat @ONLY)
+    if (INSTALL_PREREQUISITE_LIBRARIES)
+        configure_file(genSphinxDocWindowsDeployQt.bat.in genSphinxDoc.bat @ONLY)
+        configure_file(genBundleDeployQt.bat.in genBundle.bat @ONLY)
+    else()
+        configure_file(genSphinxDocWindows.bat.in genSphinxDoc.bat @ONLY)
+        configure_file(genBundle.bat.in genBundle.bat @ONLY)
+        configure_file(WinBundle.py.in.py WinBundle.py @ONLY)
+    endif()
 elseif (USE_CONDA_PACKAGES)
     if(APPLE)
 	    configure_file(genSphinxDocMacOSConda.zsh.in genSphinxDoc.zsh @ONLY )
@@ -55,9 +123,14 @@ elseif (USE_CONDA_PACKAGES)
 	    #configure_file(signatureCloudComPy.sh.in signatureCloudComPy.sh @ONLY )
     else()
 	    configure_file(genSphinxDocConda.sh.in genSphinxDoc.sh @ONLY)
+        configure_file(getDependency.py.in getDependency.py @ONLY)
+        configure_file(genLinuxBundle.sh.in genLinuxBundle.sh)
     endif()
 else()
-    configure_file(genSphinxDoc.sh.in genSphinxDoc.sh)
+    message( STATUS "Sphinx doc will be generated without conda dependencies (native build)" )
+    configure_file(genSphinxDoc.sh.in genSphinxDoc.sh @ONLY)
+    configure_file(getDependency.py.in getDependency.py @ONLY)
+    configure_file(genLinuxBundle_native.sh.in genLinuxBundle.sh @ONLY)
 endif()
 
 add_custom_target(BUILD_HTML ALL
@@ -74,6 +147,11 @@ if ( BUILD_REFERENCE_DOC )
     message( STATUS "Sphinx documentation will be generated at install" )
     install(CODE "set(CMAKE_SOURCE_DIR \"${CMAKE_SOURCE_DIR}\")")
     install(CODE "set(CMAKE_INSTALL_PREFIX \"${CMAKE_INSTALL_PREFIX}\")")
-    install( SCRIPT postInstall.cmake )
+    if( BUILD_PYPI )
+        install(CODE "set(WHEEL_TAG \"${WHEEL_TAG}\")")
+        install( SCRIPT postInstallPyPI.cmake )
+    else()
+        install( SCRIPT postInstall.cmake )
+    endif()
 endif()
 

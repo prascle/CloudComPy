@@ -19,9 +19,26 @@
 #                                                                        #
 ##########################################################################
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.17)
 
-project( CloudCompareProjects )
+if ( BUILD_PYPI )
+    # Scikit-build-core sets these values for you, or you can just hard-code the name and version.
+    project(
+    ${SKBUILD_PROJECT_NAME}
+    VERSION ${SKBUILD_PROJECT_VERSION}
+    LANGUAGES CXX)
+    if (UNIX AND NOT APPLE)
+        # set architecture flag to x86-64 (and not native or x86-64-v2) for linux wheel (manylinux) compatibility
+        # (since manylinux2014, see https://www.python.org/dev/peps/pep-0599/)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64")
+    endif()
+else()
+    project(
+    CloudComPy
+    VERSION 2.14.0
+    LANGUAGES CXX)
+endif()
 
 # specify the C++ standard: C++14 required for boost python (use of variable templates for some pointer functions)
 set(CMAKE_CXX_STANDARD 14)
@@ -29,13 +46,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # --- Qt5 detection
 
-find_package( Qt5
+find_package( Qt6
     COMPONENTS
         Concurrent
         Core
         Gui
         OpenGL
-        OpenGLExtensions
         PrintSupport
         Svg
         Widgets
@@ -43,6 +59,9 @@ find_package( Qt5
 )
 
 #find_package( FLANN REQUIRED )
+
+# Build CloudComPy for PyPI packages
+option( BUILD_PYPI_PACKAGE "Build CloudComPy for PyPI packages" ON )
 
 # Testing
 option( BUILD_PY_TESTING "Build tests for CloudComPy" ON )
@@ -65,14 +84,29 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" )
 # since they are only used by qCC/ccViewer
 if( UNIX AND NOT APPLE )
 	include( GNUInstallDirs )
-	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/cloudcompare")
+	set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/cloudComPy" )
 endif()
 
 # scripts to set environment
 if(WIN32)
-	set(ENV_CLOUDCOMPY envCloudComPy.bat checkenv.py)
+    configure_file(activate_cloudcompy_env.bat.in ${CMAKE_CURRENT_BINARY_DIR}/activate_cloudcompy_env.bat @ONLY)
+	set(ENV_CLOUDCOMPY envCloudComPy.bat checkenv.py ${CMAKE_CURRENT_BINARY_DIR}/activate_cloudcompy_env.bat)
     install(PROGRAMS ${ENV_CLOUDCOMPY}
             DESTINATION .
+           )
+    set (VSCODE_FILES .vscode/launch.json .vscode/settings.json)
+    install(FILES ${VSCODE_FILES}
+            DESTINATION .vscode
+           )
+elseif(APPLE)
+    set(ENV_CLOUDCOMPY envCloudComPyMacOS.zsh checkenv.py)
+    install(PROGRAMS ${ENV_CLOUDCOMPY}
+            DESTINATION bin
+           )
+else()
+    set(ENV_CLOUDCOMPY envCloudComPy.sh checkenv.py)
+    install(PROGRAMS ${ENV_CLOUDCOMPY}
+            DESTINATION bin
            )
 endif()
 

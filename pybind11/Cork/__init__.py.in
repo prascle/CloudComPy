@@ -22,22 +22,21 @@
 ##########################################################################
 
 """
-HPR is a standard plugin of cloudComPy.
+Cork is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginHPR` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCork` function:
 ::
 
-  isHPR_available = cc.isPluginHPR()
+  isCork_available = cc.isPluginCork()
 
-HPR is a submodule of cloudCompy:
+Cork is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginHPR():
-      import cloudComPy.HPR
-      cc.HPR.computeHPR(...)
+  if cc.isPluginCork():
+      import cloudComPy.Cork
+      mesh = cc.Cork.Cork.Compute(...)
 """
-from _HPR import *
-initTrace_HPR()
-
+from @CLOUDCOMPY_IMPORT_PREFIX@_Cork import *
+initTrace_Cork()

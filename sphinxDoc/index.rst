@@ -12,6 +12,7 @@ cloudComPy: a Python interface for CloudCompare
 
    introduction.rst
    license.rst
+   version.rst
 
 .. toctree::
    :numbered:
@@ -58,6 +59,7 @@ cloudComPy: a Python interface for CloudCompare
    
    Canupo.rst
    CSF.rst
+   HoughNormals.rst
    HPR.rst
    M3C2.rst
    MeshBoolean.rst

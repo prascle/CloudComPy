@@ -64,9 +64,7 @@ Have a look [here](doc/ReleaseNotes.md).
 
 # CloudComPy: availables binaries
 
-CloudComPy is built on Windows and Linux in a Conda environment, which facilitates building and binary portability.
-
-The binary provision includes CloudCompare and its Python interface CloudComPy, the Conda environment provides the IDE [Spyder](https://www.spyder-ide.org/) and [Jupyter](https://jupyter.org/).
+CloudComPy is available for Windows, Linux, and macOS. The package runs in a Python environment that meets its requirements, typically a Python venv or Conda environment. See the installation documentation for your platform below. 
 
 The binary are available [here](https://www.simulation.openfields.fr/index.php/cloudcompy-downloads). See the instructions below.
 
@@ -76,7 +74,7 @@ The binary are available [here](https://www.simulation.openfields.fr/index.php/c
 
  - To install and use a **macOS** binary, consult the [macOS installation documentation](doc/UseMacOSCondaBinary.md) in the doc directory.
 
- - Experimental: to test and run a Linux Conda binary in a docker container, see the [docker configuration documentation](doc/UseDockerLinuxConda.md) in the doc directory.
+ - to test and run a Linux Conda binary in a docker container, see the [docker configuration documentation](doc/UseDockerLinuxConda.md) in the doc directory.
 
 # CloudComPy: building
 

@@ -76,6 +76,8 @@ struct pyccPlugins
     static bool isPluginPoissonRecon() { return _isPluginPoissonRecon; };
     static bool _isPluginCork;
     static bool isPluginCork() { return _isPluginCork; };
+    static bool _isPluginHoughNormals;
+    static bool isPluginHoughNormals() { return _isPluginHoughNormals; };
 };
 
 enum CC_DIRECTION

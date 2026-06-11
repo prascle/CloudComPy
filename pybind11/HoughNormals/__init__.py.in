@@ -22,21 +22,22 @@
 ##########################################################################
 
 """
-Cork is a standard plugin of cloudComPy.
+HoughNormals is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCork` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginHoughNormals` function:
 ::
 
-  isCork_available = cc.isPluginCork()
+  isHoughNormals_available = cc.isPluginHoughNormals()
 
-Cork is a submodule of cloudCompy:
+HoughNormals is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginCork():
-      import cloudComPy.Cork
-      mesh = cc.Cork.Cork.Compute(...)
+  if cc.isPluginHoughNormals():
+      import cloudComPy.HoughNormals
+      cc.HoughNormals.computeHoughNormals(...)
 """
-from _Cork import *
-initTrace_Cork()
+from @CLOUDCOMPY_IMPORT_PREFIX@_HoughNormals import *
+initTrace_HoughNormals()
+

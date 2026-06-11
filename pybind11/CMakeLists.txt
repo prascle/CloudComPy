@@ -24,7 +24,7 @@ message(STATUS "Python3 and pybind11 processing")
 # --- Python detection: if several versions installed, select one with all the required packages installed
 
 set(PYTHON_PREFERED_VERSION "3.9" CACHE STRING "Select a Python version: it should be installed with all packages required for CloudCompare (pybind11, numpy)")
-set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.9" "3.10" "3.11")
+set_property(CACHE PYTHON_PREFERED_VERSION PROPERTY STRINGS "3.9" "3.10" "3.11" "3.12" "3.13" "3.14")
 
 message(STATUS "  python prefered version: " ${PYTHON_PREFERED_VERSION})
 
@@ -69,23 +69,22 @@ if (WIN32)
     PRIVATE
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
-    Qt5::WinMain
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
 	)
 else()
     target_link_libraries( ${PROJECT_NAME}
 	PUBLIC pybind11::module
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
 	)
 endif()
 
@@ -141,34 +140,46 @@ option(USE_CONDA_PACKAGES "Use Conda packages and environment for build: add com
 # --- Python scripts with added functions
 
 set(PYTHONAPI_SCRIPTS
-    __init__.py
 	minimalBoundingBox.py
+    ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
 	)
+
+# --- PyPI build: used by plugins
+
+if( BUILD_PYPI )
+    set(IS_PYPI_BUILD 1)
+    set(CLOUDCOMPY_IMPORT_PREFIX "cloudComPy.")
+else()
+    set(IS_PYPI_BUILD 0)
+    set(CLOUDCOMPY_IMPORT_PREFIX "")
+endif()
 
 # --- install
 
 if( WIN32 )
+    configure_file(__init__-Windows.py.in __init__.py @ONLY)
 	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION CloudCompare )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION CloudCompare/cloudComPy )
 elseif( APPLE )
+    configure_file(__init__-macOS.py.in __init__.py @ONLY)
 	message( STATUS "install MacOS PYTHON : ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks" )
 	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )	
 else()
-    set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare )
-    message(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
-    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON} )
-    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON}/cloudComPy)
-endif()
-
-if(NOT WIN32)
-    if (USE_CONDA_PACKAGES)
-        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_BINDIR})
+    configure_file(__init__-Linux.py.in __init__.py @ONLY)
+    message(STATUS "INSTALL_Linux_PYTHON: " ${CMAKE_INSTALL_PREFIX}/cloudComPy)
+    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy)
+    if( BUILD_PYPI )
+        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    else()
+        install(PROGRAMS ${ENV_SCRIPTS} DESTINATION ${CMAKE_INSTALL_BINDIR} )
     endif()
 endif()
 
 if(WIN32)
-  if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+  #if( NOT INSTALL_PREREQUISITE_LIBRARIES )
+  if( INSTALL_PREREQUISITE_LIBRARIES )
 
     if ( PLUGIN_IO_QRDB )
         message( STATUS "rdblib.dll ${CMAKE_CURRENT_BINARY_DIR}/../_deps/rdb_sdk-src/library/rdblib.dll")
@@ -260,6 +271,9 @@ if ( PLUGIN_STANDARD_QPOISSON_RECON )
 endif()
 if ( PLUGIN_STANDARD_QCORK )
     add_subdirectory( Cork )
+endif()
+if ( PLUGIN_STANDARD_QHOUGH_NORMALS )
+    add_subdirectory( HoughNormals )
 endif()
 
 

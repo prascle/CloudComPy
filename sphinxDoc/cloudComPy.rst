@@ -32,6 +32,7 @@ cloudComPy module, functions
 .. autofunction:: isPluginDraco
 .. autofunction:: isPluginFbx
 .. autofunction:: isPluginHPR
+.. autofunction:: isPluginHoughNormals
 .. autofunction:: isPluginM3C2
 .. autofunction:: isPluginMeshBoolean
 .. autofunction:: isPluginPCL

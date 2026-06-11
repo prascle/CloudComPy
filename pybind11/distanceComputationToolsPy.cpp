@@ -180,7 +180,7 @@ std::vector<double> computeApproxCloud2MeshDistance_py(CCCoreLib::GenericIndexed
                                                                                c2mParams,
                                                                                nullptr,
                                                                                nullptr);
-    if (ret != 1)
+    if (ret != CCCoreLib::DistanceComputationTools::DISTANCE_COMPUTATION_RESULTS::SUCCESS)
         return result;
     CCCoreLib::ScalarField* sf = compCloud->getScalarField(sfIdx);
     ScalarType mean;
@@ -224,7 +224,7 @@ int computeCloud2CloudDistances_py( CCCoreLib::GenericIndexedCloudPersist* compa
     int ret = CCCoreLib::DistanceComputationTools::computeCloud2CloudDistances(compCloud, referenceCloud, params,
                                                                                progressCb, compOctree, refOctree);
     CCTRACE("return code computeCloud2CloudDistances: " << ret);
-    if (ret <= 0)
+    if (ret != CCCoreLib::DistanceComputationTools::DISTANCE_COMPUTATION_RESULTS::SUCCESS)
         return ret;
     CCCoreLib::ScalarField* sf = compCloud->getScalarField(sfIdx);
     sf->computeMinAndMax();
@@ -270,7 +270,7 @@ int computeCloud2MeshDistances_py(  CCCoreLib::GenericIndexedCloudPersist* point
     compCloud->setCurrentScalarField(sfIdx);
     int ret = CCCoreLib::DistanceComputationTools::computeCloud2MeshDistances(compCloud, mesh, params,
                                                                               progressCb, cloudOctree);
-    if (ret != 1)
+    if (ret != CCCoreLib::DistanceComputationTools::DISTANCE_COMPUTATION_RESULTS::SUCCESS)
         return ret;
     CCCoreLib::ScalarField* sf = compCloud->getScalarField(sfIdx);
     sf->computeMinAndMax();

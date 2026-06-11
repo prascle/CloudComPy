@@ -22,22 +22,23 @@
 ##########################################################################
 
 """
-MeshBoolean is a standard plugin of cloudComPy.
+RANSAC_SD is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginMeshBoolean` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginRANSAC_SD` function:
 ::
 
-  isMeshBoolean_available = cc.isPluginMeshBoolean()
+  isRANSAC_SD_available = cc.isPluginRANSAC_SD()
 
-MeshBoolean is a submodule of cloudCompy:
+RANSAC_SD is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginMeshBoolean():
-      import cloudComPy.MeshBoolean
-      cc.MeshBoolean.computeMeshBoolean(...)
+  if cc.isPluginRANSAC_SD():
+      import cloudComPy.RANSAC_SD
+      params = cc.RANSAC_SD.RansacParams()
+      results = cc.RANSAC_SD.computeRANSAC_SD(cloud, params)
 """
-from _MeshBoolean import *
-initTrace_MeshBoolean()
+from @CLOUDCOMPY_IMPORT_PREFIX@_RANSAC_SD import *
+initTrace_RANSAC_SD()
 

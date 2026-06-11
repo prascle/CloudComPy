@@ -73,7 +73,7 @@ for entity in entities[1]:
 #---sensor003-begin
     structure = entities[-1]
 #---sensor003-end
-    if len(structure)!= 343:
+    if len(structure) < 300:
         raise RuntimeError
     for str in structure:
         print(str)

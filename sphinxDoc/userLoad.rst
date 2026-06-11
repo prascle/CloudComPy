@@ -109,7 +109,7 @@ Select the scans to load in a ``.E57`` file
 -------------------------------------------
 
 The :py:func:`cloudComPy.importFile` accept an optional parameter, ``extraData`` which a regular expression
-(see `Qt RegExp <https://doc.qt.io/qt-6/qregexp.html#introduction>`_) used to filter the scans to load in a ``.E57`` file.
+(see `Qt RegExp <https://doc.qt.io/qt-6/QRegularExpression.html#introduction>`_) used to filter the scans to load in a ``.E57`` file.
 
 In the example below, the file contains 5 scans named 'sp2_1', 'sp2_2', 'sp26_1', 'sp25_2', 'sp26_2'
 The regular expression ``sp2.*_1`` allows to select 'sp2_1' and 'sp26_1'

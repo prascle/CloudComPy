@@ -1155,6 +1155,22 @@ computes the triangular mesh on the given cloud.
 
 The above code snippet is from :download:`test053.py <../tests/test053.py>`.
 
+Compute normals on a cloud with plugin HoughNormals
+---------------------------------------------------
+The concepts are presented in the
+`CloudCompare wiki - Hough Normals (plugin) <https://www.cloudcompare.org/doc/wiki/index.php/HoughNormals_(plugin)>`_.
+
+You have to import the The :py:mod:`~.cloudComPy.HoughNormals` plugin.
+The :py:func:`~.cloudComPy.HoughNormals.computeHoughNormals` function takes in input a ccPointCloud and several optional parameters.
+
+.. include:: ../tests/test061.py
+   :start-after: #---HoughNormals01-begin
+   :end-before:  #---HoughNormals01-end
+   :literal:
+   :code: python
+
+The above code snippet is from :download:`test061.py <../tests/test061.py>`.
+
 Sclices and contours
 --------------------
 

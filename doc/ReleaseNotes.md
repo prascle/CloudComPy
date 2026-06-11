@@ -2,10 +2,22 @@
 
 These release notes start with the October 18, 2021 CloudComPy release.
 
+## may 26, 2026 CloudComPy release:
+
+ - cloudComPy is based on CloudCompare 2.14alpha (master May 1st, 2026), with various patches needed by cloudComPy.
+ - cloudComPy is now built with a Conda Python 3.12 environment and Qt6.10.
+ - A new procedure to build the Windows packaging
+ - All the packagings (Windows, Linux, macOS) embed all the required libraries: easier to install and maintain,
+   needs just a Python 3.12 environment with some packages. Windows packaging does not work with Spyder or Jupyter, but with VS code.
+ - This new packaging is a step toward creating PyPI wheels, but wheels are not yet operational.
+ - (issue #213) ComputeVolume25D : allow for groundHeight and ceilHeight to be None
+ - (issue #216) Hough Plugin
+ - several minor fixes and doc improvement.
+
 ## June 19, 2025 CloudComPy release:
 
- - cloudComPy is now built with a Conda Python 3.11 enivronment (instead of 3.10)
- - cloudComPy is based on CloudCompare 2.14aplha (master May 8, 2025), with patch to work on macOS Sequoia 15.4 and more.
+ - cloudComPy is now built with a Conda Python 3.11 environment (instead of 3.10)
+ - cloudComPy is based on CloudCompare 2.14alpha (master May 8, 2025), with patch to work on macOS Sequoia 15.4 and more.
  - (issue #192) improve behaviour when converting float into int is harmless
  - (issue #195) improve documentation on normal generation with quadric fitting
  - (issue #198) get transformation history
@@ -61,7 +73,7 @@ These release notes start with the October 18, 2021 CloudComPy release.
 ## October 26, 2023 CloudComPy release:
 
  - update to CloudCompare master (October 26, 2023)
- - (issue #130) bug on the selection of scans to import in a multi-scan e57 file (should use QRegExp::exactMatch)
+ - (issue #130) bug on the selection of scans to import in a multi-scan e57 file (should use QRegularExpression::exactMatch)
  - (issue #134) access to normals as a Numpy array
  - fix path related to CloudComPy web site changes, in documentation and tests
  - improve documentation

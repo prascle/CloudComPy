@@ -44,7 +44,7 @@ class viewerPy : public QMainWindow, public ccMainAppInterface
 
 public:
 	//! Default constructor
-	viewerPy(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+	viewerPy(QWidget *parent = 0, Qt::WindowFlags flags = Qt::Widget);
 
 	//! Default destructor
 	~viewerPy() override;

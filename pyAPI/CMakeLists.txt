@@ -29,6 +29,10 @@ project( PYCC_LIB VERSION 2.12.0 )
 add_library( PYCC_LIB STATIC )
 set_property(TARGET PYCC_LIB PROPERTY AUTOMOC ON)
 
+if ( UNIX AND NOT APPLE )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 if ( OPTION_SCALAR_DOUBLE )
 	target_compile_definitions( PYCC_LIB PUBLIC SCALAR_TYPE_DOUBLE )
 	message(STATUS "scalar type double")
@@ -98,8 +102,8 @@ endif()
 # Qt libraries
 
 target_link_libraries( PYCC_LIB
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
     )
 

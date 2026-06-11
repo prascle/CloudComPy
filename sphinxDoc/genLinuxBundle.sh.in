@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+. @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate @CONDA_ENV@
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:@CONDA_PATH@/lib
+cd @CMAKE_BINARY_DIR@/sphinxDoc
+python3 getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" @CONDA_PATH@/lib/qt6

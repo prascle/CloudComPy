@@ -35,12 +35,11 @@ if (WIN32)
     QM3C2_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
-    Qt5::WinMain
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 else()
     target_link_libraries( ${PROJECT_NAME}
@@ -48,11 +47,11 @@ else()
     QM3C2_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 endif()
 
@@ -63,7 +62,7 @@ target_sources( ${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/M3C2Py.cpp
     )
 
-qt5_wrap_ui( generated_ui_list ${CMAKE_CURRENT_SOURCE_DIR}/../../CloudCompare/plugins/core/Standard/qM3C2/ui/qM3C2Dialog.ui )
+qt6_wrap_ui( generated_ui_list ${CMAKE_CURRENT_SOURCE_DIR}/../../CloudCompare/plugins/core/Standard/qM3C2/ui/qM3C2Dialog.ui )
 message(STATUS "generated_ui_list: ${generated_ui_list}")
 target_sources( ${PROJECT_NAME} PRIVATE ${generated_ui_list} )
 
@@ -89,8 +88,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET "hidden"
 
 # --- Python scripts with added functions
 
+configure_file(__init__.py.in __init__.py)
 set(PYTHONAPI_SCRIPTS
-    __init__.py
+    ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
     )
 
 # --- install
@@ -102,8 +102,6 @@ elseif( APPLE )
     install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
     install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy/M3C2 )
 else()
-    set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare/cloudComPy/M3C2)
-    message(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
-    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cloudcompare)
-    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON})
+    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy/M3C2 )
 endif()

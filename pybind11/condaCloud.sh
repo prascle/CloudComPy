@@ -25,7 +25,7 @@
 
 activate()
 {
-    #echo "function activate $1"
+    echo "function activate $1"
     conda activate "$1"
     ret=$?
     if [ $ret == "0" ] && [ x${CONDACLOUD_ACTIVATED} != "x1" ]; then
@@ -35,10 +35,10 @@ activate()
         export PYTHONPATH_SAVED=${PYTHONPATH}
         export PATH_SAVED=${PATH}
         export LD_LIBRARY_PATH=${CONDA_ENV_ROOT}/lib:${LD_LIBRARY_PATH}
-        export PATH=${CLOUDCOMPY_ROOT}/bin:${PATH}
-        export PYTHONPATH=${CLOUDCOMPY_ROOT}/lib/cloudcompare:${PYTHONPATH}
-        export PYTHONPATH=${CLOUDCOMPY_ROOT}/doc/PythonAPI_test:${PYTHONPATH}
-        export LD_LIBRARY_PATH=${CLOUDCOMPY_ROOT}/lib/cloudcompare:${CLOUDCOMPY_ROOT}/lib/cloudcompare/plugins:${LD_LIBRARY_PATH}
+        export PATH=${CLOUDCOMPY_ROOT}/bin:${CLOUDCOMPY_ROOT}/cloudComPy:${PATH}
+        export PYTHONPATH=${CLOUDCOMPY_ROOT}/cloudComPy:${PYTHONPATH}
+        export PYTHONPATH=${CLOUDCOMPY_ROOT}/cloudComPy/doc/PythonAPI_test:${PYTHONPATH}
+        export LD_LIBRARY_PATH=${CLOUDCOMPY_ROOT}/cloudComPy:${CLOUDCOMPY_ROOT}/cloudComPy/plugins/CC:${LD_LIBRARY_PATH}
         export CONDACLOUD_ACTIVATED=1
         export LC_NUMERIC=C
     fi
@@ -46,7 +46,7 @@ activate()
 
 deactivate()
 {
-    #echo "function deactivate"
+    echo "function deactivate"
     CONDA_ENV_ROOT=$(realpath "$(dirname $(which python))/..")
     conda deactivate
     if [ x${CONDACLOUD_ACTIVATED} == "x1" ]; then
@@ -80,7 +80,9 @@ usage()
     echo
 }
 
+
 SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
+echo "script path: ${SCRIPT_PATH}"
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
 SCRIPT_DIR=$(dirname "${SCRIPT_PATH}")
 CLOUDCOMPY_ROOT=$(realpath "${SCRIPT_DIR}/..")
@@ -89,7 +91,7 @@ PROG=$(basename $0)
 CONDA_ROOT=$(realpath "$(dirname $(which conda))/..")
 . ${CONDA_ROOT}/etc/profile.d/conda.sh                                       # required to have access to conda commands in a shell script
 
-if [ $PROG == $SCRIPT_NAME ]; then
+if [ "a$PROG" == "a$SCRIPT_NAME" ]; then
     echo "this script must be sourced (with source or '.')"
 else
     case $# in

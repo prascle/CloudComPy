@@ -22,22 +22,21 @@
 ##########################################################################
 
 """
-M3C2 is a standard plugin of cloudComPy.
+CSF is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginM3C2` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginCSF` function:
 ::
 
-  isM3C2_available = cc.isPluginM3C2()
+  isCSF_available = cc.isPluginCSF()
 
-M3C2 is a submodule of cloudCompy:
+CSF is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginM3C2():
-      import cloudComPy.M3C2
-      cc.M3C2.computeM3C2(...)
+  if cc.isPluginCSF():
+      import cloudComPy.CSF
+      cc.CSF.computeCSF(...)
 """
-from _M3C2 import *
-initTrace_M3C2()
-
+from @CLOUDCOMPY_IMPORT_PREFIX@_CSF import *
+initTrace_CSF()

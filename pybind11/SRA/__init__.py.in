@@ -22,21 +22,22 @@
 ##########################################################################
 
 """
-PoissonRecon is a standard plugin of cloudComPy.
+SRA is a standard plugin of cloudComPy.
 
-The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginPoissonRecon` function:
+The availability of the plugin can be tested with the :py:meth:`cloudComPy.isPluginSRA` function:
 ::
 
-  isPoissonRecon_available = cc.isPluginPoissonRecon()
+  isSRA_available = cc.isPluginSRA()
 
-PoissonRecon is a submodule of cloudCompy:
+SRA is a submodule of cloudCompy:
 ::
 
   import cloudComPy as cc
   # ...
-  if cc.isPluginPoissonRecon():
-      import cloudComPy.PoissonRecon
-      mesh = cc.PoissonRecon.PR.PoissonReconstruction(...)
+  if cc.isPluginSRA():
+      import cloudComPy.SRA
+      cc.SRA.loadProfile(...)
 """
-from _PoissonRecon import *
-initTrace_PoissonRecon()
+from cloudComPy import DEFAULT_SCALES
+from @CLOUDCOMPY_IMPORT_PREFIX@_SRA import *
+initTrace_SRA()

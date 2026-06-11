@@ -53,7 +53,7 @@ std::vector<int> getCmyk_py(QColor& self)
 
 std::vector<double> getCmykF_py(QColor& self)
 {
-    double c, y, m, k, a;
+    float c, y, m, k, a;
     self.getCmykF(&c, &y, &m, &k, &a);
     std::vector<double> vec = {c, y, m, k, a};
     return vec;
@@ -69,7 +69,7 @@ std::vector<int> getHsl_py(QColor& self)
 
 std::vector<double> getHslF_py(QColor& self)
 {
-    double h, s, l, a;
+    float h, s, l, a;
     self.getHslF(&h, &s, &l, &a);
     std::vector<double> vec = {h, s, l, a};
     return vec;
@@ -85,7 +85,7 @@ std::vector<int> getHsv_py(QColor& self)
 
 std::vector<double> getHsvF_py(QColor& self)
 {
-    double h, s, v, a;
+    float h, s, v, a;
     self.getHsvF(&h, &s, &v, &a);
     std::vector<double> vec = {h, s, v, a};
     return vec;
@@ -101,7 +101,7 @@ std::vector<int> getRgb_py(QColor& self)
 
 std::vector<double> getRgbF_py(QColor& self)
 {
-    double r, g, b, a;
+    float r, g, b, a;
     self.getRgbF(&r, &g, &b, &a);
     std::vector<double> vec = {r, g, b, a};
     return vec;

@@ -35,7 +35,11 @@ else()
 endif()
 
 # where to install the tests scripts
-set(PYTHONAPI_TEST_SCRIPTS_DIRECTORY doc/PythonAPI_test)
+if( LINUX )
+    set(PYTHONAPI_TEST_SCRIPTS_DIRECTORY cloudComPy/doc/PythonAPI_test)
+else()
+    set(PYTHONAPI_TEST_SCRIPTS_DIRECTORY doc/PythonAPI_test)
+endif()
 
 # data sample generator and other utilities for test
 configure_file(gendata.py.in gendata.py)
@@ -116,6 +120,7 @@ set(PYTHONAPI_TEST_SCRIPTS
     test058.py
     test059.py
     test060.py
+    test061.py
     )
 
 # list of utilities
@@ -127,7 +132,7 @@ set(PYTHONAPI_TEST_UTILITIES
 if(WIN32)
     install(PROGRAMS DartTestfile.win.txt
             DESTINATION ${PYTHONAPI_TEST_SCRIPTS_DIRECTORY}
-            RENAME DartTestfile.txt
+            RENAME CTestTestfile.cmake
            )
 else()
     install(PROGRAMS DartTestfile.txt
@@ -219,4 +224,5 @@ do_test(test057)
 do_test(test058)
 do_test(test059)
 do_test(test060)
+do_test(test061)
 

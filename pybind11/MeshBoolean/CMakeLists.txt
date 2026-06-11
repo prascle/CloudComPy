@@ -29,18 +29,18 @@ project( _MeshBoolean VERSION 0.1 )
 add_library( ${PROJECT_NAME} MODULE )
 
 if (WIN32)
+    target_compile_definitions(_MeshBoolean PRIVATE NOMINMAX)
     target_link_libraries( ${PROJECT_NAME}
 	PUBLIC pybind11::module
     PRIVATE
     QMESH_BOOLEAN_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
-    Qt5::WinMain
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 else()
     target_link_libraries( ${PROJECT_NAME}
@@ -48,11 +48,11 @@ else()
     QMESH_BOOLEAN_PLUGIN
     PYCC_LIB
     CCAppCommon
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::OpenGL
-    Qt5::PrintSupport
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::PrintSupport
     )
 endif()
 
@@ -87,8 +87,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET "hidden"
 
 # --- Python scripts with added functions
 
+configure_file(__init__.py.in __init__.py)
 set(PYTHONAPI_SCRIPTS
-    __init__.py
+    ${CMAKE_CURRENT_BINARY_DIR}/__init__.py
     )
 
 # --- install
@@ -100,8 +101,6 @@ elseif( APPLE )
     install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
     install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy/MeshBoolean )
 else()
-    set(INSTALL_CLOUDCOMPARE_PYTHON ${CMAKE_INSTALL_LIBDIR}/cloudcompare/cloudComPy/MeshBoolean)
-    message(STATUS "INSTALL_CLOUDCOMPARE_PYTHON: " ${INSTALL_CLOUDCOMPARE_PYTHON})
-    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cloudcompare)
-    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${INSTALL_CLOUDCOMPARE_PYTHON})
+    install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )
+    install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy/MeshBoolean )
 endif()

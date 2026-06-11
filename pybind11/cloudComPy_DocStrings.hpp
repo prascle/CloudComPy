@@ -42,8 +42,8 @@ If only one cloud is given, the direction (X, Y or Z) defines the normal to the 
 :param ccPointCloud ceil: either a point cloud or None
 :param int vertDim: direction from (0,1,2): 0: X, 1: Y, 2: Z
 :param float gridStep: size of the grid step
-:param float groundHeight: altitude of the ground plane along the direction, if ground is None
-:param float ceilHeight: altitude of the ceil plane along the direction, if ceil is None
+:param float,optional groundHeight: altitude of the ground plane along the direction, if ground is None, default float('nan')
+:param float,optional ceilHeight: altitude of the ceil plane along the direction, if ceil is None, default float('nan')
 :param ProjectionType,optional projectionType: default PROJ_AVERAGE_VALUE
 :param EmptyCellFillOption,optional groundEmptyCellFillStrategy: default LEAVE_EMPTY
 :param float,optional groundMaxEdgeLength: default 0
@@ -383,6 +383,12 @@ const char* cloudComPy_isPluginCork_doc= R"(
 returns True if CloudComPy is built with the Cork plugin.
 
 :return: True if CloudComPy is built with the Cork plugin, False otherwise.
+:rtype: bool)";
+
+const char* cloudComPy_isPluginHoughNormals_doc= R"(
+returns True if CloudComPy is built with the HoughNormals plugin.     
+
+:return: True if CloudComPy is built with the HoughNormals plugin, False otherwise.
 :rtype: bool)";
 
 const char* cloudComPy_loadPointCloud_doc= R"(
