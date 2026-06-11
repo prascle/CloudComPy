@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core>=0.11", "pybind11>=3.0", "sphinx_rtd_theme"]
+requires = ["scikit-build-core>=0.11", "pybind11>=3.0", "sphinx_rtd_theme", "numpy", "scipy"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -48,6 +48,7 @@ CCCORELIB_USE_QT_CONCURRENT = true
 CCCORELIB_USE_TBB = false
 Boost_DIR = {env="Boost_DIR", default="Boost_DIR_not_set"}
 CGAL_DIR = {env="CGAL_DIR", default="CGAL_DIR_not_set"}
+CLOUDCOMPARE_VERSION = "2.14.beta"
 CMAKE_PREFIX_PATH = {env="CMAKE_PREFIX_PATH", default="CMAKE_PREFIX_PATH_not_set"}
 CONDA_ENV={env="CONDA_ENV", default="CONDA_ENV_not_set"}
 CONDA_PATH={env="CONDA_PATH", default="CONDA_PATH_not_set"}
@@ -134,6 +135,7 @@ pybind11_DIR = {env="pybind11_DIR", default="pybind11_DIR_not_set"}
 QANIMATION_WITH_FFMPEG_SUPPORT = true
 #QT_PREFIX = {env="QT_PREFIX", default="QT_PREFIX_not_set"}
 Qt6_DIR = {env="Qt6_DIR", default="Qt6_DIR_not_set"}
+REPO_DIR = {env="REPO_DIR", default="REPO_DIR_not_set"}
 TBB_DIR = {env="TBB_DIR", default="TBB_DIR_not_set"}
 USE_CONDA_PACKAGES = true
 USE_EXTERNAL_QHULL_FOR_QHPR = false

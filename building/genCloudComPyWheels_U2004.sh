@@ -9,6 +9,7 @@ pyminvers=( "9"      "10"      "11"      "12"      "13"      "14"    )
 pyfullvers=("3.9.25" "3.10.20" "3.11.15" "3.12.13" "3.13.13" "3.14.4")
 export genbase="${HOME}/projets/CloudComPy"
 export CONDA_ROOT=${HOME}/miniconda3                                    # root directory of conda installation
+export REPO_DIR=${genbase}/CloudComPy
 
 genWheel() {
 
