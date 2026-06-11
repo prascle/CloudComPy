@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
+
+isPypiBuild=@IS_PYPI_BUILD@
+
+if [ $isPypiBuild = "true" ] ; then
+. @CMAKE_INSTALL_PREFIX@/cloudComPy/condaCloud.sh activate @CONDA_ENV@
+else
 . @CMAKE_INSTALL_PREFIX@/bin/condaCloud.sh activate @CONDA_ENV@
+fi
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:@CONDA_PATH@/lib
 cd @CMAKE_BINARY_DIR@/sphinxDoc
 python3 getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" @CONDA_PATH@/lib/qt6
