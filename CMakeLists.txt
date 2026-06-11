@@ -106,7 +106,7 @@ elseif(APPLE)
 else()
     set(ENV_CLOUDCOMPY envCloudComPy.sh checkenv.py)
     install(PROGRAMS ${ENV_CLOUDCOMPY}
-            DESTINATION bin
+            DESTINATION cloudComPy
            )
 endif()
 
@@ -131,5 +131,5 @@ set( README_DOCS
     README.md
     License.txt
     )
-install(FILES ${README_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES ${README_DOCS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy)
     

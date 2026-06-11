@@ -14,10 +14,9 @@ if [ $isPypiBuild = "true" ] ; then
 
     rm @SPHINXDOCTREES@/*.doctree
     @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
-    #python @CMAKE_BINARY_DIR@/sphinxDoc/getDependency.py "@CMAKE_INSTALL_PREFIX@/cloudComPy" ${QT_PREFIX}
 else
     source @PYTHONVENV_DIR@/bin/activate
-    . @CMAKE_INSTALL_PREFIX@/bin/envCloudComPy.sh activate
+    . @CMAKE_INSTALL_PREFIX@/cloudComPy/envCloudComPy.sh activate
     echo "Generating Sphinx documentation for conda build"
     rm @SPHINXDOCTREES@/*.doctree
     @SPHINXBUILD@ -c @CMAKE_BINARY_DIR@/sphinxDoc -b html -d @SPHINXDOCTREES@ @ALLSPHINXOPTS@ @CMAKE_INSTALL_PREFIX@/cloudComPy/doc/html 
