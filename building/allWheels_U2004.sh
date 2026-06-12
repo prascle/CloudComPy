@@ -12,7 +12,7 @@
 
 # Python 3.12
 ./genCloudComPyWheels_U2004.sh "gen" 3 3
-#./genCloudComPyWheels_U2004.sh "repair" 3 3
+./genCloudComPyWheels_U2004.sh "repair" 3 3
 
 # Python 3.13
 #./genCloudComPyWheels_U2004.sh "gen" 4 4

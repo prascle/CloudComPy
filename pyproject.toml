@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core>=0.11", "pybind11>=3.0", "sphinx_rtd_theme", "numpy", "scipy"]
+requires = ["scikit-build-core>=0.11", "pybind11>=3.0", "sphinx_rtd_theme", "numpy", "scipy", "patchelf"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -49,6 +49,8 @@ CCCORELIB_USE_TBB = false
 Boost_DIR = {env="Boost_DIR", default="Boost_DIR_not_set"}
 CGAL_DIR = {env="CGAL_DIR", default="CGAL_DIR_not_set"}
 CLOUDCOMPARE_VERSION = "2.14.beta"
+CMAKE_C_COMPILER = {env="CMAKE_C_COMPILER", default="CMAKE_C_COMPILER_not_set"}
+CMAKE_CXX_COMPILER = {env="CMAKE_CXX_COMPILER", default="CMAKE_CXX_COMPILER_not_set"}
 CMAKE_PREFIX_PATH = {env="CMAKE_PREFIX_PATH", default="CMAKE_PREFIX_PATH_not_set"}
 CONDA_ENV={env="CONDA_ENV", default="CONDA_ENV_not_set"}
 CONDA_PATH={env="CONDA_PATH", default="CONDA_PATH_not_set"}
@@ -79,6 +81,7 @@ OPENCASCADE_78_OR_NEWER = true
 #OPENCASCADE_DLL_DIR = {env="OPENCASCADE_DLL_DIR", default="OPENCASCADE_DLL_DIR_not_set"}
 OPENCASCADE_INC_DIR = {env="OPENCASCADE_INC_DIR", default="OPENCASCADE_INC_DIR_not_set"}
 OPENCASCADE_LIB_DIR = {env="OPENCASCADE_LIB_DIR", default="OPENCASCADE_LIB_DIR_not_set"}
+OPTION_BUILD_CCVIEWER = false
 OPTION_USE_GDAL = true
 #OpenMP_omp_LIBRARY = {env="OpenMP_omp_LIBRARY", default="OpenMP_omp_LIBRARY_not_set"}
 PLUGIN_EXAMPLE_GL = true

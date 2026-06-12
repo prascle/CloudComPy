@@ -40,10 +40,12 @@ genWheel() {
     cd "${genbase}"
     source ${VENV_PYTHON}/bin/activate
     pip install --upgrade pip
-    pip install numpy scipy requests psutil matplotlib quaternion pybind11 sphinx-rtd-theme
+    pip install numpy scipy requests psutil matplotlib quaternion pybind11 sphinx-rtd-theme patchelf
     
     export Boost_DIR=${CONDA_PATH}/lib/cmake/Boost-1.88.0
     export CGAL_DIR=${CONDA_PATH}/lib/cmake/CGAL
+    export CMAKE_C_COMPILER=${CONDA_PATH}/bin/gcc
+    export CMAKE_CXX_COMPILER=${CONDA_PATH}/bin/g++
     export CMAKE_PREFIX_PATH=${CONDA_PATH}
     export cork_rep=${genbase}/cork
     export CORK_INCLUDE_DIR=${cork_rep}/src
