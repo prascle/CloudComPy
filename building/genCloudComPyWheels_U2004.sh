@@ -6,7 +6,7 @@ ilast=$3
 pyversions=("3.9"    "3.10"    "3.11"    "3.12"    "3.13"    "3.14"  )
 pyvers=(    "39"     "310"     "311"     "312"     "313"     "314"   )
 pyminvers=( "9"      "10"      "11"      "12"      "13"      "14"    )
-pyfullvers=("3.9.25" "3.10.20" "3.11.15" "3.12.13" "3.13.13" "3.14.4")
+pyfullvers=("3.9.25" "3.10.20" "3.11.15" "3.12.13" "3.13.14" "3.14.6")
 export genbase="${HOME}/projets/CloudComPy"
 export CONDA_ROOT=${HOME}/miniconda3                                    # root directory of conda installation
 export REPO_DIR=${genbase}/CloudComPy
@@ -40,7 +40,7 @@ genWheel() {
     cd "${genbase}"
     source ${VENV_PYTHON}/bin/activate
     pip install --upgrade pip
-    pip install numpy scipy requests psutil matplotlib quaternion pybind11 sphinx-rtd-theme patchelf
+    pip install numpy scipy requests psutil matplotlib numpy-quaternion pybind11 sphinx-rtd-theme patchelf
     
     export Boost_DIR=${CONDA_PATH}/lib/cmake/Boost-1.88.0
     export CGAL_DIR=${CONDA_PATH}/lib/cmake/CGAL
