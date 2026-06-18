@@ -156,7 +156,7 @@ function Invoke-Configure {
         "-DQt6_DIR=$Qt6root/lib/cmake/Qt6",
         "-DCMAKE_PREFIX_PATH=$Qt6root",
         "-DCMAKE_INSTALL_PREFIX=$InstallRoot",
-        "-DBUILD_PYPI_PACKAGE=0",
+        "-DBUILD_PYPI=1",
         "-DBUILD_PY_TESTING=1",
         "-DBUILD_REFERENCE_DOC=1",
         "-DBUILD_TESTING=1",
@@ -234,6 +234,7 @@ function Invoke-Configure {
         "-DPYTHONAPI_TRACES=1",
         "-DPYTHONVENV=$PythonVenv",
         "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
+        "-DREPO_DIR=$SourceDir",
         "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
         "-DWORKROOT=$WorkRoot"
     )
@@ -292,11 +293,21 @@ function Invoke-Tests {
     $venvActivate = Join-Path $PythonVenv "Scripts/Activate.ps1"
     & $venvActivate
 
-    Push-Location $InstallRoot
-    cmd /c "`"$(Join-Path $InstallRoot 'envCloudComPy.bat')`"" `
+    $envDump = cmd /c "call `"$InstallRoot\cloudComPy\envCloudComPy.bat`" && set" `
         2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
-    Push-Location (Join-Path $InstallRoot "doc/PythonAPI_test")
+    foreach ($line in $envDump) {
+        if ($line -match '^(.*?)=(.*)$') {
+            Set-Item -Path Env:$($matches[1]) -Value $matches[2]
+        }
+    }
+
+    Write-Host "=== PATH ==="
+    $env:PATH -split ';'
+    Write-Host "`n=== PYTHONPATH ==="
+    $env:PYTHONPATH -split ';'
+
+    Push-Location (Join-Path $InstallRoot "cloudComPy/doc/PythonAPI_test")
     ctest --output-on-failure 2>&1 | Tee-Object -FilePath $Global:LogFile -Append
 
     Pop-Location

@@ -330,9 +330,9 @@ void pyCC_setupPaths(pyCC* capi)
     capi->m_TranslationPath = (bundleDir.absolutePath() + "/CloudCompare/CloudCompare.app/Contents/translations");
 #endif
 #elif defined(Q_OS_WIN)
-    capi->m_PluginPaths << (appDir.absolutePath() + "/plugins");
-    capi->m_ShaderPath = (appDir.absolutePath() + "/shaders");
-    capi->m_TranslationPath = (appDir.absolutePath() + "/translations");
+    capi->m_PluginPaths << (appDir.absolutePath() + "/cloudComPy/plugins");
+    capi->m_ShaderPath = (appDir.absolutePath() + "/cloudComPy/shaders");
+    capi->m_TranslationPath = (appDir.absolutePath() + "/cloudComPy/translations");
 #elif defined(Q_OS_LINUX)
     // Shaders & plugins are relative to the bin directory where the executable is found
     QDir  theDir = appDir;

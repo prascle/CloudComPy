@@ -35,7 +35,7 @@ set( USE_DOCS
 if ( LINUX )
     install(FILES ${USE_DOCS} DESTINATION cloudComPy/doc )
 else()
-    install(FILES ${USE_DOCS} DESTINATION doc )
+    install(FILES ${USE_DOCS} DESTINATION cloudComPy/doc )
 endif()
 
 add_subdirectory( samples )
