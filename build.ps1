@@ -269,19 +269,38 @@ function Invoke-Install {
 
 function Invoke-Package {
     Start-Step "Package"
-    Write-Step "📦 Packaging CloudComPy..." "Cyan"
 
-    $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-    $packageName = "CloudComPy_${CondaEnvName}_$timestamp.7z"
-    $packagePath = Join-Path "$WorkRoot/install" $packageName
+    # Write-Step "📦 Packaging CloudComPy..." "Cyan"
 
-    $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+    # $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    # $packageName = "CloudComPy_${CondaEnvName}_$timestamp.7z"
+    # $packagePath = Join-Path "$WorkRoot/install" $packageName
 
-    & $sevenZip a -t7z -m0=lzma2 -mx=9 -mmt=on -ms=on $packagePath $InstallRoot `
-        2>&1 | Tee-Object -FilePath $Global:LogFile -Append
+    # $sevenZip = "C:\Program Files\7-Zip\7z.exe"
 
-    Write-Host "🎉 Package generated : $packagePath" -ForegroundColor Green
-    Write-Log "Package generated : $packagePath"
+    # & $sevenZip a -t7z -m0=lzma2 -mx=9 -mmt=on -ms=on $packagePath $InstallRoot `
+    #     2>&1 | Tee-Object -FilePath $Global:LogFile -Append
+
+    # Write-Host "🎉 Package generated : $packagePath" -ForegroundColor Green
+    # Write-Log "Package generated : $packagePath"
+
+    Write-Host "📦 Building wheel..." -ForegroundColor Cyan
+
+    # Nettoyage
+    if (Test-Path dist) { Remove-Item dist -Recurse -Force }
+
+    # Construction du wheel
+    $venvActivate = Join-Path $PythonVenv "Scripts/Activate.ps1"
+    & $venvActivate
+    Copy-Item Windows/pyproject.toml pyproject.toml -Force
+    Copy-Item Windows/setup.py setup.py -Force
+    python -m build --wheel
+
+    # Vérification
+    twine check dist\*.whl
+
+Write-Host "🎉 Wheel généré et vérifié !" -ForegroundColor Green
+
 
     End-Step "Package"
 }

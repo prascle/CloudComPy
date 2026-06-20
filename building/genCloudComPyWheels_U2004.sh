@@ -96,6 +96,7 @@ genWheel() {
     # ----------------------------------------------------------
 
     cd "${HOME}/projets/CloudComPy/CloudComPy"
+    cp -f Linux/pyproject.toml pyproject.toml
     pip install build scikit_build_core
     export SKBUILD_WHEEL_TAG=$(python -m scikit_build_core.builder.wheel_tag)
     python -m build

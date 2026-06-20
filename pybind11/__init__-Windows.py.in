@@ -50,6 +50,7 @@ print(_cc_plugins)
 # ---------------------------------------------------------------------------
 os.add_dll_directory(str(_cc_root))
 os.add_dll_directory(str(_cc_plugins))
+os.environ["PATH"]=os.environ["PATH"] + ";" + os.path.dirname(__file__)
 
 # ---------------------------------------------------------------------------
 # 2b. charger tout de suite les bonnes ddl Qt6
@@ -82,7 +83,16 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.path.dirname(__file_
 # 5. Import du module natif CloudComPy
 # ---------------------------------------------------------------------------
 
-from _cloudComPy import *
+cloudComPyInstallDir = os.path.dirname(__file__)
+# automatic detection: PyPI build if module in site-packages
+is_in_site_packages = "site-packages" in cloudComPyInstallDir
+isPypiBuild = int(is_in_site_packages)
+
+if isPypiBuild:
+    from ._cloudComPy import *
+else:
+    from _cloudComPy import *
+
 initCC()
 initCloudCompare()
 
