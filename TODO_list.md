@@ -236,7 +236,8 @@ TODO List
 - TODO: study convergence with Python plugin
 - TODO: implement missing methods from ManualSegmentationTools
 - TODO: following setPointSize, add other methods for improving rendering in file
-
+- TODO: update documentation and Readme for PyPI
+- TODO: check Q3DMasc on PyPI (Windows)
 
 
 
