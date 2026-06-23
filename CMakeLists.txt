@@ -113,7 +113,7 @@ if(WIN32)
 elseif(APPLE)
     set(ENV_CLOUDCOMPY envCloudComPyMacOS.zsh checkenv.py)
     install(PROGRAMS ${ENV_CLOUDCOMPY}
-            DESTINATION bin
+            DESTINATION cloudComPy
            )
 else()
     set(ENV_CLOUDCOMPY envCloudComPy.sh checkenv.py)

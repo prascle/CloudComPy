@@ -135,6 +135,7 @@ if (APPLE)
 else()
 	set (ENV_SCRIPTS condaCloud.sh)
 endif()
+
 option(USE_CONDA_PACKAGES "Use Conda packages and environment for build: add commands for set/unset run environment" OFF)
 
 # --- Python scripts with added functions
@@ -148,7 +149,7 @@ set(PYTHONAPI_SCRIPTS
 
 if( BUILD_PYPI )
     set(IS_PYPI_BUILD 1)
-    set(CLOUDCOMPY_IMPORT_PREFIX "cloudComPy.")
+    set(CLOUDCOMPY_IMPORT_PREFIX "")  # "cloudComPy.")
 else()
     set(IS_PYPI_BUILD 0)
     set(CLOUDCOMPY_IMPORT_PREFIX "")
@@ -167,8 +168,8 @@ if( WIN32 )
     endif()
 elseif( APPLE )
     configure_file(__init__-macOS.py.in __init__.py @ONLY)
-	message( STATUS "install MacOS PYTHON : ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks" )
-	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/CloudCompare/CloudCompare.app/Contents/Frameworks )
+	message( STATUS "install MacOS PYTHON : ${CMAKE_INSTALL_PREFIX}/cloudComPy/CloudCompare/CloudCompare.app/Contents/Frameworks" )
+	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy/CloudCompare/CloudCompare.app/Contents/Frameworks )
 	install(PROGRAMS ${PYTHONAPI_SCRIPTS} DESTINATION ${CMAKE_INSTALL_PREFIX}/cloudComPy )	
 else()
     configure_file(__init__-Linux.py.in __init__.py @ONLY)

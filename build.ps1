@@ -141,7 +141,7 @@ function Invoke-Configure {
 
     Write-Step "🔧 CMake configure for Python 3.$PyMinor..." "Green"
 
-    conda list > "$SourceDir\building\conda-list_conda3$PyMinor"
+    conda list > "$SourceDir\building\conda-list_Windows11_conda3$PyMinor"
 
     $cmakeArgs = @(
         "-S$SourceDir",
@@ -150,7 +150,7 @@ function Invoke-Configure {
         "-DCMAKE_BUILD_TYPE=$Configuration",
         "-DCMAKE_SHARED_LINKER_FLAGS='/machine:x64 /FORCE:MULTIPLE'",
         "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
-        "-DPYTHON_MIN_VERSION=$PyMinor",
+        "-DPYMINOR=$PyMinor",
         "-DUSE_CONDA_PACKAGES=ON",
         "-DCLOUDCOMPARE_VERSION=$CloudCompareVersion",
         "-DCONDA_BASE_DIRECTORY=$CondaBase",

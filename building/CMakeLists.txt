@@ -21,17 +21,17 @@
 
 if(WIN32)
         set( BUILDING_DOCS
-            conda-list_Windows11_312
+            conda-list_Windows11_conda3${PYMINOR}
             cpy312.yml
             )
 elseif (USE_CONDA_PACKAGES)
     if(APPLE)
         set( BUILDING_DOCS
-            conda-list_macOS_311
+            conda-list_macOS_3${PYMINOR}
             )
     else()
         set( BUILDING_DOCS
-        conda-list_Ubuntu20.04
+            conda-list_Ubuntu20.04_3${PYMINOR}
             )
     endif()
 endif()
