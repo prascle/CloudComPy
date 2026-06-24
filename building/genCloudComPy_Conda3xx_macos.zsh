@@ -1,5 +1,5 @@
 #!/bin/zsh
-pyindex=0
+pyindex=4
 export PYMINVERS=("10" "11" "12" "13" "14")                                                    # Python minor versions to build
 export PYFULLVERS=("3.10.20" "3.11.15" "3.12.13" "3.13.13" "3.14.4")                           # Python full versions to build
 export PYMINOR=${PYMINVERS[$pyindex+1]}                                                          # Python minor version
@@ -43,6 +43,7 @@ conda_buildenv()
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
+    ret=1
     if [ $ret != "0" ]; then
         conda activate && \
         mamba env create -y -n CloudComPy3${PYMINOR} -f CloudComPy3${PYMINOR}Qt6_MacOS.yml && \

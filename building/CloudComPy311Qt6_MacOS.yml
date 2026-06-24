@@ -1,9 +1,9 @@
-name: CloudComPy312
+name: CloudComPy311
 channels:
  - conda-forge
  - nodefaults
 dependencies:
- - python=3.12
+ - python=3.11
  - libboost=1.88
  - cgal-cpp=6.1
  - cmake=4.3
