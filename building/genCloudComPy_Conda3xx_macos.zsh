@@ -234,7 +234,7 @@ cloudcompy_gen_wheel()
     pip install build delocate
     cd ${CLOUDCOMPY_SRC}
     python -m build --wheel
-    delocate-wheel --ignore-missing-dependencies -v dist/*.whl
+    delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v dist/*.whl
     twine check dist/*.whl 
 }
 
