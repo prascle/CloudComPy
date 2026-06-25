@@ -43,7 +43,7 @@ conda_buildenv()
     conda update -y -n base -c defaults conda
     conda activate ${CONDA_ENV}
     ret=$?
-    ret=1
+    #ret=1
     if [ $ret != "0" ]; then
         conda activate && \
         mamba env create -y -n CloudComPy3${PYMINOR} -f CloudComPy3${PYMINOR}Qt6_MacOS.yml && \
@@ -223,6 +223,19 @@ cloudcompy_tarfile()
     cd ${CLOUDCOMPY_INSTNAME} && find . -type d -name __pycache__ -exec rm -rf {} \;
     cd ${CLOUDCOMPY_INSTDIR} && rm -f ${CLOUDCOMPY_TARFILE} &&\
     tar -cvJf ${CLOUDCOMPY_TARFILE} ${CLOUDCOMPY_INSTNAME}
+}
+
+cloudcompy_gen_wheel()
+{
+    echo "# --- generate CloudComPy wheel ---"
+    deactivate
+    conda deactivate
+    source ${PYTHONVENV}/bin/activate
+    pip install build delocate
+    cd ${CLOUDCOMPY_SRC}
+    python -m build --wheel
+    delocate-wheel --ignore-missing-dependencies -v dist/*.whl
+    twine check dist/*.whl 
 }
 
 cloudcompy_test()
