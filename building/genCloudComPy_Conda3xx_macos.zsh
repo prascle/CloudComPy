@@ -231,8 +231,10 @@ cloudcompy_gen_wheel()
     deactivate
     conda deactivate
     source ${PYTHONVENV}/bin/activate
-    pip install build delocate
+    pip install build delocate wheel pkginfo
     cd ${CLOUDCOMPY_SRC}
+    cp -f MacOS/pyproject.toml pyproject.toml
+    cp -f MacOS/setup.py setup.py
     python -m build --wheel
     delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v dist/*.whl
     twine check dist/*.whl 
@@ -253,5 +255,7 @@ python_buildenv &&\
 cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \
-cloudcompy_tarfile && \
+cloudcompy_gen_wheel&& \
 cloudcompy_test
+
+#cloudcompy_tarfile && \

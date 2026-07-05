@@ -1,7 +1,7 @@
 
 
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools==76.1.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,8 +10,6 @@ version = "2.14.0"
 description = "CloudCompare Python bindings"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "GPL-3.0-or-later"
-license-files = ["License.txt"]
 authors = [
   { name = "Paul RASCLE", email = "paul.rascle@openfields.fr" },
 ]
