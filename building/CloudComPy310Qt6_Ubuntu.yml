@@ -27,4 +27,5 @@ dependencies:
  - pybind11=3.0
  - qhull=2020.2
  - qt6-main=6.10
+ - libudev
  - xerces-c=3.3

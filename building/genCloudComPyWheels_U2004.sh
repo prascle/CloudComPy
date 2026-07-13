@@ -18,10 +18,10 @@ genWheel() {
     export PYPATH="${genbase}/install/${pyfullvers[$pyindex]}"
     export PYTHON_VERSION=${pyversions[$pyindex]}
     export PYTVER=${pyvers[$pyindex]}
-    export PYMINVER=${pyminvers[$pyindex]}
+    export PYMINOR=${pyminvers[$pyindex]}
     export VENV_PYTHON="${genbase}/.venv${PYTVER}"
 
-    export CONDA_ENV=CloudComPy3${PYMINVER}                             # conda environment name
+    export CONDA_ENV=CloudComPy3${PYMINOR}                              # conda environment name
     export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                   # conda environment directory
     #export QT_PREFIX=${CONDA_PATH}/lib/qt6                              # prefix for qt (if qt plugins are needed, otherwise set to empty or remove from cmake options)
     export Qt6_DIR=${CONDA_PATH}/lib/cmake/Qt6                          # path to Qt6Config.cmake (if qt plugins are needed, otherwise set to empty or remove from cmake options)
@@ -81,6 +81,7 @@ genWheel() {
     #export OpenMP_omp_LIBRARY="${CONDA_PATH}/lib/libomp.so"
     #export PYTHONAPI_TEST_DIRECTORY="CloudComPy/Data"
     #export PYTHONAPI_EXTDATA_DIRECTORY="CloudComPy/ExternalData"
+    export PYMINOR=${PYMINOR}
     export PYTHON_PREFERED_VERSION=${PYTHON_VERSION}
     export PYTHONVENV_DIR=${VENV_PYTHON}
     export pybind11_DIR=${VENV_PYTHON}/lib/python${PYTHON_VERSION}/site-packages/pybind11/share/cmake/pybind11
