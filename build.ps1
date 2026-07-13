@@ -187,6 +187,8 @@ function Invoke-Configure {
         "-DOPENCASCADE_DLL_DIR=$condaRoot/Library/bin",
         "-DOPENCASCADE_TBB_DLL_DIR=$condaRoot/Library/bin",
         "-DOPTION_BUILD_CCVIEWER=OFF",
+    	"-DOPTION_SUPPORT_3DCONNEXION_DEVICES=ON",
+        "-DOPTION_HID_DEBUG=OFF",
         "-DOPTION_USE_GDAL=1",
         "-DPLUGIN_EXAMPLE_GL=1",
         "-DPLUGIN_EXAMPLE_IO=1",
