@@ -97,9 +97,7 @@ cloudcompy_configure()
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
     -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
-    -DCMAKE_C_FLAGS="-mmacosx-version-min=12.7" \
-    -DCMAKE_CXX_FLAGS="-mmacosx-version-min=12.7" \
-    -DCMAKE_LD_FLAGS="-mmacosx-version-min=12.7" \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
     -DCMAKE_INSTALL_PREFIX:PATH="${CLOUDCOMPY_INSTALL}" \
     -DCMAKE_INSTALL_RPATH="${CLOUDCOMPY_INSTALL}/cloudComPy/CloudCompare/CloudCompare.app/Contents/Frameworks" \
     -DCMAKE_MACOSX_RPATH=ON \
@@ -140,6 +138,8 @@ cloudcompy_configure()
     -DOPENCASCADE_LIB_DIR:PATH="${OPENCASCADE_REP}/lib" \
     -DOPENCASCADE_TBB_DLL_DIR:PATH="${OPENCASCADE_REP}/lib" \
     -DOPTION_BUILD_CCVIEWER:BOOL="0" \
+    -DOPTION_SUPPORT_3DCONNEXION_DEVICES="1" \
+    -DOPTION_HID_DEBUG="0" \
     -DOPTION_USE_GDAL:BOOL="1" \
     -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
     -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.13" \
@@ -240,6 +240,21 @@ cloudcompy_gen_wheel()
     twine check dist/*.whl 
 }
 
+cloudcompy_sign_wheel()
+{
+    echo "# --- sign CloudComPy wheel ---"
+    source ${PYTHONVENV}/bin/activate
+    cd ${CLOUDCOMPY_SRC}/dist
+    rm -rf work/wheel_unpacked
+    mkdir -p work/wheel_unpacked
+    python3 -m wheel unpack cloudcompy-2.14.0-py3-none-any.whl -d work/wheel_unpacked
+    # sign all the .dylib, .so and executable files in the wheel
+    python3 ${CLOUDCOMPY_SRC}/CloudCompare/Scripts/mac/bundle/signatureCloudCompare.py work/wheel_unpacked/cloudcompy-2.14.0/cloudComPy
+    # repack the wheel
+    cd work/wheel_unpacked/cloudcompy-2.14.0
+    ditto -c -k --sequesterRsrc --keepParent . ../../dist/cloudcompy-2.14.0-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+}
+
 cloudcompy_test()
 {
     echo "# --- test CloudComPy ---"
@@ -256,6 +271,7 @@ cloudcompy_setenv && \
 cloudcompy_configure && \
 cloudcompy_build && \
 cloudcompy_gen_wheel&& \
+cloudcompy_sign_wheel && \
 cloudcompy_test
 
 #cloudcompy_tarfile && \
