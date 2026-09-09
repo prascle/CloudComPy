@@ -149,7 +149,11 @@ set(PYTHONAPI_SCRIPTS
 
 if( BUILD_PYPI )
     set(IS_PYPI_BUILD 1)
-    set(CLOUDCOMPY_IMPORT_PREFIX "")  # "cloudComPy.")
+    if ( APPLE )
+        set(CLOUDCOMPY_IMPORT_PREFIX "")
+    else()
+        set(CLOUDCOMPY_IMPORT_PREFIX "cloudComPy.")
+    endif()
 else()
     set(IS_PYPI_BUILD 0)
     set(CLOUDCOMPY_IMPORT_PREFIX "")
