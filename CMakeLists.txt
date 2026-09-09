@@ -31,7 +31,7 @@ if ( BUILD_PYPI )
     #${SKBUILD_PROJECT_NAME}
     #VERSION ${SKBUILD_PROJECT_VERSION}
     CloudComPy
-    VERSION 2.14.0
+    VERSION ${CLOUDCOMPY_VERSION}
     LANGUAGES CXX)
     if (UNIX AND NOT APPLE)
         # set architecture flag to x86-64 (and not native or x86-64-v2) for linux wheel (manylinux) compatibility
@@ -42,7 +42,7 @@ if ( BUILD_PYPI )
 else()
     project(
     CloudComPy
-    VERSION 2.14.0
+    VERSION ${CLOUDCOMPY_VERSION}
     LANGUAGES CXX)
 endif()
 

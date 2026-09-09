@@ -24,6 +24,7 @@ export OPENCASCADE_REP=${CONDA_PATH}                                            
 # export PCLLIB_REP=${HOME}/projets/CloudComPy/pcl/install                               # patch on pcl lib (issue #100): libpcl_common.so
 export NBTHREADS=10                                                                    # number of threads for parallel make
 export CLOUDCOMPARE_VERSION="2.14.beta"                                                # CloudCompare version for documentation sed for doc)
+export CLOUDCOMPY_VERSION="2.14.0"                                                     # CloudComPy version for documentation sed for doc)
 
 . ${CONDA_ROOT}/etc/profile.d/conda.sh                                                 # required to have access to conda commands in a shell script
 
@@ -95,6 +96,7 @@ cloudcompy_configure()
     -DCCCORELIB_USE_QT_CONCURRENT:BOOL="1" \
     -DCCCORELIB_USE_TBB:BOOL="0" \
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
+    -DCLOUDCOMPY_VERSION:STRING="${CLOUDCOMPY_VERSION}" \
     -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
@@ -247,12 +249,12 @@ cloudcompy_sign_wheel()
     cd ${CLOUDCOMPY_SRC}/dist
     rm -rf work/wheel_unpacked
     mkdir -p work/wheel_unpacked
-    python3 -m wheel unpack cloudcompy-2.14.0-py3-none-any.whl -d work/wheel_unpacked
+    python3 -m wheel unpack cloudcompy-${CLOUDCOMPY_VERSION}-py3-none-any.whl -d work/wheel_unpacked
     # sign all the .dylib, .so and executable files in the wheel
-    python3 ${CLOUDCOMPY_SRC}/CloudCompare/Scripts/mac/bundle/signatureCloudCompare.py work/wheel_unpacked/cloudcompy-2.14.0/cloudComPy
+    python3 ${CLOUDCOMPY_SRC}/CloudCompare/Scripts/mac/bundle/signatureCloudCompare.py work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}/cloudComPy
     # repack the wheel
-    cd work/wheel_unpacked/cloudcompy-2.14.0
-    ditto -c -k --sequesterRsrc --keepParent . ../../dist/cloudcompy-2.14.0-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+    cd work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}
+    ditto -c -k --sequesterRsrc --keepParent . ../../dist/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
 }
 
 cloudcompy_test()
