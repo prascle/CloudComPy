@@ -1,5 +1,5 @@
 #!/bin/zsh
-pyindex=4
+pyindex=$1
 export PYMINVERS=("10" "11" "12" "13" "14")                                                    # Python minor versions to build
 export PYFULLVERS=("3.10.20" "3.11.15" "3.12.13" "3.13.13" "3.14.4")                           # Python full versions to build
 export PYMINOR=${PYMINVERS[$pyindex+1]}                                                          # Python minor version
@@ -7,7 +7,7 @@ export PYBASE=${HOME}/projets/CloudComPy/install/${PYFULLVERS[$pyindex+1]}      
 export CLOUDCOMPY_SRC=${HOME}/projets/CloudComPy/CloudComPy                                    # CloudComPy source directory
 export CLOUDCOMPY_BUILD=${HOME}/projets/CloudComPy/buildConda3${PYMINOR}                       # CloudComPy build directory
 export CLOUDCOMPY_INSTDIR=${HOME}/projets/CloudComPy/installConda                              # directory for CloudComPy installs
-export CLOUDCOMPY_INSTNAME=CloudComPy3${PYMINOR}                                               # CloudComPy install directory name
+export CLOUDCOMPY_INSTNAME=CloudComPy_PyPI                                               # CloudComPy install directory name
 export CLOUDCOMPY_INSTALL=${CLOUDCOMPY_INSTDIR}/${CLOUDCOMPY_INSTNAME}                         # CloudComPy install directory
 export CLOUDCOMPY_TARFILE=CloudComPy_Conda3${PYMINOR}_MacOS_"$(date +"%Y%m%d-%H%M")".tar.xz    # CloudComPy Binary tarfile (will be in ${CLOUDCOMPY_INSTDIR}
 
@@ -16,7 +16,8 @@ export CONDA_ENV=CloudComPy3${PYMINOR}                                          
 export CONDA_PATH=${CONDA_ROOT}/envs/${CONDA_ENV}                                      # conda environment directory
 export QT_PREFIX=${CONDA_PATH}/lib/qt6                                                 # prefix for qt (if qt plugins are needed, otherwise set to empty or remove from cmake options)
 
-export PYTHONVENV=${HOME}/projets/CloudComPy/venv3${PYMINOR}doc                        # Python venv for documentation and tests
+export PYTHONVENV=${HOME}/projets/CloudComPy/venv3${PYMINOR}doc                        # Python venv for documentation and building wheel
+export PYTHONTESTENV=${HOME}/projets/CloudComPy/venv3${PYMINOR}test                    # Python venv for tests
 export CORK_REP=${HOME}/projets/CloudComPy/Cork/cork                                   # directory of cork (remove the plugin in cmake options if not needed)
 export FBXSDK_REP="/Applications/Autodesk/FBX SDK/2020.2.1"                            # directory of fbx sdk (remove the plugin in cmake options if not needed)
 export LIBIGL_REP=${HOME}/projets/CloudComPy/libigl                                    # directory of libigl (remove the plugin in cmake options if not needed)
@@ -50,6 +51,7 @@ conda_buildenv()
         mamba env create -y -n CloudComPy3${PYMINOR} -f CloudComPy3${PYMINOR}Qt6_MacOS.yml && \
         conda activate ${CONDA_ENV} || error_exit "conda environment ${CONDA_ENV} cannot be built"
     fi
+    conda deactivate
 }
 
 # --- python venv for documentation and tests
@@ -62,6 +64,7 @@ python_buildenv()
     source ${PYTHONVENV}/bin/activate
     python3 -m pip install --upgrade pip
     pip install numpy scipy requests psutil matplotlib numpy-quaternion pybind11 sphinx-rtd-theme cmake
+    deactivate
 }
 
 
@@ -86,7 +89,6 @@ cloudcompy_configure()
     -S"${CLOUDCOMPY_SRC}" \
     -B"${CLOUDCOMPY_BUILD}" \
     -G"Unix Makefiles" \
-    -DBoost_DIR:PATH="${CONDA_PATH}/lib/cmake/Boost-1.78.0" \
     -DBUILD_PYPI="1" \
     -DBUILD_PY_TESTING:BOOL="1" \
     -DBUILD_REFERENCE_DOC:BOOL="1" \
@@ -229,17 +231,20 @@ cloudcompy_tarfile()
 
 cloudcompy_gen_wheel()
 {
-    echo "# --- generate CloudComPy wheel ---"
+    echo "# --- generate CloudComPy wheel with ${PYTHONVENV} ---"
     deactivate
     conda deactivate
     source ${PYTHONVENV}/bin/activate
+    echo "Python version: $(python --version)"
     pip install build delocate wheel pkginfo
     cd ${CLOUDCOMPY_SRC}
     cp -f MacOS/pyproject.toml pyproject.toml
     cp -f MacOS/setup.py setup.py
+    rm -rf build dist
     python -m build --wheel
     delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v dist/*.whl
     twine check dist/*.whl 
+    deactivate
 }
 
 cloudcompy_sign_wheel()
@@ -254,17 +259,21 @@ cloudcompy_sign_wheel()
     python3 ${CLOUDCOMPY_SRC}/CloudCompare/Scripts/mac/bundle/signatureCloudCompare.py work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}/cloudComPy
     # repack the wheel
     cd work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}
-    ditto -c -k --sequesterRsrc --keepParent . ../../dist/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+    ditto -c -k --sequesterRsrc . ../../../cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+    deactivate
 }
 
 cloudcompy_test()
 {
     echo "# --- test CloudComPy ---"
-    source ${PYTHONVENV}/bin/activate
-    cd ${CLOUDCOMPY_INSTALL} && \
-    source cloudComPy/envCloudComPyMacOS.zsh activate && \
+    rm -rf ${PYTHONTESTENV}
+    ${PYBASE}/bin/python3.${PYMINOR} -m venv ${PYTHONTESTENV}
+    source ${PYTHONTESTENV}/bin/activate
+    python3 -m pip install --upgrade pip
+    cd ${CLOUDCOMPY_SRC}
+    pip install dist/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
     rm -rf ~/CloudComPy/Data && \
-    cd ${CLOUDCOMPY_INSTALL}/cloudComPy/doc/PythonAPI_test && ctest
+    cd ${PYTHONTESTENV}/lib/python3.${PYMINOR}/site-packages/cloudComPy/doc/PythonAPI_test && ctest
 }
 
 conda_buildenv && \

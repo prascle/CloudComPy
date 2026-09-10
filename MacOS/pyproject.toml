@@ -25,10 +25,10 @@ dependencies = [
 
 [tool.setuptools]
 include-package-data = true
-package-dir = {"" = "../installConda/CloudComPy314"}
+package-dir = {"" = "../installConda/CloudComPy_PyPI"}
 
 [tool.setuptools.packages.find]
-where = ["../installConda/CloudComPy314"]
+where = ["../installConda/CloudComPy_PyPI"]
 include = ["cloudComPy*"]
 
 [tool.setuptools.package-data]

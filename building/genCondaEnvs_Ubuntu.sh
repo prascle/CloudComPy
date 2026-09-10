@@ -1,6 +1,6 @@
 echo "# --- build conda environment ---"
 
-cd /home/paul/projets/CloudComPy/CloudComPy/building
+cd $HOME/projets/CloudComPy/CloudComPy/building
 
 conda install -y -n base mamba -c conda-forge
 conda update -y -n base -c defaults conda

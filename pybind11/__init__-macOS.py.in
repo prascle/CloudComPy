@@ -36,6 +36,8 @@ import sys
 from pathlib import Path
 
 cloudComPyInstallDir = os.path.dirname(__file__)
+sys.path.append(os.path.join(cloudComPyInstallDir, "CloudCompare", "CloudCompare.app", "Contents", "Frameworks" ))
+sys.path.append(os.path.join(cloudComPyInstallDir, "doc", "PythonAPI_test" ))
 
 # ---------------------------------------------------------------------------
 # 1. Localisation du dossier CloudCompare (racine de CloudComPy)
@@ -61,7 +63,7 @@ is_in_site_packages = "site-packages" in cloudComPyInstallDir
 isPypiBuild = int(is_in_site_packages)
 
 if isPypiBuild:
-    from ._cloudComPy import *
+    from _cloudComPy import *
 else:
     from _cloudComPy import *
 

@@ -342,7 +342,6 @@ pdal                                    2.10.1              hc364b38_0          
 pdal-plugins                            1.6.6               pypi_0                 pypi
 pexpect                                 4.9.0               pyhd8ed1ab_1           conda-forge
 pillow                                  12.2.0              py314hab283cf_0        conda-forge
-pip                                     26.0.1              pyh145f28c_0           conda-forge
 pixman                                  0.46.4              h81086ad_1             conda-forge
 pkg-config                              0.29.2              hde07d2e_1009          conda-forge
 pkgconfig                               1.6.0               pyhd8ed1ab_0           conda-forge
