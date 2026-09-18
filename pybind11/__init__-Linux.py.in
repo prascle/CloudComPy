@@ -37,6 +37,12 @@ from pathlib import Path
 
 cloudComPyInstallDir = os.path.dirname(__file__)
 sys.path.append(os.path.join(cloudComPyInstallDir, "doc", "PythonAPI_test"))
+if "LD_LIBRARY_PATH" in os.environ:
+    libpath=os.environ["LD_LIBRARY_PATH"].split(':')
+    if cloudComPyInstallDir not in libpath:
+        os.environ["LD_LIBRARY_PATH"]=cloudcompyInstallDir + ':' + os.environ["LD_LIBRARY_PATH"]
+else:
+    os.environ["LD_LIBRARY_PATH"]=cloudComPyInstallDir
 
 # automatic detection: PyPI build if module in site-packages
 is_in_site_packages = "site-packages" in cloudComPyInstallDir
