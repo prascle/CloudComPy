@@ -36,6 +36,7 @@ import sys
 from pathlib import Path
 
 cloudComPyInstallDir = os.path.dirname(__file__)
+sys.path.append(os.path.join(cloudComPyInstallDir, "doc", "PythonAPI_test"))
 
 # automatic detection: PyPI build if module in site-packages
 is_in_site_packages = "site-packages" in cloudComPyInstallDir
