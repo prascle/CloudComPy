@@ -116,7 +116,7 @@ repairWheel() {
     source ${VENV_PYTHON}/bin/activate
     cd "${HOME}/projets/CloudComPy"
     pip install auditwheel
-    auditwheel repair CloudComPy/dist/cloudcompy-2.14.0-cp${PYTVER}-cp${PYTVER}-linux_x86_64.whl \
+    auditwheel repair --plat manylinux_2_31_x86_64 CloudComPy/dist/cloudcompy-2.14.0-cp${PYTVER}-cp${PYTVER}-linux_x86_64.whl \
     --disable-isa-ext-check \
     --exclude 'libX*' \
     --exclude 'libxcb*' \
