@@ -32,6 +32,7 @@ dev = [{ include-group = "test" }]
 
 [tool.scikit-build]
 build-dir = "build/{wheel_tag}"
+#build-dir = "/home/paul/projets/CloudComPy/build/{wheel_tag}"
 cmake.build-type = "Release"
 build.verbose = true
 
@@ -81,7 +82,8 @@ OPENCASCADE_INC_DIR = {env="OPENCASCADE_INC_DIR", default="OPENCASCADE_INC_DIR_n
 OPENCASCADE_LIB_DIR = {env="OPENCASCADE_LIB_DIR", default="OPENCASCADE_LIB_DIR_not_set"}
 OPTION_BUILD_CCVIEWER = false
 OPTION_USE_GDAL = true
-OPTION_SUPPORT_3DCONNEXION_DEVICES = true
+OPTION_SUPPORT_3DMOUSE_WITH_3DxWARE = false
+OPTION_SUPPORT_3DMOUSE_WITH_HIDAPI = true
 OPTION_HID_DEBUG = false
 #OpenMP_omp_LIBRARY = {env="OpenMP_omp_LIBRARY", default="OpenMP_omp_LIBRARY_not_set"}
 PLUGIN_EXAMPLE_GL = true

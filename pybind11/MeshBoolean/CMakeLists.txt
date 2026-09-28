@@ -69,6 +69,7 @@ target_include_directories( ${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../../pybind11
     ${CMAKE_CURRENT_SOURCE_DIR}/../../pyAPI
     ${CMAKE_CURRENT_SOURCE_DIR}/../../CloudCompare/plugins/core/Standard/qMeshBoolean/include
+    ${CMAKE_BINARY_DIR}/CloudCompare/plugins/core/Standard/qMeshBoolean/QMESH_BOOLEAN_PLUGIN_autogen/include
     ${CCCoreLib_SOURCE_DIR}/include
     ${EIGEN_ROOT_DIR}
     ${LIBIGL_INCLUDE_DIR}
