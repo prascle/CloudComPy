@@ -147,7 +147,9 @@ cloudcompy_configure()
     -DOPTION_HID_DEBUG="0" \
     -DOPTION_USE_GDAL:BOOL="1" \
     -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
-    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.13" \
+    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15" \
+    -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16" \
+    -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib" \
     -DPLUGIN_EXAMPLE_GL:BOOL="1" \
     -DPLUGIN_EXAMPLE_IO:BOOL="1" \
     -DPLUGIN_EXAMPLE_STANDARD:BOOL="1" \
@@ -258,6 +260,19 @@ cloudcompy_sign_wheel()
     python3 -m wheel unpack cloudcompy-${CLOUDCOMPY_VERSION}-py3-none-any.whl -d work/wheel_unpacked
     # sign all the .dylib, .so and executable files in the wheel
     python3 ${CLOUDCOMPY_SRC}/CloudCompare/Scripts/mac/bundle/signatureCloudCompare.py work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}/cloudComPy
+
+    APP_PATH="${CLOUDCOMPY_SRC}/dist/work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}"
+    NOWIS=`date "+%Y%m%d_%H%M%S"`
+    ZIP_PATH="${CLOUDCOMPY_SRC}/dist/work/cloudcompy-${CLOUDCOMPY_VERSION}_$NOWIS.zip"
+    # --- notarize and staple cloudCompare.app
+    #     - Create a ZIP archive suitable for notarization.
+    #     - submit for notarization
+    #     - staple the app: message "The staple and validate action worked!"
+    /usr/bin/ditto -c -k -v --keepParent "$APP_PATH" "$ZIP_PATH"
+    xcrun notarytool submit "$ZIP_PATH" --keychain-profile "AC_PASSWORD" --wait
+    xcrun stapler staple ${APP_PATH}/cloudComPy/CloudCompare/CloudCompare.app
+    xcrun stapler validate ${APP_PATH}/cloudComPy/CloudCompare/CloudCompare.app
+
     # repack the wheel
     cd work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}
     ditto -c -k --sequesterRsrc . ../../../cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl

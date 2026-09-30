@@ -45,13 +45,13 @@ brotli-python                           1.2.0               py313hde1f3bb_1     
 bzip2                                   1.0.8               hd037594_9             conda-forge
 c-ares                                  1.34.6              hc919400_0             conda-forge
 c-blosc2                                3.0.1               hf9886e1_0             conda-forge
-ca-certificates                         2026.4.22           hbd8a1cb_0             conda-forge
+ca-certificates                         2026.7.22           hbd8a1cb_0             conda-forge
 cached-property                         1.5.2               hd8ed1ab_1             conda-forge
 cached_property                         1.5.2               pyha770c72_1           conda-forge
 cairo                                   1.18.4              he0f2337_1             conda-forge
 capnproto                               1.4.0               ha5ad7e1_0             conda-forge
 ceres-solver                            2.2.0               cpugplh4fb8927_209     conda-forge
-certifi                                 2026.4.22           pyhd8ed1ab_0           conda-forge
+certifi                                 2026.7.22           pyhd8ed1ab_0           conda-forge
 cffi                                    2.0.0               py313h224173a_1        conda-forge
 cgal-cpp                                6.1.1               hd63ab6d_1             conda-forge
 charset-normalizer                      3.4.7               pyhd8ed1ab_0           conda-forge
@@ -253,7 +253,7 @@ libpdal-tiledb                          2.10.1              h50a397c_2          
 libpdal-trajectory                      2.10.1              ha979107_2             conda-forge
 libplacebo                              7.351.0             h176d363_2             conda-forge
 libpmix                                 5.0.8               he5cd0f0_3             conda-forge
-libpng                                  1.6.58              h132b30e_0             conda-forge
+libpng                                  1.6.58              hf5e6511_1             conda-forge
 libpq                                   18.3                hd341ff2_0             conda-forge
 libprotobuf                             6.33.5              h4a5acfd_0             conda-forge
 libraw                                  0.21.5              h2d05ff4_0             conda-forge
@@ -328,7 +328,7 @@ openjpeg                                2.5.4               hd9e9057_0          
 openjph                                 0.27.0              h2a4d681_0             conda-forge
 openldap                                2.6.13              hf7f56bc_0             conda-forge
 openmpi                                 5.0.10              h899237b_0             conda-forge
-openssl                                 3.6.2               hd24854e_0             conda-forge
+openssl                                 3.6.4               h55eecbc_0             conda-forge
 orc                                     2.3.0               hd11884d_0             conda-forge
 overrides                               7.7.0               pyhd8ed1ab_1           conda-forge
 packaging                               26.2                pyhc364b38_0           conda-forge
