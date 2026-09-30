@@ -1,7 +1,3 @@
-# Python 3.9
-#./genCloudComPyWheels_U2004.sh "gen" 0 0
-#./genCloudComPyWheels_U2004.sh "repair" 0 0
-
 # Python 3.10
 ./genCloudComPyWheels_U2004.sh "gen" 1 1
 ./genCloudComPyWheels_U2004.sh "repair" 1 1

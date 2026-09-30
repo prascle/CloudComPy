@@ -25,7 +25,8 @@ export OPENCASCADE_REP=${CONDA_PATH}                                            
 # export PCLLIB_REP=${HOME}/projets/CloudComPy/pcl/install                               # patch on pcl lib (issue #100): libpcl_common.so
 export NBTHREADS=10                                                                    # number of threads for parallel make
 export CLOUDCOMPARE_VERSION="2.14.beta"                                                # CloudCompare version for documentation sed for doc)
-export CLOUDCOMPY_VERSION="2.14.0"                                                     # CloudComPy version for documentation sed for doc)
+export CLOUDCOMPY_VERSION="2.13.90"                                                    # CloudComPy version for documentation sed for doc)
+export WHEELHOUSE_REPO=${HOME}/projets/CloudComPy/Wheelhouse
 
 . ${CONDA_ROOT}/etc/profile.d/conda.sh                                                 # required to have access to conda commands in a shell script
 
@@ -275,7 +276,7 @@ cloudcompy_sign_wheel()
 
     # repack the wheel
     cd work/wheel_unpacked/cloudcompy-${CLOUDCOMPY_VERSION}
-    ditto -c -k --sequesterRsrc . ../../../cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+    ditto -c -k --sequesterRsrc . ${WHEELHOUSE_REPO}/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
     deactivate
 }
 
@@ -287,7 +288,7 @@ cloudcompy_test()
     source ${PYTHONTESTENV}/bin/activate
     python3 -m pip install --upgrade pip
     cd ${CLOUDCOMPY_SRC}
-    pip install dist/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
+    pip install ${WHEELHOUSE_REPO}/cloudcompy-${CLOUDCOMPY_VERSION}-cp3${PYMINOR}-cp3${PYMINOR}-macosx_13_0_arm64.whl
     rm -rf ~/CloudComPy/Data && \
     cd ${PYTHONTESTENV}/lib/python3.${PYMINOR}/site-packages/cloudComPy/doc/PythonAPI_test && ctest
 }

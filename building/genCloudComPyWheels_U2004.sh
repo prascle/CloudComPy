@@ -10,6 +10,7 @@ pyfullvers=("3.9.25" "3.10.20" "3.11.15" "3.12.13" "3.13.14" "3.14.6")
 export genbase="${HOME}/projets/CloudComPy"
 export CONDA_ROOT=${HOME}/miniconda3                                    # root directory of conda installation
 export REPO_DIR=${genbase}/CloudComPy
+export CLOUDCOMPY_VERSION="2.13.90"
 
 genWheel() {
 
@@ -116,7 +117,7 @@ repairWheel() {
     source ${VENV_PYTHON}/bin/activate
     cd "${HOME}/projets/CloudComPy"
     pip install auditwheel
-    auditwheel repair CloudComPy/dist/cloudcompy-2.14.0-cp${PYTVER}-cp${PYTVER}-linux_x86_64.whl \
+    auditwheel repair CloudComPy/dist/cloudcompy-${CLOUDCOMPY_VERSION}-cp${PYTVER}-cp${PYTVER}-linux_x86_64.whl \
     --disable-isa-ext-check \
     --exclude 'libX*' \
     --exclude 'libxcb*' \
