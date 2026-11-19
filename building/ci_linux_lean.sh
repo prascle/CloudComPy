@@ -150,10 +150,12 @@ cd "${INSTALL}"
 chmod +x cloudComPy/envCloudComPy.sh
 . cloudComPy/envCloudComPy.sh activate
 export QT_QPA_PLATFORM=offscreen
-python3 -c "import cloudComPy; print('cloudComPy import OK:', cloudComPy.__file__)"
+python3 - <<'PYEOF'
 python3 - <<'EOF'
 import cloudComPy as cc
-print("version CloudCompare:", cc.ccLog.Version)
-EOF
+print("cloudComPy import OK:", cc.__file__)
+cc.initCC()  # initialisation CloudComPy (chargement des plugins CloudCompare)
+print("cc.initCC OK")
+PYEOF
 
 echo "# --- J1a: build leger termine avec succes ---"
