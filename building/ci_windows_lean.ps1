@@ -152,10 +152,10 @@ Write-Host "# --- configuration CMake ---"
 if ($LASTEXITCODE -ne 0) { throw "echec de la configuration CMake" }
 
 Write-Host "# --- compilation (ninja) ---"
-& cmake --build "`$BUILD`"
+& cmake --build $BUILD
+if ($LASTEXITCODE -ne 0) { throw "echec de la compilation" }
 
 Write-Host "# --- installation ---"
-& cmake --build $BUILD
 if ($LASTEXITCODE -ne 0) { throw "echec de la compilation" }
 
 Write-Host "# --- installation ---"
