@@ -79,9 +79,10 @@ if res != cc.CC_FERR_NO_ERROR:
 res = cc.SavePointCloud(cloud, os.path.join(dataDir, "cloud.dxf")) # OK
 if res != cc.CC_FERR_NO_ERROR:
     raise RuntimeError
-res = cc.SavePointCloud(cloud, os.path.join(dataDir, "cloud.pcd")) # OK
-if res != cc.CC_FERR_NO_ERROR:
-    raise RuntimeError
+if cc.isPluginPCL():
+    res = cc.SavePointCloud(cloud, os.path.join(dataDir, "cloud.pcd")) # needs the qPCL plugin
+    if res != cc.CC_FERR_NO_ERROR:
+        raise RuntimeError
 res = cc.SavePointCloud(cloud, os.path.join(dataDir, "cloud.shp")) # OK
 if res != cc.CC_FERR_NO_ERROR:
     raise RuntimeError
@@ -179,9 +180,10 @@ clouddxf = cc.loadPointCloud(os.path.join(dataDir, "cloud.dxf"))
 if clouddxf.size() != 10000:
     raise RuntimeError
 
-cloudpcd = cc.loadPointCloud(os.path.join(dataDir, "cloud.pcd"))
-if cloudpcd.size() != 10000:
-    raise RuntimeError
+if cc.isPluginPCL():
+    cloudpcd = cc.loadPointCloud(os.path.join(dataDir, "cloud.pcd"))
+    if cloudpcd.size() != 10000:
+        raise RuntimeError
 
 cloudshp = cc.loadPointCloud(os.path.join(dataDir, "cloud.shp"))
 if cloudshp.size() != 10000:
