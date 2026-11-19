@@ -2387,9 +2387,11 @@ bool ExportGeoTiff_(const QString& outputFilename,
 		return false;
 	}
 
-	// GDAL recent retourne CSLConstList (const char* const*) pour GetMetadata.
-	// const_cast compatible avec les deux generations de gdal.
-	char** papszMetadata = const_cast<char**>(poDriver->GetMetadata());
+#if GDAL_VERSION_NUM >= GDAL_COMPUTE_VERSION(3, 13, 0)
+	CSLConstList papszMetadata = poDriver->GetMetadata();
+#else
+	char** papszMetadata = poDriver->GetMetadata();
+#endif
 	if (!CSLFetchBoolean(papszMetadata, GDAL_DCAP_CREATE, FALSE))
 	{
 		CCTRACE("[GDAL] Driver doesn't support Create() method " << pszFormat);
