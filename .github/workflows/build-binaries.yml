@@ -1,0 +1,61 @@
+name: build-binaries (J1b)
+
+# Jalon J1b: build leger sur les 3 OS + artifacts telechargeables.
+# Sous-jalon courant: J1b-linux (Windows et macOS dans des iterations suivantes).
+# Declenchement: push sur master et tags v*, ou manuellement (workflow_dispatch).
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux leger (Conda 3.12) + artifact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Liberer de l'espace disque
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_Ubuntu.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-linux-312-${{ hashFiles('building/CloudComPy312Qt6_Ubuntu.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, smoke test
+        shell: bash -l {0}
+        run: |
+          eval "$(micromamba shell hook -s bash)"
+          micromamba activate CloudComPy312
+          bash building/ci_linux_lean.sh
+
+      - name: Empaqueter l'installation
+        run: |
+          cd install-ci && find . -type d -name __pycache__ -prune -exec rm -rf {} \;
+          cd .. && tar -cJf cloudcompy-linux64-${GITHUB_SHA::7}.tar.xz -C install-ci .
+
+      - name: Publier l'artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-linux64-${{ github.sha }}
+          path: cloudcompy-linux64-*.tar.xz
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
+
+      - name: Espace disque final
+        if: always()
+        run: df -h /
