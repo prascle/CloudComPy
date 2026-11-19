@@ -156,9 +156,6 @@ Write-Host "# --- compilation (ninja) ---"
 if ($LASTEXITCODE -ne 0) { throw "echec de la compilation" }
 
 Write-Host "# --- installation ---"
-if ($LASTEXITCODE -ne 0) { throw "echec de la compilation" }
-
-Write-Host "# --- installation ---"
 & cmake --install $BUILD
 if ($LASTEXITCODE -ne 0) { throw "echec de l'installation" }
 
