@@ -81,6 +81,22 @@ To install and test a wheel, see [testing wheels](doc/testingWheels.md).
 
 If you'd like to view the instructions for building wheels, go to the [Building Wheels](doc/buildingWheels.md) page.
 
+# Continuous integration (GitHub Actions)
+
+The repository has a `build-check` workflow (`.github/workflows/build-check.yml`), triggered on each pull request and on pushes to `master` and `ci/**` branches (changes to documentation files alone do not trigger it).
+
+This is a **lightweight Linux build** (milestone J1a), for early detection of build regressions:
+
+ - Conda environment `building/CloudComPy312Qt6_Ubuntu.yml` created by micromamba, with cache;
+ - CloudComPy and CloudCompare built with CMake via `building/ci_linux_lean.sh`;
+ - plugins requiring external non-Conda dependencies (cork, FBX SDK, libigl, RDB SDK) are disabled in this CI build;
+ - Python traces (`PYTHONAPI_TRACES`) are enabled, as required by the patched CloudCompare;
+ - the `conda-list_Ubuntu20.04_312` file embedded in the install is regenerated from the build environment, to reflect the packages actually used (for user-side diagnostics);
+ - a smoke test runs after install: the `cloudComPy` Python module is imported (which performs initialization and plugin loading);
+ - execution time: about 13 minutes.
+
+This lightweight build does **not** replace the production builds (conda binaries, PyPI wheels): it is a quick check. Fuller CI builds (other OS, complete plugin set, doc generation) will come in later milestones.
+
 # Production: non wheel binaries requiring a Conda or Python venv environment and a specific setup script
 
 ## CloudComPy: availables non wheel binaries
