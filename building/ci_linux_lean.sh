@@ -63,6 +63,7 @@ cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
     -G"Unix Makefiles" \
+    -DBUILD_REFERENCE_DOC:BOOL="0" \
     -DBUILD_PY_TESTING:BOOL="1" \
     -DBUILD_TESTING:BOOL="1" \
     -DCCCORELIB_SHARED:BOOL="1" \
