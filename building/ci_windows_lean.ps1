@@ -43,8 +43,10 @@ if (-not (Test-Path $vcvars)) { throw "vcvars64.bat introuvable : $vcvars" }
 $output = cmd /c "`"$vcvars`" && set"
 foreach ($line in $output) {
     if ($line -match "^([^=]*)=(.*)$") {
-        if ($Matches[1] -match "^(PATH|INCLUDE|LIB|LIBPATH|TMP|TEMP|CMAKE|C|CXX)[^=]*$") {
-            Set-Item -Path "env:$($Matches[1])" -Value $Matches[2].TrimEnd("`r")
+        $name = $Matches[1]
+        $value = $Matches[2].TrimEnd("`r")
+        if ($name -match "^(PATH|INCLUDE|LIB|LIBPATH|TMP|TEMP|CMAKE|C|CXX)[^=]*$") {
+            Set-Item -Path "env:$name" -Value $value
         }
     }
 }
