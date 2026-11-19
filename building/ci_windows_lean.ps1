@@ -44,11 +44,16 @@ $output = cmd /c "`"$vcvars`" && set"
 foreach ($line in $output) {
     if ($line -match "^([^=]*)=(.*)$") {
         if ($Matches[1] -match "^(PATH|INCLUDE|LIB|LIBPATH|TMP|TEMP|CMAKE|C|CXX)[^=]*$") {
-            Set-Item -Path "env:$($Matches[1])" -Value $Matches[2]
+            Set-Item -Path "env:$($Matches[1])" -Value $Matches[2].TrimEnd("`r")
         }
     }
 }
-Write-Host "cl.exe : $(& where.exe cl.exe)"
+$cl = Get-Command cl.exe -ErrorAction SilentlyContinue
+if ($null -eq $cl) {
+    Write-Host "PATH : $env:PATH"
+    throw "cl.exe introuvable apres chargement de vcvars64"
+}
+Write-Host "cl.exe : $($cl.Source)"
 
 # --- mise a jour de la liste conda-list (diagnostics cote utilisateur) ---
 $condaList = Join-Path $ROOT "building\conda-list_Windows11_3$PyMinor"
