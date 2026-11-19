@@ -151,7 +151,9 @@ $cmakeArgs = @(
     "-DPYTHONVENV_DIR=$CondaRoot",
     "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
     "-DREPO_DIR=$ROOT",
-    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0"
+    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
+    # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
+    "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"
 )
 
 Write-Host "# --- configuration CMake ---"
