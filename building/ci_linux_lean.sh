@@ -152,9 +152,9 @@ chmod +x cloudComPy/envCloudComPy.sh
 export QT_QPA_PLATFORM=offscreen
 python3 - <<'PYEOF'
 import cloudComPy as cc
-print("cloudComPy import OK:", cc.__file__)
-cc.initCC()  # initialisation CloudComPy (chargement des plugins CloudCompare)
-print("cc.initCC OK")
+# l import de cloudComPy execute deja l initialisation (initCC) et le chargement
+# des plugins CloudCompare (cf. pybind11/__init__-Linux.py.in)
+print("cloudComPy import et init OK:", cc.__file__)
 PYEOF
 
 echo "# --- J1a: build leger termine avec succes ---"
