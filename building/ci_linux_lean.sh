@@ -151,7 +151,6 @@ chmod +x cloudComPy/envCloudComPy.sh
 . cloudComPy/envCloudComPy.sh activate
 export QT_QPA_PLATFORM=offscreen
 python3 - <<'PYEOF'
-python3 - <<'EOF'
 import cloudComPy as cc
 print("cloudComPy import OK:", cc.__file__)
 cc.initCC()  # initialisation CloudComPy (chargement des plugins CloudCompare)
