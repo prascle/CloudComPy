@@ -1,7 +1,7 @@
 name: build-binaries (J1b)
 
 # Jalon J1b: build leger sur les 3 OS + artifacts telechargeables.
-# Sous-jalon courant: J1b-linux (Windows et macOS dans des iterations suivantes).
+# Sous-jalon courant: J1b-windows (Linux termine, macOS dans une iteration suivante).
 # Declenchement: push sur master et tags v*, ou manuellement (workflow_dispatch).
 
 on:
@@ -60,3 +60,45 @@ jobs:
       - name: Espace disque final
         if: always()
         run: df -h /
+
+  windows:
+    name: Windows leger (Conda 3.12) + artifact
+    runs-on: windows-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_Windows.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-windows-312-${{ hashFiles('building/CloudComPy312Qt6_Windows.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, smoke test
+        shell: pwsh
+        run: |
+          micromamba shell hook -s powershell | Out-String | Invoke-Expression
+          micromamba activate CloudComPy312
+          & .\building\ci_windows_lean.ps1
+
+      - name: Empaqueter l'installation
+        shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -Directory -Filter __pycache__ install-ci | Remove-Item -Recurse -Force
+          $sha7 = '${{ github.sha }}'.Substring(0, 7)
+          Compress-Archive -Path install-ci\* -DestinationPath "cloudcompy-win64-$sha7.zip" -Force
+
+      - name: Publier l'artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-win64-${{ github.sha }}
+          path: cloudcompy-win64-*.zip
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
