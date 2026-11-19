@@ -25,6 +25,8 @@
 # Differences avec le build de production (genCloudComPy_Conda3xx_Ubuntu2004.sh):
 #  - pas de dependances externes non-Conda (cork, FBX SDK, libigl, RDB SDK):
 #    les plugins qui les exigent sont desactives
+#  - PYTHONAPI_TRACES=ON obligatoire: le main.cpp de CloudCompare patche appelle
+#    ccLogTrace::settrace() sans garde #ifdef (declared seulement si _PYTHONAPI_DEBUG_)
 #  - pas de generation de documentation
 #  - smoke test d'import a la place de la batterie complete de tests
 #
@@ -117,7 +119,7 @@ cmake \
     -DPLUGIN_STANDARD_QRANSAC_SD:BOOL="1" \
     -DPLUGIN_STANDARD_QSRA:BOOL="1" \
     -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
-    -DPYTHONAPI_TRACES:BOOL="0" \
+    -DPYTHONAPI_TRACES:BOOL="1" \
     -DPYTHON_PREFERED_VERSION:STRING="3.12" \
     -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
