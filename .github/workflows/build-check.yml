@@ -1,0 +1,63 @@
+name: build-check (J1a)
+
+# Jalon J1a: build "leger" CloudComPy sur Linux (runner ubuntu-24.04).
+# Build Conda Python 3.12, plugins a dependances externes non-Conda desactives.
+# Smoke test d'import a la fin. Les autres OS et le build complet (J1b)
+# viendront dans des iterations separees.
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'doc/**'
+      - 'sphinxDoc/**'
+  push:
+    branches:
+      - master
+      - 'ci/**'
+    paths-ignore:
+      - '**.md'
+      - 'doc/**'
+      - 'sphinxDoc/**'
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Linux leger (Conda 3.12)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Liberer de l'espace disque
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+
+      - name: Espace disque initial
+        run: df -h /
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_Ubuntu.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-linux-312-${{ hashFiles('building/CloudComPy312Qt6_Ubuntu.yml') }}
+          cache-downloads: true
+
+      - name: Espace disque apres creation de l'environnement Conda
+        run: df -h /
+
+      - name: Configuration, compilation, installation, smoke test
+        shell: bash -l {0}
+        run: |
+          eval "$(micromamba shell hook -s bash)"
+          micromamba activate CloudComPy312
+          bash building/ci_linux_lean.sh
+
+      - name: Espace disque final
+        if: always()
+        run: df -h /
