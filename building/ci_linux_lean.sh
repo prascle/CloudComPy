@@ -38,6 +38,7 @@ set -e
 
 CLOUDCOMPARE_VERSION="${CLOUDCOMPARE_VERSION:-2.14.beta}"
 CONDA_ENV_NAME="${CONDA_ENV_NAME:-CloudComPy312}"
+PYMINOR="${PYMINOR:-12}"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD="${ROOT}/build-ci"
@@ -49,6 +50,10 @@ echo "sources : ${ROOT}"
 echo "build   : ${BUILD}"
 echo "install : ${INSTALL}"
 echo "conda   : ${CONDA_PATH} (${CONDA_ENV_NAME})"
+
+# maj de la liste conda-list depuis l'environnement reellement utilise au build,
+# pour les diagnostics cote utilisateur (comportement de la procedure de production)
+micromamba list > "${ROOT}/building/conda-list_Ubuntu20.04_3${PYMINOR}"
 
 rm -rf "${BUILD}" "${INSTALL}"
 mkdir -p "${BUILD}"
