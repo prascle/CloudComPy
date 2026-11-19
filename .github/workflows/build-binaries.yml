@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - master
+      - ci/j1b-binaries  # temporaire: test de l'artifact avant fusion, a retirer avant la PR
     tags:
       - 'v*'
   workflow_dispatch:
