@@ -173,6 +173,7 @@ Write-Host "# --- installation ---"
 & cmake --install $BUILD
 if ($LASTEXITCODE -ne 0) { throw "echec de l'installation" }
 
+Write-Host "# --- smoke test : import cloudComPy ---"
 # layout Windows non-BUILD_PYPI : _cloudComPy.pyd et plugins dans install-ci\CloudCompare,
 # package cloudComPy dans install-ci\CloudCompare\cloudComPy. Le script d'activation
 # envCloudComPy.bat ne fait pas partie de l'install lean : en Windows non-BUILD_PYPI,
