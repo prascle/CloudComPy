@@ -7,6 +7,7 @@
 #  - BUILD_REFERENCE_DOC=0 : pas de generation de documentation
 #  - pas de packaging wheel/7z ni de batterie CTest : pris en charge par le workflow
 #  - smoke test d'import a la place des tests complets
+#  - INSTALL_PREREQUISITE_LIBRARIES=0 comme build.ps1 (prerequis fournis par l'environnement Conda)
 #
 # Le script suppose l'environnement Conda deja active (micromamba activate CloudComPy312)
 # et le toolkit MSVC charge depuis vcvars64 (via vswhere).
@@ -65,20 +66,6 @@ if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
 if (Test-Path $INSTALL) { Remove-Item -Recurse -Force $INSTALL }
 New-Item -ItemType Directory -Force $BUILD | Out-Null
 
-# --- repertoire de dll TBB pour qStepCADImport ---
-# le plugin attend tbb.dll et tbbmalloc.dll ; le paquet conda-forge tbb ne livre
-# que tbb12.dll / tbbmalloc.dll (nommage oneTBB) : on fournit des copies renommees.
-$TbbDir = Join-Path $ROOT "build-ci\tbb-dlls"
-New-Item -ItemType Directory -Force $TbbDir | Out-Null
-$tbbReal = Join-Path $Library "bin\tbb.dll"
-$tbb12 = Join-Path $Library "bin\tbb12.dll"
-if (Test-Path $tbbReal) { Copy-Item $tbbReal (Join-Path $TbbDir "tbb.dll") -Force }
-elseif (Test-Path $tbb12) { Copy-Item $tbb12 -Destination (Join-Path $TbbDir "tbb.dll") -Force }
-else { throw "tbb introuvable dans $Library\bin" }
-$tbbMalloc = Join-Path $Library "bin\tbbmalloc.dll"
-if (Test-Path $tbbMalloc) { Copy-Item $tbbMalloc -Destination (Join-Path $TbbDir "tbbmalloc.dll") -Force }
-else { Copy-Item (Join-Path $TbbDir "tbb.dll") -Destination (Join-Path $TbbDir "tbbmalloc.dll") -Force }
-
 $cmakeArgs = @(
     "-S$ROOT",
     "-B$BUILD",
@@ -107,13 +94,17 @@ $cmakeArgs = @(
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
     "-DMPIR_INCLUDE_DIR=$Library/include",
     "-DMPIR_RELEASE_LIBRARY_FILE=$Library/lib/mpir.lib",
+    # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
+    # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt
+    # (noms pre-OpenCASCADE 7.8 : TKSTEP.dll etc.) et la regle copy_files de qStepCADImport.
+    "-DINSTALL_PREREQUISITE_LIBRARIES=0",
     "-DOPENCASCADE_78_OR_NEWER=1",
     "-DOPENCASCADE_INC_DIR=$Library/include/opencascade",
     "-DOPENCASCADE_LIB_DIR=$Library/lib",
     "-DOPENCASCADE_DLL_DIR=$Library/bin",
-    "-DOPENCASCADE_TBB_DLL_DIR=$TbbDir",
+    "-DOPENCASCADE_TBB_DLL_DIR=$Library/bin",
     "-DOPTION_BUILD_CCVIEWER=OFF",
-    "-DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE=OFF",
+    "-DOPTION_SUPPORT_3DMOUSE_WITH_3DWARE=OFF",
     "-DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI=ON",
     "-DOPTION_HID_DEBUG=OFF",
     "-DOPTION_USE_GDAL=1",
