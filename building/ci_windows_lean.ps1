@@ -59,7 +59,7 @@ if ($null -eq $cl) {
 Write-Host "cl.exe : $($cl.Source)"
 
 # --- mise a jour de la liste conda-list (diagnostics cote utilisateur) ---
-$condaList = Join-Path $ROOT "building\conda-list_Windows11_3$PyMinor"
+$condaList = Join-Path $ROOT "building\conda-list_Windows11_conda3$PyMinor"
 & micromamba list | Out-File -FilePath $condaList -Encoding utf8
 
 if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
