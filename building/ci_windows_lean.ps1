@@ -65,6 +65,20 @@ if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
 if (Test-Path $INSTALL) { Remove-Item -Recurse -Force $INSTALL }
 New-Item -ItemType Directory -Force $BUILD | Out-Null
 
+# --- repertoire de dll TBB pour qStepCADImport ---
+# le plugin attend tbb.dll et tbbmalloc.dll ; le paquet conda-forge tbb ne livre
+# que tbb12.dll / tbbmalloc.dll (nommage oneTBB) : on fournit des copies renommees.
+$TbbDir = Join-Path $ROOT "build-ci\tbb-dlls"
+New-Item -ItemType Directory -Force $TbbDir | Out-Null
+$tbbReal = Join-Path $Library "bin\tbb.dll"
+$tbb12 = Join-Path $Library "bin\tbb12.dll"
+if (Test-Path $tbbReal) { Copy-Item $tbbReal (Join-Path $TbbDir "tbb.dll") -Force }
+elseif (Test-Path $tbb12) { Copy-Item $tbb12 -Destination (Join-Path $TbbDir "tbb.dll") -Force }
+else { throw "tbb introuvable dans $Library\bin" }
+$tbbMalloc = Join-Path $Library "bin\tbbmalloc.dll"
+if (Test-Path $tbbMalloc) { Copy-Item $tbbMalloc -Destination (Join-Path $TbbDir "tbbmalloc.dll") -Force }
+else { Copy-Item (Join-Path $TbbDir "tbb.dll") -Destination (Join-Path $TbbDir "tbbmalloc.dll") -Force }
+
 $cmakeArgs = @(
     "-S$ROOT",
     "-B$BUILD",
@@ -97,7 +111,7 @@ $cmakeArgs = @(
     "-DOPENCASCADE_INC_DIR=$Library/include/opencascade",
     "-DOPENCASCADE_LIB_DIR=$Library/lib",
     "-DOPENCASCADE_DLL_DIR=$Library/bin",
-    "-DOPENCASCADE_TBB_DLL_DIR=$Library/bin",
+    "-DOPENCASCADE_TBB_DLL_DIR=$TbbDir",
     "-DOPTION_BUILD_CCVIEWER=OFF",
     "-DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE=OFF",
     "-DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI=ON",
