@@ -173,10 +173,23 @@ Write-Host "# --- installation ---"
 & cmake --install $BUILD
 if ($LASTEXITCODE -ne 0) { throw "echec de l'installation" }
 
-Write-Host "# --- smoke test : import cloudComPy ---"
+# layout Windows non-BUILD_PYPI : _cloudComPy.pyd et plugins dans install-ci\CloudCompare,
+# package cloudComPy dans install-ci\CloudCompare\cloudComPy. Le script d'activation
+# envCloudComPy.bat ne fait pas partie de l'install lean : en Windows non-BUILD_PYPI,
+# pybind11/CMakeLists.txt n'installe aucun ENV_SCRIPTS sur Windows (condaCloud.sh
+# est Linux/macOS uniquement).
+# __init__-Windows.py charge explicitement, par chemins absolus, Qt6Core/Gui/Widgets/
+# OpenGL/OpenGLWidgets.dll depuis le dossier racine du module : copie partielle depuis
+# le Conda apres install (pas de windeployqt complet, headless D11 inchange).
+$ccDir = Join-Path $INSTALL "CloudCompare"
+$qtDlls = @("Qt6Core", "Qt6Gui", "Qt6Widgets", "Qt6OpenGL", "Qt6OpenGLWidgets")
+foreach ($d in $qtDlls) {
+    Copy-Item (Join-Path $Library ("bin\" + $d + ".dll")) $ccDir -Force
+}
 $smoke = Join-Path $BUILD "smoke_test_ci.py"
 Set-Content -Path $smoke -Value "import cloudComPy as cc", "print('cloudComPy import et init OK:', cc.__file__)"
-cmd /c "pushd `"$INSTALL\cloudComPy`" && envCloudComPy.bat activate && python `"$smoke`""
+$env:PYTHONPATH = Join-Path $INSTALL "CloudCompare"
+& python "$smoke"
 if ($LASTEXITCODE -ne 0) { throw "echec du smoke test d'import cloudComPy" }
 
 Write-Host "# --- J1b Windows : build leger termine avec succes ---"
