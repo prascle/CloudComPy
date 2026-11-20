@@ -174,18 +174,22 @@ Write-Host "# --- installation ---"
 if ($LASTEXITCODE -ne 0) { throw "echec de l'installation" }
 
 Write-Host "# --- smoke test : import cloudComPy ---"
-# layout Windows non-BUILD_PYPI : _cloudComPy.pyd et plugins dans install-ci\CloudCompare,
-# package cloudComPy dans install-ci\CloudCompare\cloudComPy. Le script d'activation
-# envCloudComPy.bat ne fait pas partie de l'install lean : en Windows non-BUILD_PYPI,
-# pybind11/CMakeLists.txt n'installe aucun ENV_SCRIPTS sur Windows (condaCloud.sh
-# est Linux/macOS uniquement).
-# __init__-Windows.py charge explicitement, par chemins absolus, Qt6Core/Gui/Widgets/
-# OpenGL/OpenGLWidgets.dll depuis le dossier racine du module : copie partielle depuis
-# le Conda apres install (pas de windeployqt complet, headless D11 inchange).
+# __init__-Windows.py est concu pour le layout wheel : il exige que les dossier et fichiers
+# suivants existent DANS le package cloudComPy (sinon os.add_dll_directory leve FileNotFoundError
+# et ctypes.WinDLL echoue) : plugins\, et les 5 dll Qt6Core/Gui/Widgets/OpenGL/OpenGLWidgets.
+# En non-BUILD_PYPI, le pyd et les dll restent dans CloudCompare\ : on complete le package
+# apres install (copie partielle, pas de windeployqt complet, headless D11 inchange).
 $ccDir = Join-Path $INSTALL "CloudCompare"
+$pkg = Join-Path $ccDir "cloudComPy"
+New-Item -ItemType Directory -Force (Join-Path $pkg "plugins") | Out-Null
 $qtDlls = @("Qt6Core", "Qt6Gui", "Qt6Widgets", "Qt6OpenGL", "Qt6OpenGLWidgets")
 foreach ($d in $qtDlls) {
-    Copy-Item (Join-Path $Library ("bin\" + $d + ".dll")) $ccDir -Force
+    Copy-Item (Join-Path $Library ("bin\" + $d + ".dll")) $pkg -Force
+}
+# plugins natifs CloudCompare installes dans CloudCompare\plugins : les recopier dans le package
+$ccPlugins = Join-Path $ccDir "plugins"
+if (Test-Path $ccPlugins) {
+    Copy-Item (Join-Path $ccPlugins "*") (Join-Path $pkg "plugins") -Recurse -Force
 }
 $smoke = Join-Path $BUILD "smoke_test_ci.py"
 Set-Content -Path $smoke -Value "import cloudComPy as cc", "print('cloudComPy import et init OK:', cc.__file__)"
