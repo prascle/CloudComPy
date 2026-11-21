@@ -191,10 +191,44 @@ $ccPlugins = Join-Path $ccDir "plugins"
 if (Test-Path $ccPlugins) {
     Copy-Item (Join-Path $ccPlugins "*") (Join-Path $pkg "plugins") -Recurse -Force
 }
-$smoke = Join-Path $BUILD "smoke_test_ci.py"
-Set-Content -Path $smoke -Value "import cloudComPy as cc", "print('cloudComPy import et init OK:', cc.__file__)"
+# smoke test instrumente : le run precedent a gelé sans aucune sortie (tué après 3 h).
+# - sortie non bufferisée + jalons d'impression pour localiser l'étape bloquante ;
+# - chien de garde : au bout de 10 minutes le processus est tué et la sortie partielle
+#   est affichée ;
+# - QT_QPA_PLATFORM=offscreen pour éviter toute dépendance à un plugin plateforme
+#   si un QApplication est créé à l'init.
 $env:PYTHONPATH = Join-Path $INSTALL "CloudCompare"
-& python "$smoke"
-if ($LASTEXITCODE -ne 0) { throw "echec du smoke test d'import cloudComPy" }
+$env:QT_QPA_PLATFORM = "offscreen"
+$smoke = Join-Path $BUILD "smoke_test_ci.py"
+$smokeOut = Join-Path $BUILD "smoke_test_ci.out"
+$smokeErr = Join-Path $BUILD "smoke_test_ci.err"
+Set-Content -Path $smoke -Value @(
+    "print('etape 1 : import du module natif _cloudComPy', flush=True)",
+    "import _cloudComPy as m",
+    "print('etape 2 : initCC()', flush=True)",
+    "m.initCC()",
+    "print('etape 3 : initCloudCompare()', flush=True)",
+    "m.initCloudCompare()",
+    "print('etape 4 : import du package cloudComPy', flush=True)",
+    "import cloudComPy as cc",
+    "print('cloudComPy import et init OK:', cc.__file__, flush=True)"
+)
+Write-Host "# --- smoke test : import cloudComPy (instrumenté, watchdog 10 min) ---"
+$proc = Start-Process -FilePath "python" -ArgumentList "-u", "`"$smoke`"" -NoNewWindow -PassThru `
+    -RedirectStandardOutput $smokeOut -RedirectStandardError $smokeErr
+if (-not $proc.WaitForExit(600000)) {
+    try { $proc.Kill() } catch { Stop-Process -Id $proc.Id -Force -ErrorAction Ignore }
+    Write-Host "### SMOKE TEST : TIMEOUT (ETAPE BLOQUANTE VOIR CI-DESSOUS) ###"
+    Write-Host "--- stdout partiel ---"
+    Get-Content $smokeOut -ErrorAction Ignore
+    Write-Host "--- stderr partiel ---"
+    Get-Content $smokeErr -ErrorAction Ignore
+    throw "timeout du smoke test d'import cloudComPy (etape bloquante voir ci-dessus)"
+}
+Write-Host "--- stdout ---"
+Get-Content $smokeOut -ErrorAction Ignore
+Write-Host "--- stderr ---"
+Get-Content $smokeErr -ErrorAction Ignore
+if ($proc.ExitCode -ne 0) { throw "echec du smoke test d'import cloudComPy (code $($proc.ExitCode))" }
 
 Write-Host "# --- J1b Windows : build leger termine avec succes ---"
