@@ -1,7 +1,7 @@
 name: build-binaries (J1b)
 
 # Jalon J1b: build leger sur les 3 OS + artifacts telechargeables.
-# Sous-jalon courant: J1b-windows (Linux termine, macOS dans une iteration suivante).
+# Sous-jalon courant: J1b-mac (Linux et Windows termines).
 # Declenchement: push sur master et tags v*, ou manuellement (workflow_dispatch).
 
 on:
@@ -102,3 +102,42 @@ jobs:
           path: cloudcompy-win64-*.zip
           retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
           if-no-files-found: error
+
+  macos:
+    name: macOS leger (Conda 3.12) + wheel artifact
+    runs-on: macos-14
+    timeout-minutes: 120
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_macOS.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-macos-312-${{ hashFiles('building/CloudComPy312Qt6_macOS.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, wheel, smoke test
+        shell: bash -l {0}
+        run: |
+          eval "$(micromamba shell hook -s bash)"
+          micromamba activate CloudComPy312
+          zsh building/ci_macos_lean.zsh
+
+      - name: Publier l'artifact (wheel)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-macos-arm64-${{ github.sha }}
+          path: dist/cloudcompy-*.whl
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
+
+      - name: Espace disque final
+        if: always()
+        run: df -h /
