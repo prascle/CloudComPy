@@ -191,6 +191,21 @@ $ccPlugins = Join-Path $ccDir "plugins"
 if (Test-Path $ccPlugins) {
     Copy-Item (Join-Path $ccPlugins "*") (Join-Path $pkg "plugins") -Recurse -Force
 }
+# consolidation du layout (cf. fusion avec le layout wheel) : le CMake legacy
+# non-PyPI installe aussi des docs dans $INSTALL\cloudComPy\doc (dossier cloudComPy
+# fantome a la racine, sans __init__.py, qui capte l'import cloudComPy et n'importe
+# rien si la racine est dans PYTHONPATH) et dans $INSTALL\doc. On fusionne tout dans
+# le doc du package, et on supprime les deux dossiers fantomes.
+$pkgDoc = Join-Path $pkg "doc"
+New-Item -ItemType Directory -Force $pkgDoc | Out-Null
+foreach ($docSrc in @((Join-Path $INSTALL "cloudComPy\doc"), (Join-Path $INSTALL "doc"))) {
+    if (Test-Path $docSrc) {
+        Copy-Item (Join-Path $docSrc "*") $pkgDoc -Recurse -Force
+    }
+}
+Remove-Item (Join-Path $INSTALL "cloudComPy") -Recurse -Force -ErrorAction Ignore
+Remove-Item (Join-Path $INSTALL "doc") -Recurse -Force -ErrorAction Ignore
+
 # smoke test instrumente : le run precedent a gelé sans aucune sortie (tué après 3 h).
 # - sortie non bufferisée + jalons d'impression pour localiser l'étape bloquante ;
 # - chien de garde : au bout de 10 minutes le processus est tué et la sortie partielle
