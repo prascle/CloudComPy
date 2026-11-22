@@ -80,7 +80,7 @@ cmake \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
-    -DCMAKE_INSTALL_RPATH="${INSTALL}/cloudComPy/CloudCompare/CloudCompare.app/Contents/Frameworks" \
+    -DCMAKE_INSTALL_RPATH="@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;${CONDA_PATH}/lib" \
     -DCMAKE_MACOSX_RPATH=ON \
     -DCONDA_LIBS:PATH="${CONDA_PATH}/lib" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
