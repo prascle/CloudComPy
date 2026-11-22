@@ -227,10 +227,10 @@ max_attempts=8
 while true; do
     set +e
     out="$(delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v ${exclude_args} dist/*.whl 2>&1)"
-    status=$?
+    dl_rc=$?
     set -e
     echo "${out}"
-    if [ ${status} -eq 0 ]; then
+    if [ ${dl_rc} -eq 0 ]; then
         break
     fi
     culprit="$(echo "${out}" | grep -o 'same basename as: [^[:space:]]*' | tail -1 | sed 's/same basename as: //')"
