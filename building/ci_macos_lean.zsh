@@ -249,7 +249,8 @@ deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
 echo "### smoke test debut"
-export QT_QPA_PLATFORM=offscreen
+# QT_QPA_PLATFORM non force (le wheel mac n\éembarque que le plugin cocoa ;
+# pas de probleme connu de librairies graphiques sur mac, on laisse le defaut)
 python3 -m venv "${ROOT}/venv-test"
 source "${ROOT}/venv-test/bin/activate"
 python -m pip install --upgrade pip
