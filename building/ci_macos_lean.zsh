@@ -211,8 +211,37 @@ python -m build --wheel
 # runtime (fallback @loader_path dans le wheel) avant publication de l'artifact.
 rm -rf "${BUILD}"
 rm -rf "${INSTALL}"
-delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v dist/*.whl
-twine check dist/*.whl
+# diagnostic : dependances externes les plus frequentes du wheel (comptees),
+# et focus sur les libs d'imagerie souvent dupliquees entre paquets Conda.
+delocate-listdeps --all dist/*.whl | sort | uniq -c | sort -rn | head -80 || true
+delocate-listdeps --all dist/*.whl | grep -Ei "jpeg|png|freetype" | sort -u | head -60 || true
+
+# delocate tolerant : en cas de collision "Already planning to copy library with
+# same basename" (deux requerants resolvent la meme lib vers deux chemins externes
+# distincts), on exclut le basename en cause (exclusion = lib NON recopiee,
+# dependance non reecrite) et on recommence. Le smoke test statue ensuite sur la
+# validite reellement fonctionnelle du wheel (une exclusion ne doit pas casser import).
+exclude_args=()
+attempt=1
+max_attempts=8
+while true; do
+    set +e
+    out="$(delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v ${exclude_args} dist/*.whl 2>&1)"
+    status=$?
+    set -e
+    echo "${out}"
+    if [ ${status} -eq 0 ]; then
+        break
+    fi
+    culprit="$(echo "${out}" | grep -o 'same basename as: [^[:space:]]*' | tail -1 | sed 's/same basename as: //')"
+    if [ -z "${culprit}" ] || [ ${attempt} -ge ${max_attempts} ]; then
+        echo "delocate : echec non reparable par exclusion (tentative ${attempt}) / ${culprit}"
+        exit 1
+    fi
+    echo "### collision basename : ${culprit} -> exclusion pour la tentative suivante"
+    exclude_args+=("-e" "${culprit}")
+    attempt=$((attempt+1))
+donetwine check dist/*.whl
 deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
