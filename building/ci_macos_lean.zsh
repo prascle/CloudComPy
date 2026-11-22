@@ -241,7 +241,8 @@ while true; do
     echo "### collision basename : ${culprit} -> exclusion pour la tentative suivante"
     exclude_args+=("-e" "${culprit}")
     attempt=$((attempt+1))
-donetwine check dist/*.whl
+done
+twine check dist/*.whl
 deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
