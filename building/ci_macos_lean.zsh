@@ -249,12 +249,32 @@ deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
 echo "### smoke test debut"
+export DYLD_PRINT_LIBRARIES=1
 # QT_QPA_PLATFORM non force (le wheel mac n'embarque que le plugin cocoa ;
 # pas de probleme connu de librairies graphiques sur mac, on laisse le defaut)
 python3 -m venv "${ROOT}/venv-test"
 source "${ROOT}/venv-test/bin/activate"
 python -m pip install --upgrade pip
 pip install "${ROOT}"/dist/cloudcompy-*.whl
+# --- diagnostic Mach-O : identifier qui charge la Qt Conda ---
+SP="$(pip show cloudcompy | sed -n 's/^Location: //p')"
+echo "### site-packages: ${SP}"
+echo "### contenu .dylibs (40 premiers)":
+ls "${SP}/cloudComPy/.dylibs" | head -40 || true
+QC="$(find "${SP}/cloudComPy" -name "libqcocoa*.dylib" | head -1)"
+SO="$(find "${SP}/cloudComPy" -name "_cloudComPy*.so" | head -1)"
+echo "### qcocoa: ${QC}"
+echo "### otool -L qcocoa:"
+otool -L "${QC}" || true
+echo "### rpaths qcocoa:"
+otool -l "${QC}" | grep -A2 LC_RPATH || true
+echo "### rpaths _cloudComPy.so:"
+otool -l "${SO}" | grep -A2 LC_RPATH || true
+echo "### deps de libQt6Core delocatee:"
+otool -L "${SP}/cloudComPy/.dylibs/libQt6Core.6.10.2.dylib" | head -12 || true
+echo "### rpaths de libQt6Core delocatee:"
+otool -l "${SP}/cloudComPy/.dylibs/libQt6Core.6.10.2.dylib" | grep -A2 LC_RPATH || true
+echo "### fin diagnostic Mach-O"
 python - <<'PYEOF'
 print("etape 1 : import du package cloudComPy", flush=True)
 import cloudComPy as cc
