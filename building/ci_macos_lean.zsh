@@ -228,7 +228,7 @@ attempt=1
 max_attempts=8
 while true; do
     set +e
-    out="$(delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v ${exclude_args} dist/*.whl 2>&1)"
+    out="$(delocate-wheel --ignore-missing-dependencies -v ${exclude_args} dist/*.whl 2>&1)"
     dl_rc=$?
     set -e
     echo "${out}"
