@@ -200,6 +200,17 @@ cp -f MacOS/pyproject.toml pyproject.toml
 cp -f MacOS/setup.py setup.py
 rm -rf build dist
 python -m build --wheel
+# delocate resout les references @rpath vers les LC_RPATH absolus des binaires
+# (CMAKE_INSTALL_RPATH...) : tant que les arbres reels existent hors du wheel,
+# il planifie de COPIER les libs CC (ex. libQCC_GL_LIB.dylib) depuis deux
+# emplacements distincts (build-ci et installConda) -> collision "Already
+# planning to copy library with same basename". Les arbres etant la source du
+# wheel, on les supprime apres 'python -m build' : les references deviennent
+# irresolubles et tolerees par --ignore-missing-dependencies, la lib restant
+# dans le wheel (Frameworks du bundle). Le smoke test valide la resolution
+# runtime (fallback @loader_path dans le wheel) avant publication de l'artifact.
+rm -rf "${BUILD}"
+rm -rf "${INSTALL}"
 delocate-wheel --ignore-missing-dependencies --no-sanitize-rpaths -v dist/*.whl
 twine check dist/*.whl
 deactivate
