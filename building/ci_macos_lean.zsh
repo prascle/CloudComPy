@@ -35,6 +35,8 @@
 # Le script suppose l'environnement Conda deja active (micromamba activate CloudComPy312).
 
 set -e
+trap 'echo "### script echoue ligne ${LINENO} (rc=${?})"
+# (trap ERR : rend non muet tout exit implicite sous set -e)' ERR
 
 PYMINOR="12"
 CLOUDCOMPARE_VERSION="2.14.beta"
@@ -242,10 +244,11 @@ while true; do
     exclude_args+=("-e" "${culprit}")
     attempt=$((attempt+1))
 done
-twine check dist/*.whl
+if twine check dist/*.whl; then echo "### twine check OK"; else echo "### twine check ECHEC rc=${?}"; exit 1; fi
 deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
+echo "### smoke test debut"
 export QT_QPA_PLATFORM=offscreen
 python3 -m venv "${ROOT}/venv-test"
 source "${ROOT}/venv-test/bin/activate"
