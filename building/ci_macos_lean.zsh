@@ -191,6 +191,30 @@ make -C "${BUILD}" -j"${NBTHREADS}"
 
 echo "# --- installation ---"
 make -C "${BUILD}" install
+# --- rpaths des binaires du bundle : les binaires SANS LC_RPATH (plugins
+# Qt Conda comme libqcocoa, executable CloudCompare, libs CC dont la cible
+# ecrase le CMAKE_INSTALL_RPATH global) laissent des refs @rpath irresolues
+# pour delocate -> tolerees, donc NON reecrites. Au runtime, dyld les resout
+# par le fallback sur les rpaths de l'EXECUTABLE PRINCIPAL (le venv python =
+# python Conda -> $CONDA_PREFIX/lib) -> chargement de la copie Conda de Qt en
+# double (objc duplicate class, moveToThread, abort). On ajoute donc a chaque
+# Mach-O du bundle la paire de rpaths CONDA lib + @loader_path, pour que
+# delocate resolve TOUTES les refs, copie les externes et reecrive ensuite
+# les referrers en @loader_path relatif (sanitisation : retrait des absolus).
+add_rpath_if_missing() {
+    local bin="$1"
+    local rp="$2"
+    if ! otool -l "${bin}" | grep -A2 LC_RPATH | grep -q "path ${rp}"; then
+        install_name_tool -add_rpath "${rp}" "${bin}"
+        codesign --force --sign - "${bin}" >/dev/null 2>&1 || true
+    fi
+}
+APP="${INSTALL}/cloudComPy/CloudCompare/CloudCompare.app"
+find "${APP}/Contents/MacOS" "${APP}/Contents/Frameworks" "${APP}/Contents/PlugIns" -type f 2>/dev/null | while read -r f; do
+    otool -l "${f}" >/dev/null 2>&1 || continue
+    add_rpath_if_missing "${f}" "${CONDA_PATH}/lib"
+    add_rpath_if_missing "${f}" "@loader_path"
+done
 
 echo "# --- generation du wheel (build + delocate, sans signature) ---"
 python3 -m venv "${ROOT}/venv-wheel"
@@ -249,7 +273,6 @@ deactivate
 
 echo "# --- smoke test : wheel installe dans un venv vierge ---"
 echo "### smoke test debut"
-export DYLD_PRINT_LIBRARIES=1
 # QT_QPA_PLATFORM non force (le wheel mac n'embarque que le plugin cocoa ;
 # pas de probleme connu de librairies graphiques sur mac, on laisse le defaut)
 python3 -m venv "${ROOT}/venv-test"
