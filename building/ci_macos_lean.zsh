@@ -62,6 +62,10 @@ rm -rf "${BUILD}" "${INSTALL}"
 mkdir -p "${BUILD}"
 
 echo "# --- configuration CMake ---"
+# INSTALL_PREREQUISITE_LIBRARIES=0 (D13 etendue au mac) : sinon copy_files
+# du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
+# coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
+# dans le process (OMP Error #15). Delocate fournit l'unique copie.
 cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
@@ -82,11 +86,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCMAKE_INSTALL_RPATH="@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;${CONDA_PATH}/lib" \
     -DCMAKE_MACOSX_RPATH=ON \
-    # INSTALL_PREREQUISITE_LIBRARIES=0 (D13 etendue au mac) : sinon copy_files
-    # du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
-    # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
-    # dans le process (OMP Error #15). Delocate fournit l'unique copie.
-    -DINSTALL_PREREQUISITE_LIBRARIES="0" \ \
+    -DINSTALL_PREREQUISITE_LIBRARIES="0" \
     -DCONDA_LIBS:PATH="${CONDA_PATH}/lib" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
     -DDRACO_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
