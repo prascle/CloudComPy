@@ -218,7 +218,20 @@ APP="${INSTALL}/cloudComPy/CloudCompare/CloudCompare.app"
 find "${APP}/Contents/MacOS" "${APP}/Contents/Frameworks" "${APP}/Contents/PlugIns" -type f 2>/dev/null | while read -r f; do
     otool -l "${f}" >/dev/null 2>&1 || continue
     add_rpath_if_missing "${f}" "${CONDA_PATH}/lib"
-    add_rpath_if_missing "${f}" "@loader_path"
+done
+
+# Runtime OpenMP unique : le deploiement macOS (BUILD_PYPI) copie des libs
+# Conda dans Frameworks (libomp, Qt6, gdal...), INDEPENDAMMENT du drapeau
+# INSTALL_PREREQUISITE_LIBRARIES ; delocate copie de son cote libomp dans
+# .dylibs : deux fichiers distincts du meme runtime -> OMP Error #15
+(requerants reecrits les vers Frameworks, les vers .dylibs). On supprime
+# la copie du bundle : tous les requerants seront alors resolus vers la
+# copie Conda delocatee, unique exemplaire dans .dylibs.
+for dup in "${APP}/Contents/Frameworks/"libomp* "${APP}/Contents/Frameworks/"libgomp*; do
+    if [ -f "${dup}" ]; then
+        echo "suppression copie OpenMP du bundle : ${dup}"
+        rm -f "${dup}"
+    fi
 done
 
 echo "# --- generation du wheel (build + delocate, sans signature) ---"
