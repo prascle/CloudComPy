@@ -27,7 +27,8 @@
 # Differences avec la procedure de reference genCloudComPy_Conda3xx_macos.zsh :
 #  - pas de dependances externes non-Conda (cork, FBX SDK, libigl, RDB SDK) :
 #    les plugins qui les exigent sont desactives (QCORK, QFBX, QMESH_BOOLEAN, QRDB)
-#  - BUILD_REFERENCE_DOC=0 : pas de generation de documentation
+#  - BUILD_REFERENCE
+_DOC=0 : pas de generation de documentation
 #  - pas de signature/notarisation du wheel (pas de certificat en CI)
 #  - smoke test d'import (wheel installe dans un venv vierge) a la place des tests
 #  - l'install va dans ../installConda/CloudComPy_PyPI, comme l'attend MacOS/pyproject.toml
@@ -79,6 +80,7 @@ cmake \
     -DCCCORELIB_USE_QT_CONCURRENT:BOOL="1" \
     -DCCCORELIB_USE_TBB:BOOL="0" \
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
+
     -DCLOUDCOMPY_VERSION:STRING="${CLOUDCOMPY_VERSION}" \
     -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
@@ -114,7 +116,8 @@ cmake \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
     -DOPENCASCADE_DLL_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
-    -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
+    -DOPENCASCAD
+E_LIB_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPENCASCADE_TBB_DLL_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPTION_BUILD_CCVIEWER:BOOL="0" \
     -DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE="0" \
@@ -162,7 +165,8 @@ cmake \
     -DPLUGIN_STANDARD_QMESH_BOOLEAN:BOOL="0" \
     -DPLUGIN_STANDARD_QMPLANE:BOOL="1" \
     -DPLUGIN_STANDARD_QPCL:BOOL="1" \
-    -DPLUGIN_STANDARD_QPCV:BOOL="1" \
+    -DPLUGIN_STANDARD_QPCV:BOO
+L="1" \
     -DPLUGIN_STANDARD_QPOISSON_RECON:BOOL="1" \
     -DPLUGIN_STANDARD_QRANSAC_SD:BOOL="1" \
     -DPLUGIN_STANDARD_QSRA:BOOL="1" \
@@ -201,6 +205,7 @@ make -C "${BUILD}" install
 # ecrase le CMAKE_INSTALL_RPATH global) laissent des refs @rpath irresolues
 # pour delocate -> tolerees, donc NON reecrites. Au runtime, dyld les resout
 # par le fallback sur les rpaths de l'EXECUTABLE PRINCIPAL (le venv python =
+
 # python Conda -> $CONDA_PREFIX/lib) -> chargement de la copie Conda de Qt en
 # double (objc duplicate class, moveToThread, abort). On ajoute donc a chaque
 # Mach-O du bundle la paire de rpaths CONDA lib + @loader_path, pour que
@@ -228,7 +233,10 @@ done
 # (requerants reecrits les uns vers Frameworks, les autres vers .dylibs).
 # On supprime la copie du bundle : tous les requerants seront alors resolus vers la
 # copie Conda delocatee, unique exemplaire dans .dylibs.
-for dup in "${APP}/Contents/Frameworks/"libomp* "${APP}/Contents/Frameworks/"libgomp*; do
+# (N) : glob tolérant — si aucun motif ne matche (ex. pas de libgomp dans l'env
+# Conda Apple, qui ne livre que libomp), la boucle ne s'exécute pas sans erreur
+# zsh "no matches found" qui ferait échouer le script sous set -e.
+for dup in "${APP}/Contents/Frameworks/"libomp*(N) "${APP}/Contents/Frameworks/"libgomp*(N); do
     if [ -f "${dup}" ]; then
         echo "suppression copie OpenMP du bundle : ${dup}"
         rm -f "${dup}"
@@ -242,7 +250,8 @@ python -m pip install --upgrade pip
 pip install build delocate wheel twine pkginfo
 cd "${ROOT}"
 cp -f MacOS/pyproject.toml pyproject.toml
-cp -f MacOS/setup.py setup.py
+cp -
+f MacOS/setup.py setup.py
 rm -rf build dist
 python -m build --wheel
 # delocate resout les references @rpath vers les LC_RPATH absolus des binaires
@@ -280,7 +289,8 @@ while true; do
     fi
     culprit="$(echo "${out}" | grep -o 'same basename as: [^[:space:]]*' | tail -1 | sed 's/same basename as: //')"
     if [ -z "${culprit}" ] || [ ${attempt} -ge ${max_attempts} ]; then
-        echo "delocate : echec non reparable par exclusion (tentative ${attempt}) / ${culprit}"
+        echo "deloc
+ate : echec non reparable par exclusion (tentative ${attempt}) / ${culprit}"
         exit 1
     fi
     echo "### collision basename : ${culprit} -> exclusion pour la tentative suivante"
@@ -323,7 +333,8 @@ import cloudComPy as cc
 # l'import de cloudComPy execute deja l'initialisation (initCC) et le chargement
 # des plugins CloudCompare (cf. pybind11/__init__-macOS.py.in)
 print("etape 2 : verification d'un plugin natif", flush=True)
-print("PCL charge :", cc.isPluginPCL())
+print("PCL charge :
+", cc.isPluginPCL())
 print("cloudComPy import et init OK:", cc.__file__, flush=True)
 PYEOF
 
