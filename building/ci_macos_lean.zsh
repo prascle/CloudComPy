@@ -221,6 +221,23 @@ find "${APP}/Contents/MacOS" "${APP}/Contents/Frameworks" "${APP}/Contents/PlugI
     add_rpath_if_missing "${f}" "@loader_path"
 done
 
+# --- ref lapack -> openblas : dans l'env Conda, liblapack.3.dylib est un symlink
+# vers libopenblas.0.dylib. Delocate resout la ref @rpath/liblapack.3.dylib de
+# libopencv_core avec une Search path vide -> tolereree non reecrite. Au runtime
+# avec un python Conda, le fallback rpath du main executable charge la libopenblas
+# CONDA, qui traine libgfortran + libomp Conda en refs absolues -> deux runtimes
+# OpenMP (OMP Error #15). Sans env Conda, la ref est introuvable -> import KO.
+# On reecrit @rpath/liblapack.3.dylib en @rpath/libopenblas.0.dylib (meme lib,
+# nom reel du symlink) : delocate la resoudra et la reecrira, comme il fait
+# pour les autres requerants de libopenblas.
+find "${INSTALL}/cloudComPy" \( -name "*.dylib" -o -name "*.so" \) -type f | while read -r f; do
+    if otool -L "${f}" 2>/dev/null | grep -q "@rpath/liblapack.3.dylib"; then
+        install_name_tool -change "@rpath/liblapack.3.dylib" "@rpath/libopenblas.0.dylib" "${f}"
+        codesign --force --sign - "${f}" >/dev/null 2>&1 || true
+        echo "ref lapack -> openblas reecrite : ${f}"
+    fi
+done
+
 # Runtime OpenMP unique : le deploiement macOS (BUILD_PYPI) copie des libs
 # Conda dans Frameworks (libomp, Qt6, gdal...), INDEPENDAMMENT du drapeau
 # INSTALL_PREREQUISITE_LIBRARIES ; delocate copie de son cote libomp dans
@@ -290,6 +307,28 @@ while true; do
     exclude_args+=("-e" "${culprit}")
     attempt=$((attempt+1))
 done
+# --- controle final : aucune ref @rpath ne doit pointer vers une lib absente
+# du wheel (sinon : crash import chez l'utilisateur sans env Conda, ou fallback
+# dyld chargant une lib externe, source de conflits type OMP Error #15).
+python - dist/cloudcompy-*.whl <<'PYWHEELCHK'
+import zipfile, re, os, sys
+whl = sys.argv[1]
+with zipfile.ZipFile(whl) as z:
+    names = {os.path.basename(n) for n in z.namelist()}
+    bad = {}
+    for n in z.namelist():
+        if n.endswith('.dylib') or n.endswith('.so'):
+            for m in re.finditer(rb'@rpath/([A-Za-z0-9._+-]+\.dylib)', z.read(n)):
+                tgt = m.group(1).decode()
+                if tgt not in names:
+                    bad.setdefault(tgt, set()).add(n)
+if bad:
+    for tgt in sorted(bad):
+        for r in sorted(bad[tgt]):
+            print(f"### ref externe non resolue : {r} -> {tgt}")
+    sys.exit(1)
+print("### controle refs externes OK")
+PYWHEELCHK
 if twine check dist/*.whl; then echo "### twine check OK"; else echo "### twine check ECHEC rc=${?}"; exit 1; fi
 deactivate
 
