@@ -320,6 +320,24 @@ otool -L "${SP}/cloudComPy/.dylibs/libQt6Core.6.10.2.dylib" | head -12 || true
 echo "### rpaths de libQt6Core delocatee:"
 otool -l "${SP}/cloudComPy/.dylibs/libQt6Core.6.10.2.dylib" | grep -A2 LC_RPATH || true
 echo "### fin diagnostic Mach-O"
+echo "### fichiers OpenMP presents dans le wheel installe :"
+find "${SP}/cloudComPy" \( -name "libomp*" -o -name "libgomp*" \) -type f || true
+echo "### refs OpenMP dans les Mach-O du wheel installe :"
+find "${SP}/cloudComPy" -type f | while read -r f; do
+    refs=$(otool -L "${f}" 2>/dev/null | grep -i "omp" || true)
+    if [ -n "${refs}" ]; then
+        echo "--- ${f}"
+        echo "${refs}"
+    fi
+done
+echo "### rpaths du python du venv-test :"
+PYEXE=$(readlink -f "${ROOT}/venv-test/bin/python")
+otool -l "${PYEXE}" 2>/dev/null | grep -A2 LC_RPATH || true
+echo "### trace de chargement dyld (filtre omp) :"
+DYLD_PRINT_LIBRARIES=1 python -c "import cloudComPy" >/tmp/dyld_trace.log 2>&1 || true
+echo "lignes de trace : $(wc -l < /tmp/dyld_trace.log)"
+grep -n -i -B3 "omp" /tmp/dyld_trace.log | head -80 || true
+echo "### fin trace omp"
 python - <<'PYEOF'
 print("etape 1 : import du package cloudComPy", flush=True)
 import cloudComPy as cc
