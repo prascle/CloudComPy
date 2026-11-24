@@ -119,6 +119,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Garde : le script du jalon doit exister (dispatch sur la bonne branche)
+        shell: bash
+        run: |
+          if [ ! -f building/ci_macos_lean.zsh ]; then
+            echo "### building/ci_macos_lean.zsh absent : le run a ete dispatch sur master ?"
+            echo "### Relancer avec Run workflow, Branch : ci/j1b-binaries"
+            exit 1
+          fi
+
       - name: Environnement Conda (micromamba, cache)
         uses: mamba-org/setup-micromamba@v2
         with:
