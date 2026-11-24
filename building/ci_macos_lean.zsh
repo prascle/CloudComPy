@@ -256,6 +256,7 @@ for dup in "${APP}/Contents/Frameworks/"libomp*(N) "${APP}/Contents/Frameworks/"
 done
 
 echo "# --- generation du wheel (build + delocate, sans signature) ---"
+rm -rf "${ROOT}/venv-wheel"
 python3 -m venv "${ROOT}/venv-wheel"
 source "${ROOT}/venv-wheel/bin/activate"
 python -m pip install --upgrade pip
@@ -362,6 +363,11 @@ echo "# --- smoke test : wheel installe dans un venv vierge ---"
 echo "### smoke test debut"
 # QT_QPA_PLATFORM non force (le wheel mac n'embarque que le plugin cocoa ;
 # pas de probleme connu de librairies graphiques sur mac, on laisse le defaut)
+# purge du venv avant creation : pip saute l'installation quand le meme
+# nom+version est deja present (venv persistant entre les runs locaux ;
+# no-op sur un runner CI vierge). Sans purge, le smoke test peut valider
+# un wheel PERIME du run precedent --- veux dire un fix jamais teste.
+rm -rf "${ROOT}/venv-test"
 python3 -m venv "${ROOT}/venv-test"
 source "${ROOT}/venv-test/bin/activate"
 python -m pip install --upgrade pip
