@@ -119,7 +119,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Garde : le script du jalon doit exister (dispatch sur la bonne branche)
+      - name: Garde anti-dispatch (le script ci_macos_lean.zsh doit exister)
         shell: bash
         run: |
           if [ ! -f building/ci_macos_lean.zsh ]; then
