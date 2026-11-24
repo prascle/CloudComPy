@@ -1,0 +1,142 @@
+name: build-binaries (J1b)
+
+# Copie "ouvre-porte" pour master : le bouton Run workflow (workflow_dispatch)
+# n'apparaît que si ce fichier existe sur la branche défaut. Le trigger push
+# est volontairement ABSENT ici : master ne lance RIEN automatiquement (pas
+# d'échec possible). Les dispatch se font sur la branche ci/j1b-binaries,
+# qui porte la version de référence du jalon. A harmoniser à la PR.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Linux leger (Conda 3.12) + artifact
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Liberer de l'espace disque
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_Ubuntu.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-linux-312-${{ hashFiles('building/CloudComPy312Qt6_Ubuntu.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, smoke test
+        shell: bash -l {0}
+        run: |
+          eval "$(micromamba shell hook -s bash)"
+          micromamba activate CloudComPy312
+          bash building/ci_linux_lean.sh
+
+      - name: Empaqueter l'installation
+        run: |
+          cd install-ci && find . -type d -name __pycache__ -prune -exec rm -rf {} \;
+          cd .. && tar -cJf cloudcompy-linux64-${GITHUB_SHA::7}.tar.xz -C install-ci .
+
+      - name: Publier l'artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-linux64-${{ github.sha }}
+          path: cloudcompy-linux64-*.tar.xz
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
+
+      - name: Espace disque final
+        if: always()
+        run: df -h /
+
+  windows:
+    name: Windows leger (Conda 3.12) + artifact
+    if: github.event_name == 'push'
+    runs-on: windows-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_Windows.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-windows-312-${{ hashFiles('building/CloudComPy312Qt6_Windows.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, smoke test
+        shell: pwsh
+        run: |
+          micromamba shell hook -s powershell | Out-String | Invoke-Expression
+          micromamba activate CloudComPy312
+          & .\building\ci_windows_lean.ps1
+
+      - name: Empaqueter l'installation
+        shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -Directory -Filter __pycache__ install-ci | Remove-Item -Recurse -Force
+          $sha7 = '${{ github.sha }}'.Substring(0, 7)
+          Compress-Archive -Path install-ci\* -DestinationPath "cloudcompy-win64-$sha7.zip" -Force
+
+      - name: Publier l'artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-win64-${{ github.sha }}
+          path: cloudcompy-win64-*.zip
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
+
+  macos:
+    name: macOS leger (Conda 3.12) + wheel artifact
+    if: github.event_name == 'workflow_dispatch'  # mac en manuel uniquement (runners rares)
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - name: Checkout (avec sous-modules)
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Environnement Conda (micromamba, cache)
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-file: building/CloudComPy312Qt6_macOS.yml
+          environment-name: CloudComPy312
+          cache-environment: true
+          cache-environment-key: conda-macos-312-${{ hashFiles('building/CloudComPy312Qt6_macOS.yml') }}
+          cache-downloads: true
+
+      - name: Configuration, compilation, installation, wheel, smoke test
+        shell: bash -l {0}
+        run: |
+          eval "$(micromamba shell hook -s bash)"
+          micromamba activate CloudComPy312
+          zsh building/ci_macos_lean.zsh
+
+      - name: Publier l'artifact (wheel)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudcompy-macos-arm64-${{ github.sha }}
+          path: dist/cloudcompy-*.whl
+          retention-days: ${{ startsWith(github.ref, 'refs/tags/') && 90 || 14 }}
+          if-no-files-found: error
+
+      - name: Espace disque final
+        if: always()
+        run: df -h /
