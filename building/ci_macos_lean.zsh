@@ -307,6 +307,32 @@ while true; do
     exclude_args+=("-e" "${culprit}")
     attempt=$((attempt+1))
 done
+# --- reparation lapack post-delocate : la ref @rpath/liblapack.3.dylib ne peut
+# pas etre resolue par delocate (libopencv_core est copiee depuis l'env Conda
+# dans .dylibs avec une Search path vide -> ref toleree NON reecrite par
+# --ignore-missing-dependencies). On patche donc le wheel construit : la ref
+# devient @loader_path/libopenblas.0.dylib, openblas etant deja copiee dans
+# .dylibs par delocate pour les requerants PCL. Le controle final ci-dessous
+# verifie ensuite qu'aucune ref externe ne subsiste dans le wheel.
+lp_whl="$(echo "${ROOT}"/dist/cloudcompy-*.whl)"
+lp_tmp="$(mktemp -d)"
+if unzip -q "${lp_whl}" 'cloudComPy/.dylibs/*' -d "${lp_tmp}" 2>/dev/null; then
+    lp_fixed=()
+    for lp_f in "${lp_tmp}"/cloudComPy/.dylibs/*.dylib(N) "${lp_tmp}"/cloudComPy/.dylibs/*.so(N); do
+        if otool -L "${lp_f}" 2>/dev/null | grep -q "liblapack"; then
+            install_name_tool -change "@rpath/liblapack.3.dylib" "@loader_path/libopenblas.0.dylib" "${lp_f}"
+            codesign --force --sign - "${lp_f}" >/dev/null 2>&1 || true
+            echo "### ref lapack reecrite dans le wheel : cloudComPy/.dylibs/${lp_f:t}"
+            lp_fixed+=("${lp_f}")
+        fi
+    done
+    if [ ${#lp_fixed[@]} -gt 0 ]; then
+        for lp_r in "${lp_fixed[@]}"; do
+            (cd "${lp_tmp}" && zip -q "${lp_whl}" "cloudComPy/.dylibs/${lp_r:t}")
+        done
+    fi
+fi
+rm -rf "${lp_tmp}"
 # --- controle final : aucune ref @rpath ne doit pointer vers une lib absente
 # du wheel (sinon : crash import chez l'utilisateur sans env Conda, ou fallback
 # dyld chargant une lib externe, source de conflits type OMP Error #15).
