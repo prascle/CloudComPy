@@ -1,12 +1,16 @@
 name: build-binaries (J1b)
 
-# Copie "ouvre-porte" pour master : le bouton Run workflow (workflow_dispatch)
-# n'apparaît que si ce fichier existe sur la branche défaut. Le trigger push
-# est volontairement ABSENT ici : master ne lance RIEN automatiquement (pas
-# d'échec possible). Les dispatch se font sur la branche ci/j1b-binaries,
-# qui porte la version de référence du jalon. A harmoniser à la PR.
+# Jalon J1b: build leger sur les 3 OS + artifacts telechargeables.
+# Declenchement: push sur master et tags v* = jobs linux+windows ;
+# workflow_dispatch manuel = job macos uniquement (runners mac rares :
+# evite les annulations automatiques, Paul relance quand il veut).
 
 on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:

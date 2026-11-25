@@ -30,6 +30,11 @@ os.environ["_CCTRACE_"]="ON" # only if you want C++ debug traces
 import cloudComPy as cc
 from gendata import dataDir
 
+import importlib.util
+if importlib.util.find_spec("scipy") is None:
+    print("scipy is not available: minimalBoundingBox unusable, test skipped")
+    sys.exit(0)
+
 #---optimalBB00-begin
 from cloudComPy.minimalBoundingBox import findRotation
 #---optimalBB00-end

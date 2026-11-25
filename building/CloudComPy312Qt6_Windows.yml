@@ -15,6 +15,7 @@ dependencies:
  - matplotlib>=3.9
  - mpir
  - mysql
+ - ninja
  - notebook
  - numpy
  - opencv>=4.12

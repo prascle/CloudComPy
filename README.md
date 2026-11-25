@@ -97,6 +97,8 @@ This is a **lightweight Linux build** (milestone J1a), for early detection of bu
 
 This lightweight build does **not** replace the production builds (conda binaries, PyPI wheels): it is a quick check. Fuller CI builds (other OS, complete plugin set, doc generation) will come in later milestones.
 
+A second workflow, `build-binaries` (milestone J1b), produces downloadable artifacts on the three OS: a `tar.xz` install tree (Linux), a `.zip` install tree (Windows) and a delocated PyPI wheel (macOS, arm64). The Linux and Windows jobs run on pushes to `master` and `v*` tags; the macOS job is triggered manually (`workflow_dispatch`), because free macOS runners are scarce. See [building/milestones/J1b.md](building/milestones/J1b.md) for details, usage of the artifacts, and the fixes that replaced the historical `/FORCE:MULTIPLE` linker workaround.
+
 # Production: non wheel binaries requiring a Conda or Python venv environment and a specific setup script
 
 ## CloudComPy: availables non wheel binaries
