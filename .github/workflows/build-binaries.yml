@@ -1,7 +1,6 @@
 name: build-binaries (J1b)
 
 # Jalon J1b: build leger sur les 3 OS + artifacts telechargeables.
-# Sous-jalon courant: J1b-mac (Linux et Windows termines).
 # Declenchement: push sur master et tags v* = jobs linux+windows ;
 # workflow_dispatch manuel = job macos uniquement (runners mac rares :
 # evite les annulations automatiques, Paul relance quand il veut).
@@ -10,7 +9,6 @@ on:
   push:
     branches:
       - master
-      - ci/j1b-binaries  # temporaire: test de l'artifact avant fusion, a retirer avant la PR
     tags:
       - 'v*'
   workflow_dispatch:
