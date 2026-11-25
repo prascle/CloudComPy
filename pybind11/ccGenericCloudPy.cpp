@@ -30,6 +30,15 @@
 #include <ccHObject.h>
 #include <ccObject.h>
 
+#ifdef _MSC_VER
+// MSVC : PointCloudTpl<ccGenericPointCloud, QString>::addPoint est exporte par
+// QCC_DB_LIB.dll mais la base PointCloudTpl ne porte pas dllimport : toute
+// utilisation re-instancie le membre localement (LNK2005 contre l'import lib,
+// contourne historiquement par /FORCE:MULTIPLE). La declaration d'instanciation
+// explicite supprime l'instanciation locale et renvoie a l'export de la DLL.
+extern template void CCCoreLib::PointCloudTpl<ccGenericPointCloud, QString>::addPoint(const CCVector3&);
+#endif
+
 #include "pyccTrace.h"
 #include "ccGenericCloudPy_DocStrings.hpp"
 

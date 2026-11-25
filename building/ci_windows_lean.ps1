@@ -71,7 +71,7 @@ $cmakeArgs = @(
     "-B$BUILD",
     "-G", "Ninja",
     "-DCMAKE_BUILD_TYPE=Release",
-    "-DCMAKE_SHARED_LINKER_FLAGS=/machine:x64 /FORCE:MULTIPLE",
+    "-DCMAKE_SHARED_LINKER_FLAGS=/machine:x64",
     "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
     "-DPYMINOR=$PyMinor",
     "-DUSE_CONDA_PACKAGES=ON",
