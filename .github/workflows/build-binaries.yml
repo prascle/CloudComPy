@@ -9,8 +9,6 @@ on:
   push:
     branches:
       - master
-      # trigger temporaire J2b (a retirer avant la PR)
-      - ci/j2b-presets
     tags:
       - 'v*'
   workflow_dispatch:

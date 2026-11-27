@@ -81,7 +81,6 @@ $cmakeArgs = @(
     "-DCMAKE_BUILD_TYPE=Release",
     "-DCMAKE_SHARED_LINKER_FLAGS=/machine:x64",
     "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
-    "-DPYMINOR=$PyMinor",
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCLOUDCOMPARE_VERSION=$CloudCompareVersion",
     "-DCONDA_BASE_DIRECTORY=$env:MAMBA_ROOT_PREFIX",
