@@ -66,55 +66,23 @@ echo "# --- configuration CMake ---"
 # du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
 # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
 # dans le process (OMP Error #15). Delocate fournit l'unique copie.
-# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
-# CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
-# find_package via CMAKE_PREFIX_PATH, y compris les *_DIR config-mode) pour
-# comparer les chemins resolus au build de reference (mode par defaut). Les
-# variables classe B (EIGEN_ROOT_DIR custom, OPENCASCADE_INC/LIB_DIR, FFMPEG_*,
-# TBB_DIR, CONDA_PATH, PYTHONVENV_DIR, REPO_DIR, DRACO_LIBRARIES) restent
-# toujours passees. LECON DES RUNS #65 (windows) ET DU RUN macOS CLASSE C
-# (27/11, echec de lien qDracoIO) : le find_package(Draco) du paquet conda
-# resout Draco_DIR mais ne fournit pas DRACO_LIBRARIES exploitable ->
-# pre-allocation a garder sur windows et macos (le run Linux classe C est
-# vert avec DRACO retire). Cf. audit 8.4 : un *_DIR utilise ne prouve pas
-# que l autodetection suffit.
-CLASS_C_D=()
-if [ "${CLASS_C:-0}" = "1" ]; then
-    echo "# --- classe C : pre-allocation classe A retiree, CMAKE_PREFIX_PATH explicite ---"
-    CLASS_C_D+=(-DCMAKE_PREFIX_PATH:PATH="${CONDA_PATH}")
-else
-    CLASS_C_D=(
-        -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL"
-        -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib"
-        -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
-        -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DGMP_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
-        -DGMP_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
-        -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.dylib"
-        -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib"
-        -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4"
-        -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15"
-        -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16"
-        -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib"
-        -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull"
-        -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11"
-        -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DXercesC_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib"
-        -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib"
-        -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
-        -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
-    )
-fi
+# EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : les pre-allocations
+# classe A (CGAL, GDAL, GMP/GMPXX, LASZIP, MPFR, OpenCV, PCL, PNG, Qhull, pybind11,
+# XercesC, ZLIB) ont ete retirees apres comparaison reference/classe C. DIVERGENCES
+# BENIGNES ASSUMEES (Paul, 27/11, a reexaminer si probleme en tests approfondis) :
+# GMPXX_LIBRARIES auto-resout libgmpxx.dylib (la pre-allocation pointait libgmp.dylib,
+# vraisemblablement une erreur historique), PNG/ZLIB resous via les symlinks generiques
+# (libpng.dylib, libz.dylib) au lieu des versions exactes pre-allouees (meme contenu,
+# wheel + smoke test verts), XercesC_LIBRARY_DEBUG auto-resout NOTFOUND (sans effet en
+# Release). Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR,
+# FFMPEG_* (custom), TBB_DIR, DRACO_LIBRARIES (le find_package(Draco) du paquet conda
+# macos resout Draco_DIR mais pas DRACO_LIBRARIES, echec de lien qDracoIO constate),
+# CONDA_PATH, PYTHONVENV_DIR, REPO_DIR.
 
 cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
     -G"Unix Makefiles" \
-    "${CLASS_C_D[@]}" \
     -DBUILD_PYPI="1" \
     -DBUILD_PY_TESTING:BOOL="1" \
     -DBUILD_REFERENCE_DOC:BOOL="0" \
@@ -195,11 +163,6 @@ cmake \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
     -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
-
-# EXPERIENCE CLASSE C : chemins resolus a comparer entre runs reference et classe C
-# (les entrees existent dans les deux modes, seule leur provenance differe).
-echo "# --- classe C : chemins resolus (a comparer au build de reference) ---"
-grep -E "^(CGAL_DIR|DRACO_|GDAL_|GMP|LASZIP_|MPFR_|OpenCV_DIR|PCL_DIR|PNG_|Qhull_DIR|pybind11_DIR|XercesC_|ZLIB_|EIGEN_ROOT_DIR|TBB_DIR|CMAKE_PREFIX_PATH)[A-Za-z0-9_]*:" "${BUILD}/CMakeCache.txt" | LC_ALL=C sort
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(sysctl -n hw.ncpu)"

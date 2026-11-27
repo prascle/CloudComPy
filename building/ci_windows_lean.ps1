@@ -66,21 +66,13 @@ if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
 if (Test-Path $INSTALL) { Remove-Item -Recurse -Force $INSTALL }
 New-Item -ItemType Directory -Force $BUILD | Out-Null
 
-# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
-# CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
-# find_package via CMAKE_PREFIX_PATH, deja explicite ci-dessous) : ici Qt6_DIR
-# seul. LECON DU RUN #65 (27/11, LNK2019 x19 dans qDracoIO) : DRACO_INCLUDE_DIRS/
-# DRACO_LIBRARIES ne sont PAS redondants (le find_package(Draco) du paquet conda
-# ne fournit pas DRACO_LIBRARIES) -> passes dans les DEUX modes, classe B
-# (cf. audit 8.4 : un *_DIR utilise ne prouve pas que l autodetection suffit).
-$classC = @()
-if ($env:CLASS_C -eq "1") {
-    Write-Host "# --- classe C : pre-allocation classe A retiree ---"
-} else {
-    $classC = @(
-        "-DQt6_DIR=$Library/lib/cmake/Qt6"
-    )
-}
+# EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : la pre-allocation
+# Qt6_DIR a ete retiree (resolution identique via CMAKE_PREFIX_PATH prouvee par les
+# runs reference/classe C). LECON DU RUN #65 (LNK2019 x19 dans qDracoIO) :
+# DRACO_INCLUDE_DIRS/DRACO_LIBRARIES ne sont PAS redondants (le find_package(Draco)
+# du paquet conda resout Draco_DIR mais ne fournit pas DRACO_LIBRARIES) -> classe B
+# passee ci-dessous. Cf. audit 8.4 : un *_DIR utilise ne prouve pas que
+# l autodetection suffit.
 
 $cmakeArgs = @(
     "-S$ROOT",
@@ -170,16 +162,10 @@ $cmakeArgs = @(
     # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
     "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"
 )
-$cmakeArgs += $classC
 
 Write-Host "# --- configuration CMake ---"
 & cmake @cmakeArgs
 if ($LASTEXITCODE -ne 0) { throw "echec de la configuration CMake" }
-
-# EXPERIENCE CLASSE C : chemins resolus a comparer entre runs reference et classe C
-# (les entrees existent dans les deux modes, seule leur provenance differe).
-Write-Host "# --- classe C : chemins resolus (a comparer au build de reference) ---"
-Select-String -Path (Join-Path $BUILD "CMakeCache.txt") -Pattern "^(DRACO_|Qt6_|EIGEN_ROOT_DIR|OPENCASCADE_|CMAKE_PREFIX_PATH)[A-Za-z0-9_]*:" | ForEach-Object { Write-Host $_.Line }
 
 Write-Host "# --- compilation (ninja) ---"
 & cmake --build $BUILD

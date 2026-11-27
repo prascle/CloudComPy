@@ -15,12 +15,6 @@ on:
       - 'v*'
   workflow_dispatch:
 
-# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
-# passe les scripts CI en mode classe C (pre-allocation classe A retiree,
-# comparaison des chemins resolus au build de reference).
-env:
-  CLASS_C: "1"
-
 jobs:
   linux:
     name: Linux leger (Conda 3.12) + artifact
