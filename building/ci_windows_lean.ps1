@@ -92,8 +92,6 @@ $cmakeArgs = @(
     "-DDRACO_INCLUDE_DIRS=$Library/include",
     "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
-    "-DMPIR_INCLUDE_DIR=$Library/include",
-    "-DMPIR_RELEASE_LIBRARY_FILE=$Library/lib/mpir.lib",
     # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
     # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt
     # (noms pre-OpenCASCADE 7.8 : TKSTEP.dll etc.) et la regle copy_files de qStepCADImport.
@@ -125,10 +123,7 @@ $cmakeArgs = @(
     "-DPLUGIN_IO_QPHOTOSCAN=1",
     "-DPLUGIN_IO_QRDB=0",
     "-DPLUGIN_IO_QSTEP=1",
-    "-DPLUGIN_PYTHON=OFF",
     "-DPLUGIN_STANDARD_3DMASC=1",
-    "-DPLUGIN_STANDARD_MASONRY_QAUTO_SEG=1",
-    "-DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG=1",
     "-DPLUGIN_STANDARD_QANIMATION=1",
     "-DPLUGIN_STANDARD_QBROOM=1",
     "-DPLUGIN_STANDARD_QCANUPO=1",
@@ -153,9 +148,7 @@ $cmakeArgs = @(
     "-DPYTHONAPI_TEST_DIRECTORY=CloudComPy/Data",
     "-DPYTHONAPI_EXTDATA_DIRECTORY=CloudComPy/ExternalData",
     "-DPYTHONAPI_TRACES=1",
-    "-DPYTHONVENV_DIR=$CondaRoot",
     "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
-    "-DREPO_DIR=$ROOT",
     "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
     # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
     "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"
