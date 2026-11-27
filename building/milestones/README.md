@@ -17,9 +17,11 @@ is not tracked by git until Paul commits it.
 - Branch `ci/j2b-presets`: guards G1/G2/G4/G5/G6, PYMINOR derivation,
   dead flags removed from CI then production scripts, `CMakePresets.json`
   (3 ci-* families + 6 DJ5 placeholders), class C experiment concluded:
-  class A pre-allocation removed from the CI scripts (13 linux, 23 macos,
+  class A pre-allocation removed from the CI scripts (13 linux, 22 macos,
   1 windows), DRACO_* kept as class B on windows/macos (LNK2019 lesson),
-  4 benign macos divergences assumed and documented in the script.
+  GMPXX_LIBRARIES kept as class B on macos (delocate nondeterminism lesson,
+  dispatches #66/#70), 3 benign macos divergences assumed and documented
+  in the script.
 - DJ4 resolution proposed in `J2b.md`: scripts do not consume the presets
   in J2b; J2c implements legacy-*/wheel-* FROM the presets and wires
   consumption (incl. scikit-build-core for the Linux wheel family).

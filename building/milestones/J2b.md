@@ -53,7 +53,8 @@ Status: PROPOSED to Paul with the PR; J2c starts from this.
 | 8 | DRACO fix (windows/macos) | DRACO_* moved to class B after run #65 LNK2019 lesson |
 | 9 | definitive class A removals | scripts reduced to class B, experiment blocks removed, `env: CLASS_C` removed |
 | 10 | final cleanup | `-DPYMINOR` removed from the 3 CI scripts (derivation from commit 1), temporary push trigger removed |
-| 11 | milestone doc | this document + `README.md` index update (separate commit, working method) |
+| 11 | GMPXX fix | `GMPXX_LIBRARIES` reinstated as class B on macos (nondeterministic delocate breaks, dispatches #66/#70) |
+| 12 | milestone doc | this document + `README.md` index update (separate commit, working method) |
 
 (Exact commit hashes: see the PR.)
 
@@ -100,14 +101,22 @@ Results (27/11):
 - Linux: 13 variables removed (GDAL, GMP, LASZIP, MPFR, XercesC, ZLIB, DRACO);
   all resolved identically. The bogus `XercesC_LIBRARY_DEBUG-NOTFOUND`
   pre-allocation is gone.
-- macOS: 23 variables removed. 19 resolved identically; 4 benign divergences
-  ASSUMED by Paul (documented in the script, to re-examine if problems show
-  up in deeper testing): `GMPXX_LIBRARIES` auto-resolves `libgmpxx.dylib` (the
-  pre-allocation pointed at `libgmp.dylib`, historically wrong), `PNG_*` and
-  `ZLIB_LIBRARY_RELEASE` auto-resolve through the generic symlinks
-  (`libpng.dylib`, `libz.dylib`) instead of the exact pre-allocated names
-  (same file content; wheel and delocate smoke test green),
-  `XercesC_LIBRARY_DEBUG` auto-resolves NOTFOUND (no effect in Release).
+- macOS: 22 variables removed. 19 resolved identically; PNG/ZLIB and
+  XercesC_LIBRARY_DEBUG divergences are benign and ASSUMED by Paul (documented
+  in the script, to re-examine if problems show up in deeper testing):
+  `PNG_*` and `ZLIB_LIBRARY_RELEASE` auto-resolve through the generic symlinks
+  (`libpng.dylib`, `libz.dylib`) whose dylib IDs remain `libpng16`/`libz.1`,
+  identical to the reference; `XercesC_LIBRARY_DEBUG` auto-resolves NOTFOUND
+  (no effect in Release).
+  `GMPXX_LIBRARIES` was initially removed (auto-resolves the real
+  `libgmpxx.dylib`, the pre-allocation pointed at `libgmp.dylib`) then
+  REINSTATED after dispatches #66/#70: linking gmpxx adds a
+  `libgmpxx.4.dylib` runtime dependency that delocate copies/rewrites
+  nondeterministically (basename-collision exclusion loop), so identical
+  branch states flip between green and a broken wheel
+  (`Library not loaded: @executable_path/../Frameworks/libgmpxx.4.dylib`
+  at import). With the historical pre-allocation nothing links gmpxx at
+  all; it stays class B.
 - Windows: `Qt6_DIR` removed (resolved identically). DRACO_* kept (class B).
 - Class B kept everywhere: `EIGEN_ROOT_DIR`, `OPENCASCADE_INC/LIB(_DLL...)_DIR`,
   `FFMPEG_*` (macos), `TBB_DIR` (macos), `CONDA_ENV`/`CONDA_PATH`,
