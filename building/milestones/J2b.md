@@ -55,6 +55,7 @@ Status: PROPOSED to Paul with the PR; J2c starts from this.
 | 10 | final cleanup | `-DPYMINOR` removed from the 3 CI scripts (derivation from commit 1), temporary push trigger removed |
 | 11 | GMPXX fix | `GMPXX_LIBRARIES` reinstated as class B on macos (nondeterministic delocate breaks, dispatches #66/#70) |
 | 12 | milestone doc | this document + `README.md` index update (separate commit, working method) |
+| 13 | macOS class C cancelled | all 22 class A pre-allocations restored to the reference values on macos after dispatch #71 (`libmpfr.6.dylib`, same delocate break as GMPXX); macos keeps ZERO class A removals, linux/windows removals stay |
 
 (Exact commit hashes: see the PR.)
 
@@ -101,22 +102,22 @@ Results (27/11):
 - Linux: 13 variables removed (GDAL, GMP, LASZIP, MPFR, XercesC, ZLIB, DRACO);
   all resolved identically. The bogus `XercesC_LIBRARY_DEBUG-NOTFOUND`
   pre-allocation is gone.
-- macOS: 22 variables removed. 19 resolved identically; PNG/ZLIB and
-  XercesC_LIBRARY_DEBUG divergences are benign and ASSUMED by Paul (documented
-  in the script, to re-examine if problems show up in deeper testing):
-  `PNG_*` and `ZLIB_LIBRARY_RELEASE` auto-resolve through the generic symlinks
-  (`libpng.dylib`, `libz.dylib`) whose dylib IDs remain `libpng16`/`libz.1`,
-  identical to the reference; `XercesC_LIBRARY_DEBUG` auto-resolves NOTFOUND
-  (no effect in Release).
-  `GMPXX_LIBRARIES` was initially removed (auto-resolves the real
-  `libgmpxx.dylib`, the pre-allocation pointed at `libgmp.dylib`) then
-  REINSTATED after dispatches #66/#70: linking gmpxx adds a
-  `libgmpxx.4.dylib` runtime dependency that delocate copies/rewrites
-  nondeterministically (basename-collision exclusion loop), so identical
-  branch states flip between green and a broken wheel
-  (`Library not loaded: @executable_path/../Frameworks/libgmpxx.4.dylib`
-  at import). With the historical pre-allocation nothing links gmpxx at
-  all; it stays class B.
+- macOS: EXPERIMENT CANCELLED on 28/11 (decision Paul). The 22 class A
+  pre-allocations were removed on 27/11 (19 resolved identically at
+  configure time; PNG/ZLIB/XercesC_LIBRARY_DEBUG divergences were then
+  ASSUMED benign), but the wheel BUILD_PYPI chain depends on delocate,
+  which copies/rewrites dependencies NONDETERMINISTICALLY on basename
+  collisions (the J1b exclusion loop). With the auto-detected link graph,
+  `libgmpxx.4.dylib` (dispatches #66/#70) then `libmpfr.6.dylib`
+  (dispatch #71) got excluded from the copy, leaving broken
+  `@executable_path/../Frameworks/...` references at import; identical
+  branch states flipped between green and a broken wheel. An identical
+  configure-time resolution therefore does NOT prove the safety of a
+  removal on this chain. All 22 pre-allocations are RESTORED to the
+  reference values (commit 13): macos keeps ZERO class A removals; the
+  fragile numeric-libs chain (CGAL, GMP/GMPXX, MPFR) is no longer linked
+  through auto-detection at all. Linux/Windows removals (deterministic
+  toolchains, no delocate) stay.
 - Windows: `Qt6_DIR` removed (resolved identically). DRACO_* kept (class B).
 - Class B kept everywhere: `EIGEN_ROOT_DIR`, `OPENCASCADE_INC/LIB(_DLL...)_DIR`,
   `FFMPEG_*` (macos), `TBB_DIR` (macos), `CONDA_ENV`/`CONDA_PATH`,
@@ -124,9 +125,11 @@ Results (27/11):
 
 ## Validation status
 
-- All CI runs of the branch went green on the final state (linux + windows on
-  push, macos by dispatch), including the class C runs whose configuration is
-  now the default.
+- Linux and Windows runs went green on the final state (class C now the
+  default configuration).
+- macOS: the class C state (22 removals) was NOT valid (green/red
+  nondeterminism, see above); the reference state is restored in commit 13
+  and must be validated by fresh dispatches before the PR leaves draft.
 - NOT covered by CI (to be validated by Paul's next production builds):
   the production-script removals of commit 4 (gen3xx, Ubuntu legacy, docker,
   `build.ps1`), including the pending FBX XML2/ZLIB verdict (FBX SDK version),

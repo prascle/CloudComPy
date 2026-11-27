@@ -66,23 +66,23 @@ echo "# --- configuration CMake ---"
 # du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
 # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
 # dans le process (OMP Error #15). Delocate fournit l'unique copie.
-# EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : les pre-allocations
+# EXPERIENCE CLASSE C (audit J2a 8.4), ANNULEE le 28/11/2026 : les pre-allocations
 # classe A (CGAL, GDAL, GMP, LASZIP, MPFR, OpenCV, PCL, PNG, Qhull, pybind11,
-# XercesC, ZLIB) ont ete retirees apres comparaison reference/classe C.
-# GMPXX_LIBRARIES : REINSTAUEE le 28/11 (dispatchs #66/#70) : l autodetection lie
-# la vraie libgmpxx.dylib, dont la dependance libgmpxx.4.dylib est copiee/rewrittee
-# par delocate de facon non deterministe selon les collisions de basename (run vert
-# puis rouge au meme etat) ; quand elle est exclue, l import du wheel echoue
-# (Library not loaded: @executable_path/../Frameworks/libgmpxx.4.dylib). La
-# pre-allocation historique libgmp.dylib evite de lier gmpxx du tout.
-# DIVERGENCES BENIGNES ASSUMEES (Paul, 27/11, a reexaminer si probleme en tests
-# approfondis) : PNG/ZLIB resous via les symlinks generiques (libpng.dylib,
-# libz.dylib ; l ID de dylib reste libpng16/libz.1, identique a la reference),
-# XercesC_LIBRARY_DEBUG auto-resout NOTFOUND (sans effet en Release).
+# XercesC, ZLIB) avaient ete retirees apres comparaison reference/classe C
+# (resolution identique a la configuration). Mais le wheel BUILD_PYPI macOS
+# depend de delocate, qui copie/reecrit les deps des libs de facon NON
+# DETERMINISTE selon les collisions de basename (boucle d'exclusion J1b) :
+# avec les autodetections, libgmpxx.4.dylib (dispatchs #66/#70) puis
+# libmpfr.6.dylib (dispatch #71) ont ete exclues de la copie, laissant des
+# refs @executable_path/../Frameworks cassees a l'import (runs verts et
+# rouges au meme etat du depot). La resolution identique a la configuration
+# ne prouve donc PAS la surete du retrait sur cette chaine. DECISION (Paul,
+# 28/11) : retour a la reference complete, macos ne conserve AUCUN retrait
+# classe A (les retraits linux/windows, chaines deterministes, restent).
 # Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR,
-# FFMPEG_* (custom), TBB_DIR, DRACO_LIBRARIES (le find_package(Draco) du paquet conda
-# macos resout Draco_DIR mais pas DRACO_LIBRARIES, echec de lien qDracoIO constate),
-# CONDA_PATH, PYTHONVENV_DIR, REPO_DIR, GMPXX_LIBRARIES.
+# FFMPEG_* (custom), TBB_DIR, DRACO_LIBRARIES (le find_package(Draco) du
+# paquet conda macos resout Draco_DIR mais pas DRACO_LIBRARIES, echec de
+# lien qDracoIO constate), CONDA_PATH, PYTHONVENV_DIR, REPO_DIR.
 
 cmake \
     -S"${ROOT}" \
@@ -103,7 +103,18 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCMAKE_INSTALL_RPATH="@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;${CONDA_PATH}/lib" \
     -DCMAKE_MACOSX_RPATH=ON \
+    -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
+    -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib" \
+    -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DGMP_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
+    -DGMP_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
+    -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.dylib" \
+    -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib" \
     -DINSTALL_PREREQUISITE_LIBRARIES="0" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
     -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
@@ -114,6 +125,10 @@ cmake \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
+    -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
+    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15" \
+    -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16" \
+    -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib" \
     -DOPTION_BUILD_CCVIEWER:BOOL="0" \
     -DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE="0" \
     -DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI="1" \
@@ -166,8 +181,15 @@ cmake \
     -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
     -DREPO_DIR:PATH="${ROOT}" \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
+    -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull" \
+    -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
-    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
+    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
+    -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DXercesC_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib" \
+    -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib" \
+    -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(sysctl -n hw.ncpu)"

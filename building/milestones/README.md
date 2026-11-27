@@ -12,16 +12,19 @@ is not tracked by git until Paul commits it.
 | `J2a-audit.md` | J2a - audit of fork options + build flags | done, merged (PR #8, merge commit `638d587`) |
 | `J2b.md` | J2b - guards, presets, dead flags, class C experiment | done on `ci/j2b-presets`, PR pending |
 
-## J2b summary (as of 27/11/2026 evening)
+## J2b summary (as of 28/11/2026)
 
 - Branch `ci/j2b-presets`: guards G1/G2/G4/G5/G6, PYMINOR derivation,
   dead flags removed from CI then production scripts, `CMakePresets.json`
   (3 ci-* families + 6 DJ5 placeholders), class C experiment concluded:
-  class A pre-allocation removed from the CI scripts (13 linux, 22 macos,
-  1 windows), DRACO_* kept as class B on windows/macos (LNK2019 lesson),
-  GMPXX_LIBRARIES kept as class B on macos (delocate nondeterminism lesson,
-  dispatches #66/#70), 3 benign macos divergences assumed and documented
-  in the script.
+  class A pre-allocation removed from the CI scripts (13 linux,
+  1 windows), DRACO_* kept as class B on windows/macos (LNK2019 lesson).
+  macOS: experiment CANCELLED 28/11 (decision Paul): after the GMPXX
+  breaks (dispatches #66/#70) the mpfr break (dispatch #71) confirmed
+  that the delocate wheel chain is nondeterministic on basename
+  collisions; an identical configure-time resolution does not prove a
+  removal safe there. All 22 macos class A pre-allocations restored to
+  the reference values (zero class A removals on macos).
 - DJ4 resolution proposed in `J2b.md`: scripts do not consume the presets
   in J2b; J2c implements legacy-*/wheel-* FROM the presets and wires
   consumption (incl. scikit-build-core for the Linux wheel family).
