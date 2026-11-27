@@ -67,17 +67,22 @@ echo "# --- configuration CMake ---"
 # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
 # dans le process (OMP Error #15). Delocate fournit l'unique copie.
 # EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : les pre-allocations
-# classe A (CGAL, GDAL, GMP/GMPXX, LASZIP, MPFR, OpenCV, PCL, PNG, Qhull, pybind11,
-# XercesC, ZLIB) ont ete retirees apres comparaison reference/classe C. DIVERGENCES
-# BENIGNES ASSUMEES (Paul, 27/11, a reexaminer si probleme en tests approfondis) :
-# GMPXX_LIBRARIES auto-resout libgmpxx.dylib (la pre-allocation pointait libgmp.dylib,
-# vraisemblablement une erreur historique), PNG/ZLIB resous via les symlinks generiques
-# (libpng.dylib, libz.dylib) au lieu des versions exactes pre-allouees (meme contenu,
-# wheel + smoke test verts), XercesC_LIBRARY_DEBUG auto-resout NOTFOUND (sans effet en
-# Release). Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR,
+# classe A (CGAL, GDAL, GMP, LASZIP, MPFR, OpenCV, PCL, PNG, Qhull, pybind11,
+# XercesC, ZLIB) ont ete retirees apres comparaison reference/classe C.
+# GMPXX_LIBRARIES : REINSTAUEE le 28/11 (dispatchs #66/#70) : l autodetection lie
+# la vraie libgmpxx.dylib, dont la dependance libgmpxx.4.dylib est copiee/rewrittee
+# par delocate de facon non deterministe selon les collisions de basename (run vert
+# puis rouge au meme etat) ; quand elle est exclue, l import du wheel echoue
+# (Library not loaded: @executable_path/../Frameworks/libgmpxx.4.dylib). La
+# pre-allocation historique libgmp.dylib evite de lier gmpxx du tout.
+# DIVERGENCES BENIGNES ASSUMEES (Paul, 27/11, a reexaminer si probleme en tests
+# approfondis) : PNG/ZLIB resous via les symlinks generiques (libpng.dylib,
+# libz.dylib ; l ID de dylib reste libpng16/libz.1, identique a la reference),
+# XercesC_LIBRARY_DEBUG auto-resout NOTFOUND (sans effet en Release).
+# Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR,
 # FFMPEG_* (custom), TBB_DIR, DRACO_LIBRARIES (le find_package(Draco) du paquet conda
 # macos resout Draco_DIR mais pas DRACO_LIBRARIES, echec de lien qDracoIO constate),
-# CONDA_PATH, PYTHONVENV_DIR, REPO_DIR.
+# CONDA_PATH, PYTHONVENV_DIR, REPO_DIR, GMPXX_LIBRARIES.
 
 cmake \
     -S"${ROOT}" \
@@ -98,6 +103,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCMAKE_INSTALL_RPATH="@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;${CONDA_PATH}/lib" \
     -DCMAKE_MACOSX_RPATH=ON \
+    -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
     -DINSTALL_PREREQUISITE_LIBRARIES="0" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
     -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
