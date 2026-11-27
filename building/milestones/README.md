@@ -6,24 +6,25 @@ is not tracked by git until Paul commits it.
 
 ## Index
 
-| File | Milestone | Status (25/11/2026) |
+| File | Milestone | Status (27/11/2026) |
 |------|-----------|---------------------|
 | `J1b.md` | J1b - CI builds on 3 OS | done, merged (PR #7, merge commit `4a1d8f8`) |
-| `J2a-audit.md` | J2a - audit of fork options + build flags | done, VALIDATED by Paul 27/11 (guard plan G1/G2/G4/G5/G6, preset decisions DJ1-DJ5) |
+| `J2a-audit.md` | J2a - audit of fork options + build flags | done, merged (PR #8, merge commit `638d587`) |
+| `J2b.md` | J2b - guards, presets, dead flags, class C experiment | done on `ci/j2b-presets`, PR pending |
 
-## J2a resume notes (as of 25/11/2026 evening)
+## J2b summary (as of 27/11/2026 evening)
 
-- Sections: 0 Paul's working method, 1 fork diff classification (families
-  A-F), 2 anomalies (with Paul's decisions), 3 upstream strategy, 4 flag
-  x family x value matrix (J2a.1), 5 dead flags on the 3 CI platforms
-  (J2a.2), 6 pending (J2a.4 impact audit + guards, J2a.5 joint review).
-- Decisions acted: DJ1-DJ3, DJ5 (9 preset families: ci-/legacy-/wheel-
-  x linux/windows/macos, only ci-* implemented in J2b). DJ4 open.
-- Next steps, in order:
-  1. J2a.5 first pass: joint review of the full document;
-  2. J2a.4: impact audit + CMake guard proposals (material from section 2);
-  3. commit of this file by Paul on branch `ci/j2a-audit`
-     (message FR, no accents: "J2a : document d audit du fork CloudCompare").
+- Branch `ci/j2b-presets`: guards G1/G2/G4/G5/G6, PYMINOR derivation,
+  dead flags removed from CI then production scripts, `CMakePresets.json`
+  (3 ci-* families + 6 DJ5 placeholders), class C experiment concluded:
+  class A pre-allocation removed from the CI scripts (13 linux, 23 macos,
+  1 windows), DRACO_* kept as class B on windows/macos (LNK2019 lesson),
+  4 benign macos divergences assumed and documented in the script.
+- DJ4 resolution proposed in `J2b.md`: scripts do not consume the presets
+  in J2b; J2c implements legacy-*/wheel-* FROM the presets and wires
+  consumption (incl. scikit-build-core for the Linux wheel family).
+- Production-script removals are NOT covered by CI: validation at Paul's
+  next production builds (incl. FBX XML2/ZLIB verdict).
 - Living checklist + acted decisions: canvas "j2-audit-presets".
 - Long-term memory of the project: Vibe Knowledge topic "cloudcompy".
 - Do NOT commit `J2a-fork-vs-base.diff` (raw working diff, repo root).
