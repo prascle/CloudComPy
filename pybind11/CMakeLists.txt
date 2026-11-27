@@ -21,6 +21,19 @@
 
 message(STATUS "Python3 and pybind11 processing")
 
+# --- Guard G1 (audit J2a, section 8.1):
+# APPLE + BUILD_PYPI + INSTALL_PREREQUISITE_LIBRARIES ON duplicates conda
+# libraries into the wheel bundle (OMP Error #15 class, J1b lesson):
+# refuse this combination explicitly.
+if ( APPLE AND BUILD_PYPI )
+    if ( INSTALL_PREREQUISITE_LIBRARIES )
+        message( FATAL_ERROR
+            "INSTALL_PREREQUISITE_LIBRARIES=ON is not compatible with BUILD_PYPI on Apple: "
+            "conda libraries would be duplicated into the wheel bundle "
+            "(see audit J2a, section 8.1)")
+    endif()
+endif()
+
 # --- Python detection: if several versions installed, select one with all the required packages installed
 
 set(PYTHON_PREFERED_VERSION "3.9" CACHE STRING "Select a Python version: it should be installed with all packages required for CloudCompare (pybind11, numpy)")
@@ -191,6 +204,17 @@ if(WIN32)
     #if( NOT INSTALL_PREREQUISITE_LIBRARIES )
     if( INSTALL_PREREQUISITE_LIBRARIES )
 
+        # --- Guard G2 (audit J2a, section 8.1):
+        # the OCCT_DLL_FILES list below uses pre-OpenCASCADE 7.8 DLL names;
+        # with OPENCASCADE_78_OR_NEWER it cannot work (TKSTEP etc. renamed
+        # to TKDESTEP, J1b lesson): warn loudly.
+        if ( OPENCASCADE_78_OR_NEWER )
+            message( WARNING
+                "INSTALL_PREREQUISITE_LIBRARIES=ON on WIN32 installs pre-OCCT-7.8 DLL names; "
+                "with OPENCASCADE_78_OR_NEWER this install will fail on missing TKSTEP*.dll "
+                "(see audit J2a, section 8.1)")
+        endif()
+
         if ( PLUGIN_IO_QRDB )
             message( STATUS "rdblib.dll ${CMAKE_CURRENT_BINARY_DIR}/../_deps/rdb_sdk-src/library/rdblib.dll")
             if( BUILD_PYPI )
@@ -296,6 +320,58 @@ if ( PLUGIN_STANDARD_QCORK )
 endif()
 if ( PLUGIN_STANDARD_QHOUGH_NORMALS )
     add_subdirectory( HoughNormals )
+endif()
+
+# --- Guard G5 (audit J2a, section 8.4):
+# an explicitly-set pre-allocated path variable must point to an existing
+# file or directory: catch dead or stale conda trees at configure time,
+# instead of late link/import errors (J1b GDAL version lesson).
+# Only checks variables explicitly provided; autodetection unaffected.
+foreach( _VAR IN ITEMS
+    GDAL_INCLUDE_DIR GDAL_LIBRARY
+    XercesC_INCLUDE_DIR XercesC_LIBRARY_RELEASE XercesC_LIBRARY_DEBUG
+    LASZIP_INCLUDE_DIR LASZIP_LIBRARY
+    ZLIB_INCLUDE_DIR ZLIB_LIBRARY_RELEASE
+    DRACO_LIBRARIES EIGEN_ROOT_DIR
+    MPFR_INCLUDE_DIR MPFR_LIBRARIES
+    GMP_INCLUDE_DIR GMP_LIBRARIES
+    MPIR_INCLUDE_DIR MPIR_RELEASE_LIBRARY_FILE
+    CORK_RELEASE_LIBRARY_FILE LIBIGL_RELEASE_LIBRARY_FILE
+    FBX_SDK_INCLUDE_DIR FBX_SDK_LIBRARY_FILE
+    OPENCASCADE_INC_DIR OPENCASCADE_LIB_DIR OPENCASCADE_DLL_DIR )
+    if ( DEFINED ${_VAR} AND NOT "${${_VAR}}" STREQUAL "" AND NOT "${${_VAR}}" MATCHES "-NOTFOUND$" )
+        if ( NOT EXISTS "${${_VAR}}" )
+            message( FATAL_ERROR
+                "${_VAR} is set to '${${_VAR}}' which does not exist "
+                "(see audit J2a, section 8.4)")
+        endif()
+    endif()
+endforeach()
+unset( _VAR )
+
+# --- Guard G6 (audit J2a, section 8.5):
+# when OPENCASCADE_78_OR_NEWER is explicitly set, check it agrees with the
+# detected OpenCASCADE headers (silent when the version cannot be read).
+if ( DEFINED OPENCASCADE_78_OR_NEWER AND DEFINED OPENCASCADE_INC_DIR )
+    if ( EXISTS "${OPENCASCADE_INC_DIR}/OCCT_Version.hxx" )
+        file( READ "${OPENCASCADE_INC_DIR}/OCCT_Version.hxx" _OCC_VERSION_HXX )
+        string( REGEX MATCH "OCC_VERSION_MAJOR[ \t]+([0-9]+)" _OCC_MAJOR "${_OCC_VERSION_HXX}" )
+        set( _OCC_MAJOR_NUM "${CMAKE_MATCH_1}" )
+        string( REGEX MATCH "OCC_VERSION_MINOR[ \t]+([0-9]+)" _OCC_MINOR "${_OCC_VERSION_HXX}" )
+        set( _OCC_MINOR_NUM "${CMAKE_MATCH_1}" )
+        if ( _OCC_MAJOR AND _OCC_MINOR )
+            if ( _OCC_MAJOR_NUM LESS 7 OR ( _OCC_MAJOR_NUM EQUAL 7 AND _OCC_MINOR_NUM LESS 8 ) )
+                message( WARNING
+                    "OPENCASCADE_78_OR_NEWER=${OPENCASCADE_78_OR_NEWER} but detected OpenCASCADE "
+                    "is ${_OCC_MAJOR_NUM}.${_OCC_MINOR_NUM} (see audit J2a, section 8.5)")
+            endif()
+        endif()
+        unset( _OCC_MAJOR )
+        unset( _OCC_MINOR )
+        unset( _OCC_MAJOR_NUM )
+        unset( _OCC_MINOR_NUM )
+        unset( _OCC_VERSION_HXX )
+    endif()
 endif()
 
 

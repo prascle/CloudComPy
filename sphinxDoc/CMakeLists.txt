@@ -65,6 +65,10 @@ set(RSTFILES
 
 if( BUILD_PYPI )
     set(IS_PYPI_BUILD "true")
+    # REPO_DIR is consumed ONLY here, as REPO_GIT_DIR: it gives the reference
+    # doc the git version string when the build tree differs from the source
+    # tree (wheel builds driven from an install/prefix tree). The wheel
+    # families must keep it set (audit J2a, section 5.7).
     set(REPO_GIT_DIR "${REPO_DIR}")
 else()
     set(IS_PYPI_BUILD "false")
