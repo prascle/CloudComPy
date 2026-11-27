@@ -58,11 +58,39 @@ micromamba list > "${ROOT}/building/conda-list_Ubuntu20.04_3${PYMINOR}"
 rm -rf "${BUILD}" "${INSTALL}"
 mkdir -p "${BUILD}"
 
+# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
+# CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
+# find_package via CMAKE_PREFIX_PATH) pour comparer les chemins resolus au build
+# de reference (mode par defaut). Les variables classe B (EIGEN_ROOT_DIR custom,
+# OPENCASCADE_INC/LIB_DIR, CONDA_*, PYTHONVENV_DIR) restent toujours passees.
+CLASS_C_D=()
+if [ "${CLASS_C:-0}" = "1" ]; then
+    echo "# --- classe C : pre-allocation classe A retiree, CMAKE_PREFIX_PATH explicite ---"
+    CLASS_C_D+=(-DCMAKE_PREFIX_PATH:PATH="${CONDA_PATH}")
+else
+    CLASS_C_D=(
+        -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a"
+        -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.so"
+        -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DGMP_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.so"
+        -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.so"
+        -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.so"
+        -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.so"
+        -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.so"
+    )
+fi
+
 echo "# --- configuration CMake ---"
 cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
     -G"Unix Makefiles" \
+    "${CLASS_C_D[@]}" \
     -DBUILD_REFERENCE_DOC:BOOL="0" \
     -DBUILD_PY_TESTING:BOOL="1" \
     -DBUILD_TESTING:BOOL="1" \
@@ -77,16 +105,7 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCONDA_ENV="${CONDA_ENV_NAME}" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
-    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
-    -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.so" \
-    -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGMP_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.so" \
-    -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.so" \
-    -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.so" \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
@@ -119,12 +138,12 @@ cmake \
     -DPYMINOR:STRING="12" \
     -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
-    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
-    -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DXercesC_LIBRARY_DEBUG:FILEPATH="XercesC_LIBRARY_DEBUG-NOTFOUND" \
-    -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.so" \
-    -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.so"
+    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
+
+# EXPERIENCE CLASSE C : chemins resolus a comparer entre runs reference et classe C
+# (les entrees existent dans les deux modes, seule leur provenance differe).
+echo "# --- classe C : chemins resolus (a comparer au build de reference) ---"
+grep -E "^(DRACO_|GDAL_|GMP|LASZIP_|MPFR_|XercesC_|ZLIB_|EIGEN_ROOT_DIR|CMAKE_PREFIX_PATH)[A-Za-z0-9_]*:" "${BUILD}/CMakeCache.txt" | LC_ALL=C sort
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(nproc)"

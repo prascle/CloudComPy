@@ -66,10 +66,50 @@ echo "# --- configuration CMake ---"
 # du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
 # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
 # dans le process (OMP Error #15). Delocate fournit l'unique copie.
+# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
+# CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
+# find_package via CMAKE_PREFIX_PATH, y compris les *_DIR config-mode) pour
+# comparer les chemins resolus au build de reference (mode par defaut). Les
+# variables classe B (EIGEN_ROOT_DIR custom, OPENCASCADE_INC/LIB_DIR, FFMPEG_*,
+# TBB_DIR, CONDA_PATH, PYTHONVENV_DIR, REPO_DIR) restent toujours passees.
+CLASS_C_D=()
+if [ "${CLASS_C:-0}" = "1" ]; then
+    echo "# --- classe C : pre-allocation classe A retiree, CMAKE_PREFIX_PATH explicite ---"
+    CLASS_C_D+=(-DCMAKE_PREFIX_PATH:PATH="${CONDA_PATH}")
+else
+    CLASS_C_D=(
+        -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL"
+        -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a"
+        -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib"
+        -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
+        -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DGMP_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
+        -DGMP_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib"
+        -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.dylib"
+        -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib"
+        -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4"
+        -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15"
+        -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16"
+        -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib"
+        -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull"
+        -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11"
+        -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DXercesC_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib"
+        -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib"
+        -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
+        -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
+    )
+fi
+
 cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
     -G"Unix Makefiles" \
+    "${CLASS_C_D[@]}" \
     -DBUILD_PYPI="1" \
     -DBUILD_PY_TESTING:BOOL="1" \
     -DBUILD_REFERENCE_DOC:BOOL="0" \
@@ -80,7 +120,6 @@ cmake \
     -DCCCORELIB_USE_TBB:BOOL="0" \
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
     -DCLOUDCOMPY_VERSION:STRING="${CLOUDCOMPY_VERSION}" \
-    -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
@@ -88,22 +127,10 @@ cmake \
     -DCMAKE_MACOSX_RPATH=ON \
     -DINSTALL_PREREQUISITE_LIBRARIES="0" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
-    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
     -DFFMPEG_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DFFMPEG_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
     -DFFMPEG_X264_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
-    -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib" \
-    -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
-    -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGMP_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
-    -DGMP_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
-    -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.dylib" \
-    -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib" \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
@@ -112,10 +139,6 @@ cmake \
     -DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI="1" \
     -DOPTION_HID_DEBUG="0" \
     -DOPTION_USE_GDAL:BOOL="1" \
-    -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
-    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15" \
-    -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16" \
-    -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib" \
     -DPLUGIN_EXAMPLE_GL:BOOL="1" \
     -DPLUGIN_EXAMPLE_IO:BOOL="1" \
     -DPLUGIN_EXAMPLE_STANDARD:BOOL="1" \
@@ -156,8 +179,6 @@ cmake \
     -DPLUGIN_STANDARD_QSRA:BOOL="1" \
     -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
     -DQANIMATION_WITH_FFMPEG_SUPPORT:BOOL="1" \
-    -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull" \
-    -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11" \
     -DPYTHONAPI_TEST_DIRECTORY:STRING="CloudComPy/Data" \
     -DPYTHONAPI_EXTDATA_DIRECTORY:STRING="CloudComPy/ExternalData" \
     -DPYTHONAPI_TRACES:BOOL="1" \
@@ -167,12 +188,12 @@ cmake \
     -DREPO_DIR:PATH="${ROOT}" \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
-    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
-    -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DXercesC_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib" \
-    -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.dylib" \
-    -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.1.dylib"
+    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
+
+# EXPERIENCE CLASSE C : chemins resolus a comparer entre runs reference et classe C
+# (les entrees existent dans les deux modes, seule leur provenance differe).
+echo "# --- classe C : chemins resolus (a comparer au build de reference) ---"
+grep -E "^(CGAL_DIR|DRACO_|GDAL_|GMP|LASZIP_|MPFR_|OpenCV_DIR|PCL_DIR|PNG_|Qhull_DIR|pybind11_DIR|XercesC_|ZLIB_|EIGEN_ROOT_DIR|TBB_DIR|CMAKE_PREFIX_PATH)[A-Za-z0-9_]*:" "${BUILD}/CMakeCache.txt" | LC_ALL=C sort
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(sysctl -n hw.ncpu)"

@@ -66,6 +66,23 @@ if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
 if (Test-Path $INSTALL) { Remove-Item -Recurse -Force $INSTALL }
 New-Item -ItemType Directory -Force $BUILD | Out-Null
 
+# EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
+# CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
+# find_package via CMAKE_PREFIX_PATH, deja explicite ci-dessous) :
+# DRACO_INCLUDE_DIRS/DRACO_LIBRARIES (find_package Draco) et Qt6_DIR (config-mode).
+# Les variables classe B (EIGEN_ROOT_DIR custom, OPENCASCADE_*, CONDA_*,
+# win_deploy_qt) restent toujours passees.
+$classC = @()
+if ($env:CLASS_C -eq "1") {
+    Write-Host "# --- classe C : pre-allocation classe A retiree ---"
+} else {
+    $classC = @(
+        "-DDRACO_INCLUDE_DIRS=$Library/include",
+        "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
+        "-DQt6_DIR=$Library/lib/cmake/Qt6"
+    )
+}
+
 $cmakeArgs = @(
     "-S$ROOT",
     "-B$BUILD",
@@ -79,7 +96,6 @@ $cmakeArgs = @(
     "-DCONDA_BASE_DIRECTORY=$env:MAMBA_ROOT_PREFIX",
     "-DCONDA_ENV_NAME=$CondaEnvName",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
-    "-DQt6_DIR=$Library/lib/cmake/Qt6",
     "-DCMAKE_PREFIX_PATH=$Library",
     "-DCMAKE_INSTALL_PREFIX=$INSTALL",
     "-DBUILD_PY_TESTING=1",
@@ -89,8 +105,6 @@ $cmakeArgs = @(
     "-DCCCORELIB_USE_CGAL=1",
     "-DCCCORELIB_USE_QT_CONCURRENT=1",
     "-DCCCORELIB_USE_TBB=0",
-    "-DDRACO_INCLUDE_DIRS=$Library/include",
-    "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
     # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
     # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt
@@ -153,10 +167,16 @@ $cmakeArgs = @(
     # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
     "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"
 )
+$cmakeArgs += $classC
 
 Write-Host "# --- configuration CMake ---"
 & cmake @cmakeArgs
 if ($LASTEXITCODE -ne 0) { throw "echec de la configuration CMake" }
+
+# EXPERIENCE CLASSE C : chemins resolus a comparer entre runs reference et classe C
+# (les entrees existent dans les deux modes, seule leur provenance differe).
+Write-Host "# --- classe C : chemins resolus (a comparer au build de reference) ---"
+Select-String -Path (Join-Path $BUILD "CMakeCache.txt") -Pattern "^(DRACO_|Qt6_|EIGEN_ROOT_DIR|OPENCASCADE_|CMAKE_PREFIX_PATH)[A-Za-z0-9_]*:" | ForEach-Object { Write-Host $_.Line }
 
 Write-Host "# --- compilation (ninja) ---"
 & cmake --build $BUILD
