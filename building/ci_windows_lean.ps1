@@ -68,17 +68,16 @@ New-Item -ItemType Directory -Force $BUILD | Out-Null
 
 # EXPERIENCE CLASSE C (audit J2a 8.4) - EXPERIMENT TEMPORAIRE, A RETIRER AVANT LA PR :
 # CLASS_C=1 retire la pre-allocation classe A (variables resolvables par
-# find_package via CMAKE_PREFIX_PATH, deja explicite ci-dessous) :
-# DRACO_INCLUDE_DIRS/DRACO_LIBRARIES (find_package Draco) et Qt6_DIR (config-mode).
-# Les variables classe B (EIGEN_ROOT_DIR custom, OPENCASCADE_*, CONDA_*,
-# win_deploy_qt) restent toujours passees.
+# find_package via CMAKE_PREFIX_PATH, deja explicite ci-dessous) : ici Qt6_DIR
+# seul. LECON DU RUN #65 (27/11, LNK2019 x19 dans qDracoIO) : DRACO_INCLUDE_DIRS/
+# DRACO_LIBRARIES ne sont PAS redondants (le find_package(Draco) du paquet conda
+# ne fournit pas DRACO_LIBRARIES) -> passes dans les DEUX modes, classe B
+# (cf. audit 8.4 : un *_DIR utilise ne prouve pas que l autodetection suffit).
 $classC = @()
 if ($env:CLASS_C -eq "1") {
     Write-Host "# --- classe C : pre-allocation classe A retiree ---"
 } else {
     $classC = @(
-        "-DDRACO_INCLUDE_DIRS=$Library/include",
-        "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
         "-DQt6_DIR=$Library/lib/cmake/Qt6"
     )
 }
@@ -105,6 +104,10 @@ $cmakeArgs = @(
     "-DCCCORELIB_USE_CGAL=1",
     "-DCCCORELIB_USE_QT_CONCURRENT=1",
     "-DCCCORELIB_USE_TBB=0",
+    # classe B depuis le run #65 : sans DRACO_LIBRARIES explicite, le plugin
+    # qDracoIO compile mais ne lie pas draco.lib (LNK2019). Voir bloc classe C ci-dessus.
+    "-DDRACO_INCLUDE_DIRS=$Library/include",
+    "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
     # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
     # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt

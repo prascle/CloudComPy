@@ -71,7 +71,13 @@ echo "# --- configuration CMake ---"
 # find_package via CMAKE_PREFIX_PATH, y compris les *_DIR config-mode) pour
 # comparer les chemins resolus au build de reference (mode par defaut). Les
 # variables classe B (EIGEN_ROOT_DIR custom, OPENCASCADE_INC/LIB_DIR, FFMPEG_*,
-# TBB_DIR, CONDA_PATH, PYTHONVENV_DIR, REPO_DIR) restent toujours passees.
+# TBB_DIR, CONDA_PATH, PYTHONVENV_DIR, REPO_DIR, DRACO_LIBRARIES) restent
+# toujours passees. LECON DES RUNS #65 (windows) ET DU RUN macOS CLASSE C
+# (27/11, echec de lien qDracoIO) : le find_package(Draco) du paquet conda
+# resout Draco_DIR mais ne fournit pas DRACO_LIBRARIES exploitable ->
+# pre-allocation a garder sur windows et macos (le run Linux classe C est
+# vert avec DRACO retire). Cf. audit 8.4 : un *_DIR utilise ne prouve pas
+# que l autodetection suffit.
 CLASS_C_D=()
 if [ "${CLASS_C:-0}" = "1" ]; then
     echo "# --- classe C : pre-allocation classe A retiree, CMAKE_PREFIX_PATH explicite ---"
@@ -79,7 +85,6 @@ if [ "${CLASS_C:-0}" = "1" ]; then
 else
     CLASS_C_D=(
         -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL"
-        -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a"
         -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
         -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib"
         -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include"
@@ -127,6 +132,7 @@ cmake \
     -DCMAKE_MACOSX_RPATH=ON \
     -DINSTALL_PREREQUISITE_LIBRARIES="0" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
+    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
     -DFFMPEG_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DFFMPEG_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
