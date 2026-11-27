@@ -1,0 +1,191 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "cloudcompy-base",
+      "hidden": true,
+      "description": "J2b : noyau commun des 35 drapeaux constants (audit J2a 4.1), identiques dans les 5 scripts audites, plus PYTHONAPI_TEST/EXTDATA_DIRECTORY (audit 8.9, consommes par tests/gendata.py) et USE_CONDA_PACKAGES=ON impose (audit 8.9, DJ5/G7 retiree : l option ne selectionne que les templates doc/bundle, aucun effet build). Les chemins machine (conda, SDK externes) et la pre-allocation classe A restent cote scripts en attendant l experience classe C (audit 8.4). PYMINOR disparait : derive de PYTHON_PREFERED_VERSION dans building/CMakeLists.txt (audit 8.3.a).",
+      "cacheVariables": {
+        "BUILD_PY_TESTING": true,
+        "BUILD_TESTING": true,
+        "CCCORELIB_SHARED": true,
+        "CCCORELIB_USE_CGAL": true,
+        "CCCORELIB_USE_QT_CONCURRENT": true,
+        "CCCORELIB_USE_TBB": false,
+        "OPENCASCADE_78_OR_NEWER": true,
+        "OPTION_USE_GDAL": true,
+        "PLUGIN_GL_QEDL": true,
+        "PLUGIN_GL_QSSAO": true,
+        "PLUGIN_IO_QADDITIONAL": true,
+        "PLUGIN_IO_QCORE": true,
+        "PLUGIN_IO_QCSV_MATRIX": true,
+        "PLUGIN_IO_QDRACO": true,
+        "PLUGIN_IO_QE57": true,
+        "PLUGIN_IO_QLAS": true,
+        "PLUGIN_IO_QSTEP": true,
+        "PLUGIN_PYTHON": false,
+        "PLUGIN_STANDARD_QBROOM": true,
+        "PLUGIN_STANDARD_QCANUPO": true,
+        "PLUGIN_STANDARD_QCLOUDLAYERS": true,
+        "PLUGIN_STANDARD_QCOMPASS": true,
+        "PLUGIN_STANDARD_QCSF": true,
+        "PLUGIN_STANDARD_QFACETS": true,
+        "PLUGIN_STANDARD_QHOUGH_NORMALS": true,
+        "PLUGIN_STANDARD_QHPR": true,
+        "PLUGIN_STANDARD_QM3C2": true,
+        "PLUGIN_STANDARD_QMPLANE": true,
+        "PLUGIN_STANDARD_QPOISSON_RECON": true,
+        "PLUGIN_STANDARD_QRANSAC_SD": true,
+        "PLUGIN_STANDARD_QSRA": true,
+        "PLUGIN_STANDARD_QTREEISO": true,
+        "PYTHONAPI_TRACES": true,
+        "PYTHONAPI_TEST_DIRECTORY": "CloudComPy/Data",
+        "PYTHONAPI_EXTDATA_DIRECTORY": "CloudComPy/ExternalData",
+        "USE_CONDA_PACKAGES": true,
+        "USE_EXTERNAL_QHULL_FOR_QHPR": false
+      }
+    },
+    {
+      "name": "ci-common",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "J2b : partie commune aux 3 familles ci-* (audit 4.2/4.3) : sans doc de reference, Release, Python 3.12 explicite (audit 8.2/8.3 : le pin rend un mismatch fatal par design).",
+      "cacheVariables": {
+        "BUILD_REFERENCE_DOC": false,
+        "CMAKE_BUILD_TYPE": "Release",
+        "PYTHON_PREFERED_VERSION": "3.12"
+      }
+    },
+    {
+      "name": "ci-lean-plugin-panel",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "J2b : panneau lean commun Windows/macOS (audit 4.3) : plugins sans dependance externe non-Conda (QFBX, QCORK, QMESH_BOOLEAN, QRDB OFF). OPTIONS_SUPPORT_3DMOUSE ici et pas dans la base : les defauts upstream sont OFF et le CI Linux ne les passe pas (HIDAPI=1 force find_package(hidapi) avec repli vendored, comportement a ne pas imposer a Linux).",
+      "cacheVariables": {
+        "OPTION_BUILD_CCVIEWER": false,
+        "OPTION_HID_DEBUG": false,
+        "OPTION_SUPPORT_3DMOUSE_WITH_3DxWARE": false,
+        "OPTION_SUPPORT_3DMOUSE_WITH_HIDAPI": true,
+        "PLUGIN_EXAMPLE_GL": true,
+        "PLUGIN_EXAMPLE_IO": true,
+        "PLUGIN_EXAMPLE_STANDARD": true,
+        "PLUGIN_GL_QEDL": true,
+        "PLUGIN_GL_QSSAO": true,
+        "PLUGIN_IO_QADDITIONAL": true,
+        "PLUGIN_IO_QCORE": true,
+        "PLUGIN_IO_QCSV_MATRIX": true,
+        "PLUGIN_IO_QDRACO": true,
+        "PLUGIN_IO_QE57": true,
+        "PLUGIN_IO_QFBX": false,
+        "PLUGIN_IO_QLAS": true,
+        "PLUGIN_IO_QLAS_FWF": false,
+        "PLUGIN_IO_QPDAL": false,
+        "PLUGIN_IO_QPHOTOSCAN": true,
+        "PLUGIN_IO_QRDB": false,
+        "PLUGIN_IO_QSTEP": true,
+        "PLUGIN_STANDARD_3DMASC": true,
+        "PLUGIN_STANDARD_QANIMATION": true,
+        "PLUGIN_STANDARD_QBROOM": true,
+        "PLUGIN_STANDARD_QCANUPO": true,
+        "PLUGIN_STANDARD_QCLOUDLAYERS": true,
+        "PLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER": true,
+        "PLUGIN_STANDARD_QCOMPASS": true,
+        "PLUGIN_STANDARD_QCORK": false,
+        "PLUGIN_STANDARD_QCSF": true,
+        "PLUGIN_STANDARD_QFACETS": true,
+        "PLUGIN_STANDARD_QHOUGH_NORMALS": true,
+        "PLUGIN_STANDARD_QHPR": true,
+        "PLUGIN_STANDARD_QJSONRPC": true,
+        "PLUGIN_STANDARD_QM3C2": true,
+        "PLUGIN_STANDARD_QMESH_BOOLEAN": false,
+        "PLUGIN_STANDARD_QMPLANE": true,
+        "PLUGIN_STANDARD_QPCL": true,
+        "PLUGIN_STANDARD_QPCV": true,
+        "PLUGIN_STANDARD_QPOISSON_RECON": true,
+        "PLUGIN_STANDARD_QRANSAC_SD": true,
+        "PLUGIN_STANDARD_QSRA": true,
+        "PLUGIN_STANDARD_QTREEISO": true,
+        "QANIMATION_WITH_FFMPEG_SUPPORT": true
+      }
+    },
+    {
+      "name": "ci-linux-lean",
+      "inherits": "ci-common",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-ci",
+      "description": "J2b : famille CI Linux (building/ci_linux_lean.sh, audit famille L). Les plugins externes (3DMASC, QPCL, ...) ne sont PAS passes : le Linux CI s appuie sur les defauts, inchange ici. Chemins conda et pre-allocation classe A restent cote script.",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cc",
+        "CMAKE_CXX_COMPILER": "c++"
+      }
+    },
+    {
+      "name": "ci-windows-lean",
+      "inherits": [ "ci-common", "ci-lean-plugin-panel" ],
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-ci",
+      "description": "J2b : famille CI Windows (building/ci_windows_lean.ps1, audit famille W). INSTALL_PREREQUISITE_LIBRARIES=0 (D13 : court-circuite les noms de DLL OCCT pre-7.8 dans pybind11/CMakeLists.txt). Qt6_DIR/CMAKE_PREFIX_PATH/CONDA_* : cote script (chemins machine).",
+      "cacheVariables": {
+        "CMAKE_SHARED_LINKER_FLAGS": "/machine:x64",
+        "INSTALL_PREREQUISITE_LIBRARIES": false
+      }
+    },
+    {
+      "name": "ci-macos-wheel",
+      "inherits": [ "ci-common", "ci-lean-plugin-panel" ],
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-ci",
+      "description": "J2b : famille CI macOS chaine wheel (building/ci_macos_lean.zsh, audit famille M, D9). INSTALL_PREREQUISITE_LIBRARIES=0 (D13 mac : sinon double runtime OpenMP, OMP Error #15). Rpaths relatifs @loader_path (J1b aa6a8de) ; le prefix Conda vient de l environnement via $env{CONDA_PREFIX}.",
+      "cacheVariables": {
+        "BUILD_PYPI": true,
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "13.0",
+        "CMAKE_MACOSX_RPATH": true,
+        "CMAKE_INSTALL_RPATH": "@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;$env{CONDA_PREFIX}/lib",
+        "INSTALL_PREREQUISITE_LIBRARIES": false
+      }
+    },
+    {
+      "name": "legacy-linux",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : famille production Linux legacy (genCloudComPy_Conda31x_Ubuntu*.sh, audit famille P). Rien d implemente en J2b.",
+      "cacheVariables": {}
+    },
+    {
+      "name": "legacy-macos",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : famille production macOS wheels (genCloudComPy_Conda3xx_macos.zsh, audit famille G). Rien d implemente en J2b.",
+      "cacheVariables": {}
+    },
+    {
+      "name": "legacy-windows",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : famille production Windows (build.ps1, audit famille B). Rien d implemente en J2b.",
+      "cacheVariables": {}
+    },
+    {
+      "name": "wheel-linux",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : famille production Linux wheels (Linux/pyproject.toml via scikit-build-core, audit famille K ; scikit-build-core sait consommer les presets). Rien d implemente en J2b.",
+      "cacheVariables": {}
+    },
+    {
+      "name": "wheel-macos",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : variante wheel de legacy-macos, a distinguer si besoin en J2c. Rien d implemente en J2b.",
+      "cacheVariables": {}
+    },
+    {
+      "name": "wheel-windows",
+      "hidden": true,
+      "inherits": "cloudcompy-base",
+      "description": "PLACEHOLDER J2c (DJ5) : famille production Windows wheels (build.ps1 en BUILD_PYPI, audit famille B). Rien d implemente en J2b.",
+      "cacheVariables": {}
+    }
+  ]
+}
