@@ -123,7 +123,7 @@ jobs:
         run: |
           if [ ! -f building/ci_macos_lean.zsh ]; then
             echo "### building/ci_macos_lean.zsh absent : le run a ete dispatch sur master ?"
-            echo "### Relancer avec Run workflow, Branch : ci/j1b-binaries"
+            echo "### Relancer avec Run workflow en selectionnant la branche du jalon (ci/j2c-presets)"
             exit 1
           fi
 
