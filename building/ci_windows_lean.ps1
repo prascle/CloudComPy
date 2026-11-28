@@ -74,96 +74,35 @@ New-Item -ItemType Directory -Force $BUILD | Out-Null
 # passee ci-dessous. Cf. audit 8.4 : un *_DIR utilise ne prouve pas que
 # l autodetection suffit.
 
+# J2c : le panneau constant des drapeaux est consomme via le preset
+# ci-windows-lean (CMakePresets.json, resolution DJ4) ; le script ne passe
+# plus que les chemins machine et la classe B (INSTALL_PREREQUISITE_LIBRARIES
+# est porte par le preset, cf. D13).
+
 $cmakeArgs = @(
-    "-S$ROOT",
-    "-B$BUILD",
-    "-G", "Ninja",
-    "-DCMAKE_BUILD_TYPE=Release",
-    "-DCMAKE_SHARED_LINKER_FLAGS=/machine:x64",
-    "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
-    "-DUSE_CONDA_PACKAGES=ON",
     "-DCLOUDCOMPARE_VERSION=$CloudCompareVersion",
     "-DCONDA_BASE_DIRECTORY=$env:MAMBA_ROOT_PREFIX",
     "-DCONDA_ENV_NAME=$CondaEnvName",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
     "-DCMAKE_PREFIX_PATH=$Library",
     "-DCMAKE_INSTALL_PREFIX=$INSTALL",
-    "-DBUILD_PY_TESTING=1",
-    "-DBUILD_REFERENCE_DOC=0",
-    "-DBUILD_TESTING=1",
-    "-DCCCORELIB_SHARED=1",
-    "-DCCCORELIB_USE_CGAL=1",
-    "-DCCCORELIB_USE_QT_CONCURRENT=1",
-    "-DCCCORELIB_USE_TBB=0",
     # classe B depuis le run #65 : sans DRACO_LIBRARIES explicite, le plugin
-    # qDracoIO compile mais ne lie pas draco.lib (LNK2019). Voir bloc classe C ci-dessus.
+    # qDracoIO compile mais ne lie pas draco.lib (LNK2019). Cf. audit 8.4 :
+    # un *_DIR utilise ne prouve pas que l autodetection suffit.
     "-DDRACO_INCLUDE_DIRS=$Library/include",
     "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
-    # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
-    # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt
-    # (noms pre-OpenCASCADE 7.8 : TKSTEP.dll etc.) et la regle copy_files de qStepCADImport.
-    "-DINSTALL_PREREQUISITE_LIBRARIES=0",
-    "-DOPENCASCADE_78_OR_NEWER=1",
     "-DOPENCASCADE_INC_DIR=$Library/include/opencascade",
     "-DOPENCASCADE_LIB_DIR=$Library/lib",
     "-DOPENCASCADE_DLL_DIR=$Library/bin",
     "-DOPENCASCADE_TBB_DLL_DIR=$Library/bin",
-    "-DOPTION_BUILD_CCVIEWER=OFF",
-    "-DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE=OFF",
-    "-DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI=ON",
-    "-DOPTION_HID_DEBUG=OFF",
-    "-DOPTION_USE_GDAL=1",
-    "-DPLUGIN_EXAMPLE_GL=1",
-    "-DPLUGIN_EXAMPLE_IO=1",
-    "-DPLUGIN_EXAMPLE_STANDARD=1",
-    "-DPLUGIN_GL_QEDL=1",
-    "-DPLUGIN_GL_QSSAO=1",
-    "-DPLUGIN_IO_QADDITIONAL=1",
-    "-DPLUGIN_IO_QCORE=1",
-    "-DPLUGIN_IO_QCSV_MATRIX=1",
-    "-DPLUGIN_IO_QDRACO=1",
-    "-DPLUGIN_IO_QE57=1",
-    "-DPLUGIN_IO_QFBX=0",
-    "-DPLUGIN_IO_QLAS=1",
-    "-DPLUGIN_IO_QLAS_FWF=0",
-    "-DPLUGIN_IO_QPDAL=0",
-    "-DPLUGIN_IO_QPHOTOSCAN=1",
-    "-DPLUGIN_IO_QRDB=0",
-    "-DPLUGIN_IO_QSTEP=1",
-    "-DPLUGIN_STANDARD_3DMASC=1",
-    "-DPLUGIN_STANDARD_QANIMATION=1",
-    "-DPLUGIN_STANDARD_QBROOM=1",
-    "-DPLUGIN_STANDARD_QCANUPO=1",
-    "-DPLUGIN_STANDARD_QCLOUDLAYERS=1",
-    "-DPLUGIN_STANDARD_QCOLORIMETRIC_SEGMENTER=1",
-    "-DPLUGIN_STANDARD_QCOMPASS=1",
-    "-DPLUGIN_STANDARD_QCORK=0",
-    "-DPLUGIN_STANDARD_QCSF=1",
-    "-DPLUGIN_STANDARD_QFACETS=1",
-    "-DPLUGIN_STANDARD_QHOUGH_NORMALS=1",
-    "-DPLUGIN_STANDARD_QHPR=1",
-    "-DPLUGIN_STANDARD_QJSONRPC=1",
-    "-DPLUGIN_STANDARD_QM3C2=1",
-    "-DPLUGIN_STANDARD_QMESH_BOOLEAN=0",
-    "-DPLUGIN_STANDARD_QMPLANE=1",
-    "-DPLUGIN_STANDARD_QPCL=1",
-    "-DPLUGIN_STANDARD_QPCV=1",
-    "-DPLUGIN_STANDARD_QPOISSON_RECON=1",
-    "-DPLUGIN_STANDARD_QRANSAC_SD=1",
-    "-DPLUGIN_STANDARD_QSRA=1",
-    "-DPLUGIN_STANDARD_QTREEISO=1",
-    "-DPYTHONAPI_TEST_DIRECTORY=CloudComPy/Data",
-    "-DPYTHONAPI_EXTDATA_DIRECTORY=CloudComPy/ExternalData",
-    "-DPYTHONAPI_TRACES=1",
-    "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
-    "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
+    "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
     # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
     "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"
 )
 
 Write-Host "# --- configuration CMake ---"
-& cmake @cmakeArgs
+& cmake --preset ci-windows-lean @cmakeArgs
 if ($LASTEXITCODE -ne 0) { throw "echec de la configuration CMake" }
 
 Write-Host "# --- compilation (ninja) ---"

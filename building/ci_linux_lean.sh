@@ -67,57 +67,18 @@ mkdir -p "${BUILD}"
 # fourni par l activation de l environnement conda, find_package resout le reste.
 
 echo "# --- configuration CMake ---"
-cmake \
-    -S"${ROOT}" \
-    -B"${BUILD}" \
-    -G"Unix Makefiles" \
-    -DBUILD_REFERENCE_DOC:BOOL="0" \
-    -DBUILD_PY_TESTING:BOOL="1" \
-    -DBUILD_TESTING:BOOL="1" \
-    -DCCCORELIB_SHARED:BOOL="1" \
-    -DCCCORELIB_USE_CGAL:BOOL="1" \
-    -DCCCORELIB_USE_QT_CONCURRENT:BOOL="1" \
-    -DCCCORELIB_USE_TBB:BOOL="0" \
+# J2c : le panneau constant des drapeaux est consomme via le preset
+# ci-linux-lean (CMakePresets.json, source unique, resolution DJ4) ; le
+# script ne passe plus que les chemins machine et la classe B.
+cmake --preset ci-linux-lean \
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
-    -DCMAKE_BUILD_TYPE:STRING="Release" \
-    -DCMAKE_C_COMPILER:FILEPATH=cc \
-    -DCMAKE_CXX_COMPILER:FILEPATH=c++ \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCONDA_ENV="${CONDA_ENV_NAME}" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
-    -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
-    -DOPTION_USE_GDAL:BOOL="1" \
-    -DPLUGIN_GL_QEDL:BOOL="1" \
-    -DPLUGIN_GL_QSSAO:BOOL="1" \
-    -DPLUGIN_IO_QADDITIONAL:BOOL="1" \
-    -DPLUGIN_IO_QCORE:BOOL="1" \
-    -DPLUGIN_IO_QCSV_MATRIX:BOOL="1" \
-    -DPLUGIN_IO_QDRACO:BOOL="1" \
-    -DPLUGIN_IO_QE57:BOOL="1" \
-    -DPLUGIN_IO_QLAS:BOOL="1" \
-    -DPLUGIN_IO_QSTEP:BOOL="1" \
-    -DPLUGIN_STANDARD_QBROOM:BOOL="1" \
-    -DPLUGIN_STANDARD_QCANUPO:BOOL="1" \
-    -DPLUGIN_STANDARD_QCLOUDLAYERS:BOOL="1" \
-    -DPLUGIN_STANDARD_QCOMPASS:BOOL="1" \
-    -DPLUGIN_STANDARD_QCSF:BOOL="1" \
-    -DPLUGIN_STANDARD_QFACETS:BOOL="1" \
-    -DPLUGIN_STANDARD_QHOUGH_NORMALS:BOOL="1" \
-    -DPLUGIN_STANDARD_QHPR:BOOL="1" \
-    -DPLUGIN_STANDARD_QM3C2:BOOL="1" \
-    -DPLUGIN_STANDARD_QMPLANE:BOOL="1" \
-    -DPLUGIN_STANDARD_QPOISSON_RECON:BOOL="1" \
-    -DPLUGIN_STANDARD_QRANSAC_SD:BOOL="1" \
-    -DPLUGIN_STANDARD_QSRA:BOOL="1" \
-    -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
-    -DPYTHONAPI_TRACES:BOOL="1" \
-    -DPYTHON_PREFERED_VERSION:STRING="3.12" \
-    -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
-    -DUSE_CONDA_PACKAGES:BOOL="1" \
-    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
+    -DPYTHONVENV_DIR:PATH="${CONDA_PATH}"
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(nproc)"

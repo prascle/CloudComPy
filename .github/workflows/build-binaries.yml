@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - master
+      - ci/j2c-presets  # TEMPORAIRE J2c (a retirer avant la PR)
     tags:
       - 'v*'
   workflow_dispatch:
