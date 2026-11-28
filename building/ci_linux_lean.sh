@@ -58,6 +58,14 @@ micromamba list > "${ROOT}/building/conda-list_Ubuntu20.04_3${PYMINOR}"
 rm -rf "${BUILD}" "${INSTALL}"
 mkdir -p "${BUILD}"
 
+# EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : les pre-allocations
+# classe A (GDAL, GMP, LASZIP, MPFR, XercesC, ZLIB, DRACO) ont ete retirees apres
+# comparaison des chemins resolus entre runs reference et classe C (identiques ;
+# le paquet conda linux draco resout meme la lib, contrairement a windows/macos).
+# Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR (qStepCAD),
+# CONDA_ENV/CONDA_PATH (templates fork), PYTHONVENV_DIR. CMAKE_PREFIX_PATH est
+# fourni par l activation de l environnement conda, find_package resout le reste.
+
 echo "# --- configuration CMake ---"
 cmake \
     -S"${ROOT}" \
@@ -77,30 +85,11 @@ cmake \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCONDA_ENV="${CONDA_ENV_NAME}" \
     -DCONDA_PATH:PATH="${CONDA_PATH}" \
-    -DDRACO_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DDRACO_LIB_DIR:PATH="${CONDA_PATH}/lib" \
-    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
-    -DEIGEN_INCLUDE_DIR:PATH="${CONDA_PATH}/include/eigen3" \
     -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
-    -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.so" \
-    -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGMP_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.so" \
-    -DGMP_LIBRARIES_DIR:PATH="${CONDA_PATH}" \
-    -DLASZIP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.so" \
-    -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.so" \
-    -DMPFR_LIBRARIES_DIR:PATH="${CONDA_PATH}" \
-    -DMPIR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DMPIR_RELEASE_LIBRARY_FILE:FILEPATH="${CONDA_PATH}/lib/libgmp.so" \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
-    -DOPENCASCADE_DLL_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
-    -DOPENCASCADE_TBB_DLL_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPTION_USE_GDAL:BOOL="1" \
-    -DOpenMP_omp_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libomp.so" \
     -DPLUGIN_GL_QEDL:BOOL="1" \
     -DPLUGIN_GL_QSSAO:BOOL="1" \
     -DPLUGIN_IO_QADDITIONAL:BOOL="1" \
@@ -110,7 +99,6 @@ cmake \
     -DPLUGIN_IO_QE57:BOOL="1" \
     -DPLUGIN_IO_QLAS:BOOL="1" \
     -DPLUGIN_IO_QSTEP:BOOL="1" \
-    -DPLUGIN_PYTHON="OFF" \
     -DPLUGIN_STANDARD_QBROOM:BOOL="1" \
     -DPLUGIN_STANDARD_QCANUPO:BOOL="1" \
     -DPLUGIN_STANDARD_QCLOUDLAYERS:BOOL="1" \
@@ -127,16 +115,9 @@ cmake \
     -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
     -DPYTHONAPI_TRACES:BOOL="1" \
     -DPYTHON_PREFERED_VERSION:STRING="3.12" \
-    -DPYMINOR:STRING="12" \
     -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
-    -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
-    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
-    -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DXercesC_LIBRARY_DEBUG:FILEPATH="XercesC_LIBRARY_DEBUG-NOTFOUND" \
-    -DXercesC_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libxerces-c.so" \
-    -DZLIB_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DZLIB_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libz.so"
+    -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0"
 
 echo "# --- compilation (make parallele) ---"
 NBTHREADS="$(nproc)"

@@ -66,6 +66,24 @@ echo "# --- configuration CMake ---"
 # du sous-module installe des copies Conda (libomp, etc.) dans Frameworks,
 # coexistant avec la copie delocatee dans .dylibs -> deux runtimes OpenMP
 # dans le process (OMP Error #15). Delocate fournit l'unique copie.
+# EXPERIENCE CLASSE C (audit J2a 8.4), ANNULEE le 28/11/2026 : les pre-allocations
+# classe A (CGAL, GDAL, GMP, LASZIP, MPFR, OpenCV, PCL, PNG, Qhull, pybind11,
+# XercesC, ZLIB) avaient ete retirees apres comparaison reference/classe C
+# (resolution identique a la configuration). Mais le wheel BUILD_PYPI macOS
+# depend de delocate, qui copie/reecrit les deps des libs de facon NON
+# DETERMINISTE selon les collisions de basename (boucle d'exclusion J1b) :
+# avec les autodetections, libgmpxx.4.dylib (dispatchs #66/#70) puis
+# libmpfr.6.dylib (dispatch #71) ont ete exclues de la copie, laissant des
+# refs @executable_path/../Frameworks cassees a l'import (runs verts et
+# rouges au meme etat du depot). La resolution identique a la configuration
+# ne prouve donc PAS la surete du retrait sur cette chaine. DECISION (Paul,
+# 28/11) : retour a la reference complete, macos ne conserve AUCUN retrait
+# classe A (les retraits linux/windows, chaines deterministes, restent).
+# Restent en classe B : EIGEN_ROOT_DIR (custom), OPENCASCADE_INC/LIB_DIR,
+# FFMPEG_* (custom), TBB_DIR, DRACO_LIBRARIES (le find_package(Draco) du
+# paquet conda macos resout Draco_DIR mais pas DRACO_LIBRARIES, echec de
+# lien qDracoIO constate), CONDA_PATH, PYTHONVENV_DIR, REPO_DIR.
+
 cmake \
     -S"${ROOT}" \
     -B"${BUILD}" \
@@ -80,28 +98,16 @@ cmake \
     -DCCCORELIB_USE_TBB:BOOL="0" \
     -DCLOUDCOMPARE_VERSION:STRING="${CLOUDCOMPARE_VERSION}" \
     -DCLOUDCOMPY_VERSION:STRING="${CLOUDCOMPY_VERSION}" \
-    -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
     -DCMAKE_BUILD_TYPE:STRING="Release" \
     -DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
     -DCMAKE_INSTALL_PREFIX:PATH="${INSTALL}" \
     -DCMAKE_INSTALL_RPATH="@loader_path;@loader_path/../Frameworks;@loader_path/../../Frameworks;${CONDA_PATH}/lib" \
     -DCMAKE_MACOSX_RPATH=ON \
-    -DINSTALL_PREREQUISITE_LIBRARIES="0" \
-    -DCONDA_LIBS:PATH="${CONDA_PATH}/lib" \
-    -DCONDA_PATH:PATH="${CONDA_PATH}" \
-    -DDRACO_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DDRACO_LIB_DIR:PATH="${CONDA_PATH}/lib" \
-    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
-    -DEIGEN_INCLUDE_DIR:PATH="${CONDA_PATH}/include/eigen3" \
-    -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
-    -DFFMPEG_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DFFMPEG_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
-    -DFFMPEG_X264_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
-    -DFBX_XML2_LIBRARY_FILE:FILEPATH="" \
+    -DCGAL_DIR:PATH="${CONDA_PATH}/lib/cmake/CGAL" \
+    -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
     -DGDAL_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DGDAL_LIBRARY:FILEPATH="${CONDA_PATH}/lib/libgdal.dylib" \
     -DGMPXX_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DGMPXX_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
     -DGMP_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DGMP_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
     -DGMP_LIBRARY_RELEASE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
@@ -109,22 +115,25 @@ cmake \
     -DLASZIP_LIBRARY:FILEPATH="${CONDA_PATH}/lib/liblaszip.dylib" \
     -DMPFR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
     -DMPFR_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libmpfr.dylib" \
-    -DMPIR_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
-    -DMPIR_RELEASE_LIBRARY_FILE:FILEPATH="${CONDA_PATH}/lib/libgmp.dylib" \
+    -DINSTALL_PREREQUISITE_LIBRARIES="0" \
+    -DCONDA_PATH:PATH="${CONDA_PATH}" \
+    -DDRACO_LIBRARIES:PATH="${CONDA_PATH}/lib/libdraco.a" \
+    -DEIGEN_ROOT_DIR:PATH="${CONDA_PATH}/include/eigen3" \
+    -DFFMPEG_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \
+    -DFFMPEG_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
+    -DFFMPEG_X264_LIBRARY_DIR:FILEPATH="${CONDA_PATH}/lib" \
     -DOPENCASCADE_78_OR_NEWER:BOOL="1" \
-    -DOPENCASCADE_DLL_DIR:PATH="${CONDA_PATH}/lib" \
     -DOPENCASCADE_INC_DIR:PATH="${CONDA_PATH}/include/opencascade" \
     -DOPENCASCADE_LIB_DIR:PATH="${CONDA_PATH}/lib" \
-    -DOPENCASCADE_TBB_DLL_DIR:PATH="${CONDA_PATH}/lib" \
+    -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
+    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15" \
+    -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16" \
+    -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib" \
     -DOPTION_BUILD_CCVIEWER:BOOL="0" \
     -DOPTION_SUPPORT_3DMOUSE_WITH_3DxWARE="0" \
     -DOPTION_SUPPORT_3DMOUSE_WITH_HIDAPI="1" \
     -DOPTION_HID_DEBUG="0" \
     -DOPTION_USE_GDAL:BOOL="1" \
-    -DOpenCV_DIR:PATH="${CONDA_PATH}/lib/cmake/opencv4" \
-    -DPCL_DIR:PATH="${CONDA_PATH}/share/pcl-1.15" \
-    -DPNG_INCLUDE_DIR:PATH="${CONDA_PATH}/include/libpng16" \
-    -DPNG_LIBRARIES:FILEPATH="${CONDA_PATH}/lib/libpng16.dylib" \
     -DPLUGIN_EXAMPLE_GL:BOOL="1" \
     -DPLUGIN_EXAMPLE_IO:BOOL="1" \
     -DPLUGIN_EXAMPLE_STANDARD:BOOL="1" \
@@ -142,10 +151,7 @@ cmake \
     -DPLUGIN_IO_QPHOTOSCAN:BOOL="1" \
     -DPLUGIN_IO_QRDB:BOOL="0" \
     -DPLUGIN_IO_QSTEP:BOOL="1" \
-    -DPLUGIN_PYTHON="OFF" \
     -DPLUGIN_STANDARD_3DMASC:BOOL="1" \
-    -DPLUGIN_STANDARD_MASONRY_QAUTO_SEG:BOOL="1" \
-    -DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG:BOOL="1" \
     -DPLUGIN_STANDARD_QANIMATION:BOOL="1" \
     -DPLUGIN_STANDARD_QBROOM:BOOL="1" \
     -DPLUGIN_STANDARD_QCANUPO:BOOL="1" \
@@ -168,20 +174,15 @@ cmake \
     -DPLUGIN_STANDARD_QSRA:BOOL="1" \
     -DPLUGIN_STANDARD_QTREEISO:BOOL="1" \
     -DQANIMATION_WITH_FFMPEG_SUPPORT:BOOL="1" \
-    -DQHULL_LIBRARY_DEBUG:FILEPATH="${CONDA_PATH}/lib/libqhullcpp.a" \
-    -DQHULL_LIBRARY_DEBUG_STATIC:FILEPATH="${CONDA_PATH}/lib/libqhullstatic_r.a" \
-    -DQHULL_LIBRARY_SHARED:FILEPATH="${CONDA_PATH}/lib/libqhull_r.dylib" \
-    -DQHULL_LIBRARY_STATIC:FILEPATH="${CONDA_PATH}/lib/libqhullstatic_r.a" \
-    -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull" \
-    -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11" \
     -DPYTHONAPI_TEST_DIRECTORY:STRING="CloudComPy/Data" \
     -DPYTHONAPI_EXTDATA_DIRECTORY:STRING="CloudComPy/ExternalData" \
     -DPYTHONAPI_TRACES:BOOL="1" \
-    -DPYMINOR:STRING="${PYMINOR}" \
     -DPYTHON_PREFERED_VERSION:STRING="3.${PYMINOR}" \
     -DPYTHONVENV_DIR:PATH="${CONDA_PATH}" \
     -DREPO_DIR:PATH="${ROOT}" \
     -DTBB_DIR:PATH="${CONDA_PATH}/lib/cmake/TBB" \
+    -DQhull_DIR:PATH="${CONDA_PATH}/lib/cmake/Qhull" \
+    -Dpybind11_DIR:PATH="${CONDA_PATH}/share/cmake/pybind11" \
     -DUSE_CONDA_PACKAGES:BOOL="1" \
     -DUSE_EXTERNAL_QHULL_FOR_QHPR:BOOL="0" \
     -DXercesC_INCLUDE_DIR:PATH="${CONDA_PATH}/include" \

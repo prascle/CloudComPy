@@ -66,6 +66,14 @@ if (Test-Path $BUILD) { Remove-Item -Recurse -Force $BUILD }
 if (Test-Path $INSTALL) { Remove-Item -Recurse -Force $INSTALL }
 New-Item -ItemType Directory -Force $BUILD | Out-Null
 
+# EXPERIENCE CLASSE C (audit J2a 8.4), TERMINEE le 27/11/2026 : la pre-allocation
+# Qt6_DIR a ete retiree (resolution identique via CMAKE_PREFIX_PATH prouvee par les
+# runs reference/classe C). LECON DU RUN #65 (LNK2019 x19 dans qDracoIO) :
+# DRACO_INCLUDE_DIRS/DRACO_LIBRARIES ne sont PAS redondants (le find_package(Draco)
+# du paquet conda resout Draco_DIR mais ne fournit pas DRACO_LIBRARIES) -> classe B
+# passee ci-dessous. Cf. audit 8.4 : un *_DIR utilise ne prouve pas que
+# l autodetection suffit.
+
 $cmakeArgs = @(
     "-S$ROOT",
     "-B$BUILD",
@@ -73,13 +81,11 @@ $cmakeArgs = @(
     "-DCMAKE_BUILD_TYPE=Release",
     "-DCMAKE_SHARED_LINKER_FLAGS=/machine:x64",
     "-DPYTHON_PREFERED_VERSION=3.$PyMinor",
-    "-DPYMINOR=$PyMinor",
     "-DUSE_CONDA_PACKAGES=ON",
     "-DCLOUDCOMPARE_VERSION=$CloudCompareVersion",
     "-DCONDA_BASE_DIRECTORY=$env:MAMBA_ROOT_PREFIX",
     "-DCONDA_ENV_NAME=$CondaEnvName",
     "-DCONDA_ROOT_DIRECTORY=$CondaRoot",
-    "-DQt6_DIR=$Library/lib/cmake/Qt6",
     "-DCMAKE_PREFIX_PATH=$Library",
     "-DCMAKE_INSTALL_PREFIX=$INSTALL",
     "-DBUILD_PY_TESTING=1",
@@ -89,11 +95,11 @@ $cmakeArgs = @(
     "-DCCCORELIB_USE_CGAL=1",
     "-DCCCORELIB_USE_QT_CONCURRENT=1",
     "-DCCCORELIB_USE_TBB=0",
+    # classe B depuis le run #65 : sans DRACO_LIBRARIES explicite, le plugin
+    # qDracoIO compile mais ne lie pas draco.lib (LNK2019). Voir bloc classe C ci-dessus.
     "-DDRACO_INCLUDE_DIRS=$Library/include",
     "-DDRACO_LIBRARIES=$Library/lib/draco.lib",
     "-DEIGEN_ROOT_DIR=$Library/include/eigen3",
-    "-DMPIR_INCLUDE_DIR=$Library/include",
-    "-DMPIR_RELEASE_LIBRARY_FILE=$Library/lib/mpir.lib",
     # D13 : comme build.ps1, les prerequis (OCCT, PCL, TBB) restent dans l'environnement Conda.
     # Court-circuite les regles d'install de DLL prerequises de pybind11/CMakeLists.txt
     # (noms pre-OpenCASCADE 7.8 : TKSTEP.dll etc.) et la regle copy_files de qStepCADImport.
@@ -125,10 +131,7 @@ $cmakeArgs = @(
     "-DPLUGIN_IO_QPHOTOSCAN=1",
     "-DPLUGIN_IO_QRDB=0",
     "-DPLUGIN_IO_QSTEP=1",
-    "-DPLUGIN_PYTHON=OFF",
     "-DPLUGIN_STANDARD_3DMASC=1",
-    "-DPLUGIN_STANDARD_MASONRY_QAUTO_SEG=1",
-    "-DPLUGIN_STANDARD_MASONRY_QMANUAL_SEG=1",
     "-DPLUGIN_STANDARD_QANIMATION=1",
     "-DPLUGIN_STANDARD_QBROOM=1",
     "-DPLUGIN_STANDARD_QCANUPO=1",
@@ -153,9 +156,7 @@ $cmakeArgs = @(
     "-DPYTHONAPI_TEST_DIRECTORY=CloudComPy/Data",
     "-DPYTHONAPI_EXTDATA_DIRECTORY=CloudComPy/ExternalData",
     "-DPYTHONAPI_TRACES=1",
-    "-DPYTHONVENV_DIR=$CondaRoot",
     "-DQANIMATION_WITH_FFMPEG_SUPPORT=1",
-    "-DREPO_DIR=$ROOT",
     "-DUSE_EXTERNAL_QHULL_FOR_QHPR=0",
     # stub neutre a la place du windeployqt Conda (Qt >= 6.9 refuse --openglwidgets/--concurrent)
     "-Dwin_deploy_qt=$ROOT\building\ci_windeployqt_stub.cmd"

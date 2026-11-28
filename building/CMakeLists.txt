@@ -19,6 +19,24 @@
 #                                                                        #
 ##########################################################################
 
+# --- PYMINOR derivation (audit J2a, section 8.3):
+# PYMINOR feeds only the conda-list filenames below; it is derived from
+# PYTHON_PREFERED_VERSION so scripts and presets no longer need to define
+# both. If a caller still passes PYMINOR, a divergence with
+# PYTHON_PREFERED_VERSION is a configuration error (J1b lesson ebbd785).
+if ( DEFINED PYMINOR AND NOT "${PYMINOR}" STREQUAL "" )
+    string( REGEX REPLACE "^3\\." "" _PYMINOR_DERIVED "${PYTHON_PREFERED_VERSION}" )
+    if ( NOT "${PYMINOR}" STREQUAL "${_PYMINOR_DERIVED}" )
+        message( WARNING
+            "PYMINOR (${PYMINOR}) is inconsistent with PYTHON_PREFERED_VERSION "
+            "(${PYTHON_PREFERED_VERSION}); using PYMINOR for the conda-list filenames "
+            "(see audit J2a, section 8.3)")
+    endif()
+    unset( _PYMINOR_DERIVED )
+else()
+    string( REGEX REPLACE "^3\\." "" PYMINOR "${PYTHON_PREFERED_VERSION}" )
+endif()
+
 if(WIN32)
         set( BUILDING_DOCS
             conda-list_Windows11_conda3${PYMINOR}
